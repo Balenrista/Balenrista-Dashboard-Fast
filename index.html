@@ -154,12 +154,12 @@ function setupPeriods(){
 function buildMonth(){const m=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];document.getElementById('monthSelect').innerHTML=m.map((x,i)=>`<option value="${String(i+1).padStart(2,'0')}">${x}</option>`).join('');document.getElementById('monthSelect').value=String(today.getMonth()+1).padStart(2,'0')}
 function buildYears(){const y=today.getFullYear();document.getElementById('yearSelect').innerHTML=Array.from({length:5},(_,i)=>`<option>${y-i}</option>`).join('');}
 function range(){if(period==='daily'){const d=document.getElementById('dateDaily').value||iso(today);return [d,d]}if(period==='monthly'){const y=document.getElementById('yearSelect').value||today.getFullYear(),m=document.getElementById('monthSelect').value||String(today.getMonth()+1).padStart(2,'0');const last=new Date(Number(y),Number(m),0).getDate();return [`${y}-${m}-01`,`${y}-${m}-${String(last).padStart(2,'0')}`]}const y=document.getElementById('yearSelect').value||today.getFullYear();return [`${y}-01-01`,`${y}-12-31`]}
-async function q(table,start,end){let query=db.from(table).select('*').gte('transaction_date',start).lte('transaction_date',end);const {data,error}=await query; if(error)throw error;return data||[]}
+async function q(table,start,end){let select='*';if(table==='materials')select='*,ingredients(name)';let query=db.from(table).select(select).gte('transaction_date',start).lte('transaction_date',end);const {data,error}=await query; if(error)throw error;return data||[]}
 async function loadDashboard(){
   if(!sbReady)return;
   try{
     const [s,m,e]=await Promise.all([q('sales',...range()),q('materials',...range()),q('expenses',...range())]);
-    dashboardSales=s; dashboardMaterials=m; dashboardExpenses=e;
+    dashboardSales=s; dashboardMaterials=(m||[]).map(x=>({...x,ingredient_name:x.ingredients?.name||x.ingredient_name||x.ingredient_id})); dashboardExpenses=e;
     const ingredients=db.from('ingredients').select('id',{count:'exact',head:true});
     const menus=db.from('menus').select('id',{count:'exact',head:true});
     const recipes=db.from('recipes').select('id',{count:'exact',head:true});
@@ -286,7 +286,7 @@ async function openMaterialCart(){
 }
 
 function bindMaterialCartInputs(){
-  const sel=document.getElementById('cart_material_ingredient'),qty=document.getElementById('cart_material_qty'),price=document.getElementById('cart_material_price');
+  const sel=document.getElementById('f_cart_material_ingredient'),qty=document.getElementById('cart_material_qty'),price=document.getElementById('cart_material_price');
   const update=()=>{
     const ing=(window.__materialIngredients||[]).find(x=>x.id===sel.value);
     const unit=ing?.purchase_unit||'';
@@ -299,7 +299,7 @@ function bindMaterialCartInputs(){
 }
 function stepCartMaterialQty(delta){const el=document.getElementById('cart_material_qty');if(!el)return;const step=Number(el.step)||1;el.value=Math.max(0,Number(el.value||0)+delta*step);el.dispatchEvent(new Event('input',{bubbles:true}))}
 function addMaterialToCart(){
-  const sel=document.getElementById('cart_material_ingredient'),qty=document.getElementById('cart_material_qty'),price=document.getElementById('cart_material_price');
+  const sel=document.getElementById('f_cart_material_ingredient'),qty=document.getElementById('cart_material_qty'),price=document.getElementById('cart_material_price');
   const ing=(window.__materialIngredients||[]).find(x=>x.id===sel.value);const q=Number(qty.value||0),p=Number(price.value||0);
   if(!ing||q<=0) return toast('กรุณาเลือกวัตถุดิบและจำนวน');
   materialCart.push({ingredient_id:ing.id,ingredient_name:ing.name,purchase_unit:ing.purchase_unit||'',stock_unit:ing.stock_unit||'',conversion_ratio:Number(ing.purchase_to_stock_ratio||1),quantity_purchased:q,unit_price:p,total_amount:Number((q*p).toFixed(2))});
