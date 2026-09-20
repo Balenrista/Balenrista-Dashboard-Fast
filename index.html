@@ -161,18 +161,32 @@ async function saveToGoogleSheet(sheetName, rows){
 
 document.addEventListener('DOMContentLoaded',()=>{document.getElementById('dateDaily').value=iso(today);setupPeriods();setBottom('dashboard');if(!sbReady){document.getElementById('setup').style.display='block';document.getElementById('loading').style.display='none';renderDemo();return}initAuth()});
 
-const AUTH_SESSION_KEY='balenrista_dashboard_session_v1';
+const AUTH_SESSION_KEY='balenrista_dashboard_auth_v2';
 let currentUser=null;
-function readAuthSession(){try{const raw=sessionStorage.getItem(AUTH_SESSION_KEY);if(!raw)return null;const s=JSON.parse(raw);if(!s?.username)return null;return s}catch(_){return null}}
-function writeAuthSession(user){try{sessionStorage.setItem(AUTH_SESSION_KEY,JSON.stringify(user))}catch(_){}}
-function clearAuthSession(){try{sessionStorage.removeItem(AUTH_SESSION_KEY)}catch(_){}currentUser=null}
+function readAuthSession(){try{const raw=localStorage.getItem(AUTH_SESSION_KEY);if(!raw)return null;const s=JSON.parse(raw);if(!s?.username||!s?.session_token)return null;if(s.expires_at&&new Date(s.expires_at)<=new Date())return null;return s}catch(_){return null}}
+function writeAuthSession(user){try{localStorage.setItem(AUTH_SESSION_KEY,JSON.stringify(user))}catch(_){} }
+function clearAuthSession(){try{localStorage.removeItem(AUTH_SESSION_KEY)}catch(_){}try{sessionStorage.removeItem('balenrista_dashboard_session_v1')}catch(_){}currentUser=null}
 function setAuthUserUI(){const name=document.getElementById('authUserName'),role=document.getElementById('authUserRole');if(name)name.textContent=currentUser?.display_name||currentUser?.username||'Balenrista';if(role)role.textContent=currentUser?.role||'admin'}
 function showLogin(message=''){document.getElementById('authOverlay').classList.remove('hidden');document.getElementById('loading').style.display='none';document.getElementById('loginError').textContent=message;setTimeout(()=>document.getElementById('loginUsername')?.focus(),60)}
 function hideLogin(){document.getElementById('authOverlay').classList.add('hidden');document.getElementById('loginError').textContent=''}
+async function validateAuthSession(session){
+  if(!db||!session?.session_token)return null;
+  try{
+    const {data,error}=await db.rpc('balenrista_check_session',{p_session_token:session.session_token});
+    if(error)throw error;
+    const row=Array.isArray(data)?data[0]:data;
+    if(!row||row.success===false)return null;
+    return {...session,username:row.username||session.username,display_name:row.display_name||row.name||session.display_name||session.username,role:row.role||session.role||'admin',is_active:row.is_active!==false,session_token:row.session_token||session.session_token,expires_at:row.expires_at||session.expires_at||null};
+  }catch(err){console.warn('Session validation error:',err.message);return null}
+}
 async function initAuth(){
   setLoading(true,'กำลังตรวจสอบสิทธิ์...');
   const session=readAuthSession();
-  if(session){currentUser=session;setAuthUserUI();hideLogin();await logCurrentVisitor();await loadDashboard();setLoading(false);return}
+  if(session){
+    const valid=await validateAuthSession(session);
+    if(valid&&valid.is_active!==false){currentUser=valid;writeAuthSession(valid);setAuthUserUI();hideLogin();await logCurrentVisitor();await loadDashboard();setLoading(false);return}
+    clearAuthSession();
+  }
   setLoading(false);showLogin();
 }
 async function handleLogin(e){
@@ -208,7 +222,11 @@ async function handleLogin(e){
   finally{button.disabled=false;button.querySelector('span').textContent='Sign in'}
   return false;
 }
-function logout(){clearAuthSession();closePopovers();closeVisitorLog();managementType=null;document.getElementById('managementSection').classList.remove('active');document.getElementById('dashboardSection').classList.add('active');showLogin('ออกจากระบบแล้ว');document.getElementById('loginPassword').value='';}
+async function logout(){
+  const token=currentUser?.session_token;
+  try{if(db&&token)await db.rpc('balenrista_logout',{p_session_token:token})}catch(err){console.warn('Logout error:',err.message)}
+  clearAuthSession();closePopovers();closeVisitorLog();managementType=null;document.getElementById('managementSection').classList.remove('active');document.getElementById('dashboardSection').classList.add('active');showLogin('ออกจากระบบแล้ว');document.getElementById('loginPassword').value='';
+}
 
 function setupPeriods(){
   document.querySelectorAll('.period-tab').forEach(b=>b.onclick=()=>{
