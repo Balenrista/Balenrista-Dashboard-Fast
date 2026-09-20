@@ -18,7 +18,7 @@
 /* management */.section{display:none}.section.active{display:block}.section-head{display:flex;justify-content:space-between;align-items:flex-end;gap:15px;margin:12px 0 18px}.section-title{font-size:25px;font-weight:800;letter-spacing:-.6px}.section-desc{font-size:11px;color:var(--muted);margin-top:3px}.primary{height:42px;border:0;border-radius:13px;padding:0 15px;background:var(--paper);color:var(--black);font-size:11px;font-weight:800;display:flex;align-items:center;gap:8px}.primary svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2}.toolbar{display:flex;gap:9px;margin-bottom:14px}.search{flex:1}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:20px;background:rgba(255,255,255,.025)}table{border-collapse:collapse;width:100%;min-width:650px}.material-form{max-width:560px}.material-form .field[readonly]{opacity:.9}.quantity-stepper{display:grid;grid-template-columns:44px 1fr 44px;gap:7px}.quantity-stepper button{height:42px;border:1px solid var(--line);border-radius:13px;background:var(--glass);color:var(--white);font-size:20px;font-weight:700;cursor:pointer}.quantity-stepper button:active{transform:scale(.98)}.quantity-stepper input{text-align:center}.chart-range{display:flex;gap:5px;padding:3px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.025)}.chart-range button{border:0;background:transparent;color:var(--muted);padding:6px 9px;border-radius:8px;font-size:9px;font-weight:800;cursor:pointer}.chart-range button.active{background:var(--paper);color:var(--black)}.panel-action{border:1px solid var(--line);background:rgba(255,255,255,.025);color:var(--paper);border-radius:9px;padding:7px 9px;font-size:9px;font-weight:800;cursor:pointer}.metric-click{width:100%;text-align:left;cursor:pointer;color:inherit;font:inherit}.metric-click:focus{outline:1px solid rgba(181,151,133,.45)}.detail-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}.detail-summary>div{padding:12px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025)}.detail-summary span{display:block;font-size:9px;color:var(--muted);margin-bottom:5px}.detail-summary b{font-size:12px}.detail-summary .net{grid-column:1/-1;background:rgba(100,6,6,.18)}.detail-section{margin-top:14px}.detail-section-title{font-size:11px;font-weight:800;margin:0 0 8px}.detail-section .detail-list{max-height:30vh}.detail-list{display:grid;gap:8px;max-height:55vh;overflow:auto}.detail-row{display:grid;grid-template-columns:1fr auto;gap:12px;padding:12px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025)}.detail-main{min-width:0}.detail-title{font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.detail-sub{font-size:9px;color:var(--muted);margin-top:3px}.detail-value{text-align:right;font-size:11px;font-weight:800}.detail-empty{padding:30px;text-align:center;color:var(--muted);font-size:11px}th,td{padding:13px 14px;border-bottom:1px solid var(--line);font-size:11px;text-align:left}th{font-size:9px;text-transform:uppercase;letter-spacing:1.2px;color:var(--muted);font-weight:700}td{color:var(--white)}tr:last-child td{border-bottom:0}.row-actions{display:flex;align-items:center;justify-content:flex-end}.delete-row{width:34px;height:34px;border:1px solid rgba(243,237,231,.10);border-radius:10px;background:rgba(100,6,6,.16);color:#b9aaa1;display:grid;place-items:center;cursor:pointer}.delete-row:hover{background:rgba(100,6,6,.55);color:var(--white)}.delete-row svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.status{display:inline-flex;padding:5px 8px;border-radius:8px;font-size:9px;background:rgba(181,151,133,.1);color:var(--paper)}
 /* bottom actions */.bottom-actions{position:fixed;z-index:80;bottom:18px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:7px;padding:7px;border:1px solid rgba(243,237,231,.12);background:rgba(17,14,13,.76);backdrop-filter:blur(22px);border-radius:19px;box-shadow:0 18px 60px rgba(0,0,0,.45)}.fab{width:42px;height:42px;border:0;border-radius:13px;background:transparent;color:var(--muted);display:grid;place-items:center;transition:.2s}.fab:hover{background:rgba(255,255,255,.07);color:var(--white)}.fab.main{background:var(--paper);color:var(--black)}.fab.scan-fab{background:rgba(100,6,6,.72);color:var(--white);border:1px solid rgba(181,151,133,.22)}.fab svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.fab-label{display:none}
 /* menus */.popover{position:fixed;z-index:150;right:22px;top:78px;width:285px;border:1px solid rgba(243,237,231,.13);background:rgba(26,21,19,.94);backdrop-filter:blur(28px);border-radius:20px;box-shadow:0 25px 80px rgba(0,0,0,.5);padding:10px}.popover-title{font-size:9px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:9px 10px 6px;font-weight:800}.menu-item{display:flex;align-items:center;gap:11px;padding:11px 10px;border-radius:12px;font-size:11px;font-weight:700;color:var(--white)}.menu-item:hover{background:rgba(255,255,255,.06)}.menu-item svg{width:17px;height:17px;stroke:var(--paper);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.menu-sep{height:1px;background:var(--line);margin:7px 4px}.menu-note{font-size:9px;color:var(--muted);padding:5px 10px 9px}
-/* modal */.overlay{position:fixed;inset:0;z-index:200;background:rgba(7,5,4,.72);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center}.overlay.open{display:flex}.modal{width:min(680px,100%);max-height:88vh;overflow:auto;background:#191411;border:1px solid var(--line);border-radius:28px 28px 0 0;padding:22px;box-shadow:0 -20px 90px rgba(0,0,0,.55)}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modal-title{font-size:17px;font-weight:800}.close{width:36px;height:36px;border:1px solid var(--line);background:var(--glass);color:var(--white);border-radius:11px;display:grid;place-items:center}.close svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.form-item{display:grid;gap:6px}.form-item.full{grid-column:1/-1}.form-label{font-size:10px;color:var(--muted)}.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.secondary{height:42px;padding:0 15px;border-radius:13px;border:1px solid var(--line);background:var(--glass);color:var(--white);font-size:11px;font-weight:700}.toast{position:fixed;z-index:400;left:50%;bottom:86px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#221b18;border:1px solid var(--line);padding:10px 14px;border-radius:12px;color:var(--white);font-size:11px;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+/* modal */.overlay{position:fixed;inset:0;z-index:200;background:rgba(7,5,4,.72);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center}.overlay.open{display:flex}.modal{width:min(680px,100%);max-height:88vh;overflow:auto;background:linear-gradient(145deg,rgba(38,31,28,.78),rgba(24,19,17,.66));border:1px solid rgba(243,237,231,.12);border-radius:28px 28px 0 0;padding:22px;box-shadow:0 -20px 90px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.035);backdrop-filter:blur(28px) saturate(120%);-webkit-backdrop-filter:blur(28px) saturate(120%)}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modal-title{font-size:17px;font-weight:800}.close{width:36px;height:36px;border:1px solid var(--line);background:var(--glass);color:var(--white);border-radius:11px;display:grid;place-items:center}.close svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.glass-form{padding:14px;border:1px solid rgba(243,237,231,.09);border-radius:20px;background:rgba(255,255,255,.035);box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.glass-input{background:rgba(255,255,255,.045)!important;border-color:rgba(243,237,231,.09)!important}.cart-box{margin-top:14px;padding:14px;border:1px solid rgba(243,237,231,.10);border-radius:20px;background:rgba(255,255,255,.04);box-shadow:inset 0 1px 0 rgba(255,255,255,.025)}.cart-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.cart-title{font-size:12px;font-weight:800}.cart-count{font-size:9px;color:var(--muted)}.cart-list{display:grid;gap:8px;max-height:260px;overflow:auto}.cart-item{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;padding:10px 11px;border:1px solid rgba(243,237,231,.08);border-radius:14px;background:rgba(0,0,0,.14)}.cart-main{min-width:0}.cart-name{font-size:11px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.cart-sub{font-size:9px;color:var(--muted);margin-top:3px}.cart-total{font-size:11px;font-weight:800;text-align:right;white-space:nowrap}.cart-remove{width:30px;height:30px;border:1px solid rgba(243,237,231,.08);border-radius:9px;background:rgba(100,6,6,.12);color:var(--muted);display:grid;place-items:center}.cart-remove svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}.cart-summary{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.cart-summary span{font-size:10px;color:var(--muted)}.cart-summary b{font-size:16px}.cart-empty{padding:18px;text-align:center;color:var(--muted);font-size:10px;border:1px dashed rgba(243,237,231,.08);border-radius:13px}.cart-add{width:100%;justify-content:center;margin-top:11px}.cart-save{width:100%;justify-content:center;margin-top:10px}.date-card{margin-bottom:11px}.date-card .field{width:100%}.form-item{display:grid;gap:6px}.form-item.full{grid-column:1/-1}.form-label{font-size:10px;color:var(--muted)}.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.secondary{height:42px;padding:0 15px;border-radius:13px;border:1px solid var(--line);background:var(--glass);color:var(--white);font-size:11px;font-weight:700}.toast{position:fixed;z-index:400;left:50%;bottom:86px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#221b18;border:1px solid var(--line);padding:10px 14px;border-radius:12px;color:var(--white);font-size:11px;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 /* setup */.setup{display:none;margin:15px 0;padding:14px 16px;border:1px solid rgba(181,151,133,.28);background:rgba(181,151,133,.07);border-radius:16px;font-size:11px;color:var(--muted)}.setup strong{color:var(--paper)}.loading{position:fixed;inset:0;z-index:500;background:var(--black);display:grid;place-items:center}.loader-box{text-align:center}.loader-line{width:130px;height:2px;background:rgba(255,255,255,.08);overflow:hidden;margin:14px auto 0}.loader-line i{display:block;width:45%;height:100%;background:var(--paper);animation:load 1.1s infinite}@keyframes load{from{transform:translateX(-120%)}to{transform:translateX(300%)}}
 
 .scan-modal{max-width:620px}.scan-body{display:grid;gap:14px}.scan-drop{display:grid;place-items:center;text-align:center;border:1px dashed rgba(243,237,231,.22);border-radius:18px;padding:28px 18px;background:rgba(255,255,255,.025);cursor:pointer}.scan-drop:hover{background:rgba(255,255,255,.05);border-color:rgba(181,151,133,.5)}.scan-icon{width:52px;height:52px;border-radius:16px;background:rgba(181,151,133,.16);display:grid;place-items:center;color:var(--paper);margin-bottom:10px}.scan-icon svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.8}.scan-title{font-size:14px;font-weight:800}.scan-help{font-size:10px;color:var(--muted);margin-top:4px}.scan-previews{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.scan-preview-item{position:relative;min-width:0}.scan-preview-item img{display:block;width:100%;height:190px;object-fit:contain;border-radius:14px;border:1px solid var(--line);background:#0b0908}.scan-preview-badge{position:absolute;left:8px;top:8px;padding:4px 7px;border-radius:8px;background:rgba(17,14,13,.86);border:1px solid var(--line);font-size:9px;font-weight:800;color:var(--paper)}.scan-ai-btn{justify-content:center}.scan-results{border:1px solid var(--line);border-radius:16px;padding:14px;background:rgba(255,255,255,.025);max-height:310px;overflow:auto}.scan-result-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.scan-result-row:last-child{border-bottom:0}.scan-result-name{font-size:12px;font-weight:800}.scan-result-meta{font-size:10px;color:var(--muted);margin-top:3px}.scan-result-total{font-size:13px;font-weight:900;white-space:nowrap}.scan-edit{width:100%;min-width:0;height:36px;border:1px solid var(--line);background:rgba(0,0,0,.18);color:var(--white);border-radius:10px;padding:0 9px;outline:none;font-size:11px}.scan-edit:focus{border-color:rgba(181,151,133,.55)}.scan-edit-name{font-weight:800}.scan-edit-row{display:grid;grid-template-columns:minmax(0,1fr) 82px 100px;gap:8px;align-items:center}.scan-edit-label{font-size:8px;color:var(--muted);margin-bottom:3px}.scan-summary{display:flex;justify-content:space-between;padding-top:12px;margin-top:4px;font-size:11px;font-weight:800}.scan-save{margin-top:12px;width:100%;justify-content:center}
@@ -244,29 +244,143 @@ async function openCrud(type=managementType){
   document.getElementById('modalBody').innerHTML='<div class="empty">กำลังเตรียมข้อมูล…</div>';
   document.getElementById('modalOverlay').classList.add('open');
   try{
+    if(type==='expenses'){
+      await openExpenseCart();
+      return;
+    }
+    if(type==='materials'){
+      await openMaterialCart();
+      return;
+    }
     let html='';
     if(type==='ingredients')html=`<div class="form-grid">
-      <label class="form-item full"><span class="form-label">Name</span><input class="field" id="f_name" type="text"></label>
+      <label class="form-item full"><span class="form-label">Name</span><input class="field glass-input" id="f_name" type="text"></label>
       ${selectField('stock_unit','Stock Unit',unitOptions(),'เลือกหน่วยสต็อก')}
       ${selectField('purchase_unit','Purchase Unit',unitOptions(),'เลือกหน่วยซื้อ')}
       <label class="form-item"><span class="form-label">Conversion Ratio</span><input class="field" id="f_purchase_to_stock_ratio" type="number" min="0" step="0.001" value="1"></label>
       <label class="form-item"><span class="form-label">Minimum Stock</span><input class="field" id="f_min_stock" type="number" min="0" step="0.001" value="5"></label>
     </div>`;
     if(type==='menus')html=await menuForm();
-    if(type==='expenses')html=await expenseForm();
     if(type==='sales')html=await saleForm();
-    if(type==='materials')html=await materialForm();
     if(type==='recipes')html=await recipeForm();
 
     document.getElementById('modalBody').innerHTML=html+`<div class="form-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="primary" onclick="saveCrud('${type}')"><span>Save</span></button></div>`;
 
     if(type==='sales')bindSaleForm();
-    if(type==='materials')bindMaterialForm();
     if(type==='recipes')bindRecipeForm();
   }catch(err){
     document.getElementById('modalBody').innerHTML='<div class="empty">โหลดข้อมูลไม่สำเร็จ: '+esc(err.message)+'</div>';
   }
 }
+
+let materialCart=[], expenseCart=[];
+
+async function openMaterialCart(){
+  const ings=await getIngredients();
+  window.__materialIngredients=ings;
+  materialCart=[];
+  document.getElementById('modalBody').innerHTML=`
+    <div class="glass-form">
+      <div class="form-grid date-card">
+        <label class="form-item full"><span class="form-label">วันที่ซื้อ</span><input class="field glass-input" id="cart_material_date" type="date" value="${iso(today)}"></label>
+      </div>
+      <div class="form-grid">
+        ${selectField('cart_material_ingredient','วัตถุดิบ',ings.map(x=>({value:x.id,label:x.name})),'เลือกวัตถุดิบ')}
+        <label class="form-item"><span class="form-label" id="cartMaterialQtyLabel">จำนวนที่ซื้อ</span><div class="quantity-stepper"><button type="button" onclick="stepCartMaterialQty(-1)">−</button><input class="field glass-input" id="cart_material_qty" type="number" min="0" step="1" value="1"><button type="button" onclick="stepCartMaterialQty(1)">+</button></div></label>
+        <label class="form-item"><span class="form-label" id="cartMaterialPriceLabel">ราคา / หน่วย</span><input class="field glass-input" id="cart_material_price" type="number" min="0" step="0.01" value="0"></label>
+        <label class="form-item"><span class="form-label">ราคารวม</span><input class="field glass-input" id="cart_material_total" type="number" readonly value="0.00"></label>
+      </div>
+      <button class="primary cart-add" onclick="addMaterialToCart()">${ICONS.plus}<span>เพิ่มลงตะกร้า</span></button>
+    </div>
+    <div id="materialCartBox" class="cart-box"></div>
+  `;
+  bindMaterialCartInputs();
+  renderMaterialCart();
+}
+
+function bindMaterialCartInputs(){
+  const sel=document.getElementById('cart_material_ingredient'),qty=document.getElementById('cart_material_qty'),price=document.getElementById('cart_material_price');
+  const update=()=>{
+    const ing=(window.__materialIngredients||[]).find(x=>x.id===sel.value);
+    const unit=ing?.purchase_unit||'';
+    const q=Number(qty.value||0),p=Number(price.value||0);
+    document.getElementById('cartMaterialQtyLabel').textContent=unit?`จำนวนที่ซื้อ (${unit})`:'จำนวนที่ซื้อ';
+    document.getElementById('cartMaterialPriceLabel').textContent=unit?`ราคา / ${unit}`:'ราคา / หน่วย';
+    document.getElementById('cart_material_total').value=(q*p).toFixed(2);
+  };
+  sel.onchange=update;qty.oninput=update;price.oninput=update;update();
+}
+function stepCartMaterialQty(delta){const el=document.getElementById('cart_material_qty');if(!el)return;const step=Number(el.step)||1;el.value=Math.max(0,Number(el.value||0)+delta*step);el.dispatchEvent(new Event('input',{bubbles:true}))}
+function addMaterialToCart(){
+  const sel=document.getElementById('cart_material_ingredient'),qty=document.getElementById('cart_material_qty'),price=document.getElementById('cart_material_price');
+  const ing=(window.__materialIngredients||[]).find(x=>x.id===sel.value);const q=Number(qty.value||0),p=Number(price.value||0);
+  if(!ing||q<=0) return toast('กรุณาเลือกวัตถุดิบและจำนวน');
+  materialCart.push({ingredient_id:ing.id,ingredient_name:ing.name,purchase_unit:ing.purchase_unit||'',stock_unit:ing.stock_unit||'',conversion_ratio:Number(ing.purchase_to_stock_ratio||1),quantity_purchased:q,unit_price:p,total_amount:Number((q*p).toFixed(2))});
+  qty.value=1;price.value=0;sel.value='';bindMaterialCartInputs();renderMaterialCart();
+}
+function removeMaterialCart(i){materialCart.splice(i,1);renderMaterialCart()}
+function renderMaterialCart(){
+  const box=document.getElementById('materialCartBox');if(!box)return;
+  const total=materialCart.reduce((a,x)=>a+x.total_amount,0);
+  box.innerHTML=`<div class="cart-head"><div><div class="cart-title">รายการในตะกร้า</div><div class="cart-count">${materialCart.length} รายการ</div></div></div>${materialCart.length?`<div class="cart-list">${materialCart.map((x,i)=>`<div class="cart-item"><div class="cart-main"><div class="cart-name">${esc(x.ingredient_name)}</div><div class="cart-sub">${fmt(x.quantity_purchased)} ${esc(x.purchase_unit)} × ${fmt(x.unit_price)}</div></div><div class="cart-total">${fmt(x.total_amount)} THB</div><button class="cart-remove" title="ลบ" aria-label="ลบ" onclick="removeMaterialCart(${i})">${ICONS.trash}</button></div>`).join('')}</div>`:'<div class="cart-empty">ยังไม่มีรายการในตะกร้า</div>'}<div class="cart-summary"><span>รวมทั้งหมด</span><b>${fmt(total)} THB</b></div><button class="primary cart-save" ${materialCart.length?'':'disabled'} onclick="saveMaterialCart()">${ICONS.plus}<span>เพิ่มรายการทั้งหมด</span></button>`;
+}
+async function saveMaterialCart(){
+  if(!db||!materialCart.length)return toast('ยังไม่มีรายการในตะกร้า');
+  const date=document.getElementById('cart_material_date').value||iso(today);
+  const rows=materialCart.map(x=>({transaction_date:date,ingredient_id:x.ingredient_id,purchase_unit:x.purchase_unit,quantity_purchased:x.quantity_purchased,unit_price:x.unit_price,total_amount:x.total_amount,conversion_ratio:x.conversion_ratio,stock_unit:x.stock_unit,stock_quantity:Number((x.quantity_purchased*x.conversion_ratio).toFixed(4))}));
+  const googleRows=materialCart.map(x=>[date,x.ingredient_name,null,x.quantity_purchased,x.unit_price]);
+  setLoading(true,'กำลังบันทึกรายการซื้อทั้งหมด...');
+  try{
+    const {error}=await db.from('materials').insert(rows);if(error)throw error;
+    try{await saveToGoogleSheet('ซื้อวัตถุดิบ',googleRows)}catch(sheetError){console.error(sheetError);closeModal();toast('บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: '+sheetError.message);await loadManagement();await loadDashboard();return}
+    const total=rows.reduce((a,x)=>a+x.total_amount,0);const count=rows.length;materialCart=[];closeModal();toast(`บันทึกซื้อวัตถุดิบ ${count} รายการ · ${fmt(total)} THB แล้ว`);await loadManagement();await loadDashboard();
+  }catch(err){toast('บันทึกไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
+}
+
+async function openExpenseCart(){
+  const groups=await expenseGroups();
+  expenseCart=[];
+  document.getElementById('modalBody').innerHTML=`
+    <div class="glass-form">
+      <div class="form-grid date-card">
+        <label class="form-item full"><span class="form-label">วันที่</span><input class="field glass-input" id="cart_expense_date" type="date" value="${iso(today)}"></label>
+      </div>
+      <div class="form-grid">
+        <label class="form-item full"><span class="form-label">รายการ</span><input class="field glass-input" id="cart_expense_item" type="text" placeholder="เช่น ค่าน้ำแข็ง"></label>
+        ${selectField('cart_expense_group','กลุ่มค่าใช้จ่าย',groups.map(x=>({value:x,label:x})),'เลือกกลุ่ม')}
+        <label class="form-item"><span class="form-label">ราคา (THB)</span><input class="field glass-input" id="cart_expense_amount" type="number" min="0" step="0.01" value="0"></label>
+      </div>
+      <button class="primary cart-add" onclick="addExpenseToCart()">${ICONS.plus}<span>เพิ่มลงตะกร้า</span></button>
+    </div>
+    <div id="expenseCartBox" class="cart-box"></div>
+  `;
+  renderExpenseCart();
+}
+function addExpenseToCart(){
+  const item=document.getElementById('cart_expense_item').value.trim(),group=document.getElementById('f_cart_expense_group').value,amount=Number(document.getElementById('cart_expense_amount').value||0);
+  if(!item||amount<=0)return toast('กรุณากรอกรายการและราคา');
+  expenseCart.push({item_name:item,expense_group:group||'',amount:Number(amount.toFixed(2))});
+  document.getElementById('cart_expense_item').value='';document.getElementById('cart_expense_amount').value=0;document.getElementById('f_cart_expense_group').value='';renderExpenseCart();
+}
+function removeExpenseCart(i){expenseCart.splice(i,1);renderExpenseCart()}
+function renderExpenseCart(){
+  const box=document.getElementById('expenseCartBox');if(!box)return;
+  const total=expenseCart.reduce((a,x)=>a+x.amount,0);
+  box.innerHTML=`<div class="cart-head"><div><div class="cart-title">รายการในตะกร้า</div><div class="cart-count">${expenseCart.length} รายการ</div></div></div>${expenseCart.length?`<div class="cart-list">${expenseCart.map((x,i)=>`<div class="cart-item"><div class="cart-main"><div class="cart-name">${esc(x.item_name)}</div><div class="cart-sub">${esc(x.expense_group||'ไม่ระบุกลุ่ม')}</div></div><div class="cart-total">−${fmt(x.amount)} THB</div><button class="cart-remove" title="ลบ" aria-label="ลบ" onclick="removeExpenseCart(${i})">${ICONS.trash}</button></div>`).join('')}</div>`:'<div class="cart-empty">ยังไม่มีรายการในตะกร้า</div>'}<div class="cart-summary"><span>รวมทั้งหมด</span><b>${fmt(total)} THB</b></div><button class="primary cart-save" ${expenseCart.length?'':'disabled'} onclick="saveExpenseCart()">${ICONS.plus}<span>เพิ่มค่าใช้จ่ายทั้งหมด</span></button>`;
+}
+async function saveExpenseCart(){
+  if(!db||!expenseCart.length)return toast('ยังไม่มีรายการในตะกร้า');
+  const date=document.getElementById('cart_expense_date').value||iso(today);
+  const rows=expenseCart.map(x=>({transaction_date:date,item_name:x.item_name,amount:x.amount,expense_group:x.expense_group||null}));
+  const googleRows=rows.map(x=>[x.transaction_date,x.item_name,x.amount,x.expense_group||'']);
+  setLoading(true,'กำลังบันทึกค่าใช้จ่ายทั้งหมด...');
+  try{
+    const {error}=await db.from('expenses').insert(rows);if(error)throw error;
+    try{await saveToGoogleSheet('ค่าใช้จ่าย',googleRows)}catch(sheetError){console.error(sheetError);closeModal();toast('บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: '+sheetError.message);await loadManagement();await loadDashboard();return}
+    const total=rows.reduce((a,x)=>a+x.amount,0);const count=rows.length;expenseCart=[];closeModal();toast(`บันทึกค่าใช้จ่าย ${count} รายการ · ${fmt(total)} THB แล้ว`);await loadManagement();await loadDashboard();
+  }catch(err){toast('บันทึกไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
+}
+
 function form(fields){return '<div class="form-grid">'+fields.map(f=>`<label class="form-item"><span class="form-label">${f[1]}</span><input class="field" id="f_${f[0]}" type="${f[2]}" ${f[0]==='transaction_date'?`value="${iso(today)}"`:''}></label>`).join('')+'</div>'}
 async function getIngredients(){const r=await db.from('ingredients').select('id,name,stock_unit,purchase_unit,purchase_to_stock_ratio,min_stock,is_active').eq('is_active',true).order('name');if(r.error)throw r.error;return r.data||[]}
 async function getMenus(){const r=await db.from('menus').select('id,name,sale_price,avg_ingredient_cost,is_active').eq('is_active',true).order('name');if(r.error)throw r.error;return r.data||[]}
