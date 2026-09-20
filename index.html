@@ -87,6 +87,8 @@ const fmt0=n=>Number(n||0).toLocaleString('th-TH',{maximumFractionDigits:0});
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let period='daily', chart=null, managementType=null, cache={}, currentRows=[];
 let chartRange='7d'; let dashboardSales=[], dashboardMaterials=[], dashboardExpenses=[];
+const dashboardYearCache={};
+let dashboardMetaCounts=null;
 const today=new Date(); const iso=d=>{const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
 
 function setLoading(show,message=''){
@@ -154,23 +156,109 @@ function setupPeriods(){
 function buildMonth(){const m=['มกราคม','กุมภาพันธ์','มีนาคม','เมษายน','พฤษภาคม','มิถุนายน','กรกฎาคม','สิงหาคม','กันยายน','ตุลาคม','พฤศจิกายน','ธันวาคม'];document.getElementById('monthSelect').innerHTML=m.map((x,i)=>`<option value="${String(i+1).padStart(2,'0')}">${x}</option>`).join('');document.getElementById('monthSelect').value=String(today.getMonth()+1).padStart(2,'0')}
 function buildYears(){const y=today.getFullYear();document.getElementById('yearSelect').innerHTML=Array.from({length:5},(_,i)=>`<option>${y-i}</option>`).join('');}
 function range(){if(period==='daily'){const d=document.getElementById('dateDaily').value||iso(today);return [d,d]}if(period==='monthly'){const y=document.getElementById('yearSelect').value||today.getFullYear(),m=document.getElementById('monthSelect').value||String(today.getMonth()+1).padStart(2,'0');const last=new Date(Number(y),Number(m),0).getDate();return [`${y}-${m}-01`,`${y}-${m}-${String(last).padStart(2,'0')}`]}const y=document.getElementById('yearSelect').value||today.getFullYear();return [`${y}-01-01`,`${y}-12-31`]}
-async function q(table,start,end){let select='*';if(table==='materials')select='*,ingredients(name)';let query=db.from(table).select(select).gte('transaction_date',start).lte('transaction_date',end);const {data,error}=await query; if(error)throw error;return data||[]}
+async function q(table,start,end){
+  let select='*';
+  if(table==='materials')select='*,ingredients(name)';
+  const pageSize=1000;
+  let all=[];
+  let from=0;
+  while(true){
+    const {data,error}=await db.from(table)
+      .select(select)
+      .gte('transaction_date',start)
+      .lte('transaction_date',end)
+      .order('transaction_date',{ascending:true})
+      .range(from,from+pageSize-1);
+    if(error)throw error;
+    const rows=data||[];
+    all=all.concat(rows);
+    if(rows.length<pageSize)break;
+    from+=pageSize;
+  }
+  return all;
+}
+
+function yearRange(year){return [`${year}-01-01`,`${year}-12-31`]}
+
+async function loadDashboardYear(year){
+  const key=String(year);
+  if(dashboardYearCache[key])return dashboardYearCache[key];
+
+  setLoading(true,`กำลังโหลดข้อมูลปี ${year}...`);
+  const [s,m,e]=await Promise.all([
+    q('sales',...yearRange(year)),
+    q('materials',...yearRange(year)),
+    q('expenses',...yearRange(year))
+  ]);
+
+  const data={
+    sales:s||[],
+    materials:(m||[]).map(x=>({...x,ingredient_name:x.ingredients?.name||x.ingredient_name||x.ingredient_id})),
+    expenses:e||[]
+  };
+  dashboardYearCache[key]=data;
+  return data;
+}
+
+async function loadDashboardYearsForWindow(start,end){
+  const years=[];
+  for(let y=Number(String(start).slice(0,4));y<=Number(String(end).slice(0,4));y++)years.push(y);
+  const datasets=await Promise.all(years.map(loadDashboardYear));
+  return {
+    sales:datasets.flatMap(x=>x.sales),
+    materials:datasets.flatMap(x=>x.materials),
+    expenses:datasets.flatMap(x=>x.expenses)
+  };
+}
+
+function filterRows(rows,start,end){
+  return (rows||[]).filter(x=>x.transaction_date>=start&&x.transaction_date<=end);
+}
+
 async function loadDashboard(){
   if(!sbReady)return;
   try{
-    const [s,m,e]=await Promise.all([q('sales',...range()),q('materials',...range()),q('expenses',...range())]);
-    dashboardSales=s; dashboardMaterials=(m||[]).map(x=>({...x,ingredient_name:x.ingredients?.name||x.ingredient_name||x.ingredient_id})); dashboardExpenses=e;
-    const ingredients=db.from('ingredients').select('id',{count:'exact',head:true});
-    const menus=db.from('menus').select('id',{count:'exact',head:true});
-    const recipes=db.from('recipes').select('id',{count:'exact',head:true});
-    const counts=await Promise.all([ingredients,menus,recipes]);
-    const revenue=s.reduce((a,x)=>a+Number(x.total_amount||0),0),cups=s.reduce((a,x)=>a+Number(x.quantity||0),0),mc=m.reduce((a,x)=>a+Number(x.total_amount||0),0),ec=e.reduce((a,x)=>a+Number(x.amount||0),0);
-    renderKpi({revenue,cups,mc,ec,rows:s.length,ingredients:counts[0].count||0,menus:counts[1].count||0,recipes:counts[2].count||0});
-    renderTop(s);
+    const [start,end]=range();
+    const selectedYear=Number(String(start).slice(0,4));
+    const yearData=await loadDashboardYear(selectedYear);
+
+    dashboardSales=filterRows(yearData.sales,start,end);
+    dashboardMaterials=filterRows(yearData.materials,start,end);
+    dashboardExpenses=filterRows(yearData.expenses,start,end);
+
+    if(!dashboardMetaCounts){
+      const ingredients=db.from('ingredients').select('id',{count:'exact',head:true});
+      const menus=db.from('menus').select('id',{count:'exact',head:true});
+      const recipes=db.from('recipes').select('id',{count:'exact',head:true});
+      const counts=await Promise.all([ingredients,menus,recipes]);
+      dashboardMetaCounts={
+        ingredients:counts[0].count||0,
+        menus:counts[1].count||0,
+        recipes:counts[2].count||0
+      };
+    }
+
+    const revenue=dashboardSales.reduce((a,x)=>a+Number(x.total_amount||0),0);
+    const cups=dashboardSales.reduce((a,x)=>a+Number(x.quantity||0),0);
+    const mc=dashboardMaterials.reduce((a,x)=>a+Number(x.total_amount||0),0);
+    const ec=dashboardExpenses.reduce((a,x)=>a+Number(x.amount||0),0);
+
+    renderKpi({
+      revenue,cups,mc,ec,rows:dashboardSales.length,
+      ingredients:dashboardMetaCounts.ingredients,
+      menus:dashboardMetaCounts.menus,
+      recipes:dashboardMetaCounts.recipes
+    });
+    renderTop(dashboardSales);
     await loadTrendChart();
-  }catch(err){toast('โหลดข้อมูลไม่สำเร็จ: '+err.message)}
+  }catch(err){
+    toast('โหลดข้อมูลไม่สำเร็จ: '+err.message);
+  }finally{
+    setLoading(false);
+  }
 }
 function renderKpi(x){const net=x.revenue-x.mc-x.ec;const totalCost=x.mc+x.ec;document.getElementById('revenue').innerHTML=`${fmt(net)} <span>THB</span>`;document.getElementById('profit').innerHTML=`${fmt(totalCost)} <small>THB</small>`;document.getElementById('cups').innerHTML=`${fmt0(x.cups)} <small>cups</small>`;document.getElementById('materialsCost').innerHTML=`${fmt(x.mc)} <small>THB</small>`;document.getElementById('expensesCost').innerHTML=`${fmt(x.ec)} <small>THB</small>`;document.getElementById('salesRows').textContent=`${fmt0(x.rows)} sales records`;document.getElementById('countIngredients').textContent=fmt0(x.ingredients);document.getElementById('countMenus').textContent=fmt0(x.menus);document.getElementById('countRecipes').textContent=fmt0(x.recipes);const [a]=range();document.getElementById('periodLabel').textContent=period==='daily'?a:period==='monthly'?a.slice(0,7):a.slice(0,4)}
+
 function aggregateMenus(s){const map={};s.forEach(x=>{const n=x.menu_name||'Unknown';map[n]??={name:n,qty:0,total:0,records:0};map[n].qty+=Number(x.quantity||0);map[n].total+=Number(x.total_amount||0);map[n].records++});return Object.values(map).sort((a,b)=>b.total-a.total)}
 function renderTop(s){const arr=aggregateMenus(s).slice(0,10);document.getElementById('topList').innerHTML=arr.length?arr.map((x,i)=>`<div class="top-row"><div class="rank">${i+1}</div><div class="top-name">${esc(x.name)}</div><div><div class="top-amount">${fmt(x.total)} THB</div><div class="top-qty">${fmt0(x.qty)} cups</div></div></div>`).join(''):'<div class="empty">No data</div>'}
 function chartWindow(){let baseEnd;if(period==='daily'){baseEnd=document.getElementById('dateDaily').value||iso(today)}else if(period==='monthly'){const y=Number(document.getElementById('yearSelect').value||today.getFullYear());const mo=Number(document.getElementById('monthSelect').value||String(today.getMonth()+1));baseEnd=iso(new Date(y,mo,0))}else{const y=Number(document.getElementById('yearSelect').value||today.getFullYear());baseEnd=iso(new Date(y,11,31))}const d=new Date(baseEnd+'T12:00:00');let startDate=new Date(d),endDate=new Date(d);if(chartRange==='7d'){startDate.setDate(startDate.getDate()-6)}else if(chartRange==='1m'){startDate.setDate(startDate.getDate()-29)}else{startDate=new Date(d.getFullYear(),d.getMonth()-11,1);endDate=new Date(d.getFullYear(),d.getMonth()+1,0)}return [iso(startDate),iso(endDate)]}
@@ -178,11 +266,8 @@ async function loadTrendChart(){
   if(!sbReady)return;
   try{
     const [start,end]=chartWindow();
-    let [s,m,e]=[dashboardSales,dashboardMaterials,dashboardExpenses];
-    if(!s.length||!s.some(x=>x.transaction_date>=start&&x.transaction_date<=end)||!m.some(x=>x.transaction_date>=start&&x.transaction_date<=end)||!e.some(x=>x.transaction_date>=start&&x.transaction_date<=end)){
-      [s,m,e]=await Promise.all([q('sales',start,end),q('materials',start,end),q('expenses',start,end)]);
-    }
-    renderChart(s,m,e,start,end);
+    const data=await loadDashboardYearsForWindow(start,end);
+    renderChart(data.sales,data.materials,data.expenses,start,end);
   }catch(err){toast('โหลดกราฟไม่สำเร็จ: '+err.message)}
 }
 function renderChart(s,m,e,start,end){let labels=[],vals=[];if(chartRange==='7d'){for(let i=0;i<7;i++){const d=new Date(end+'T12:00:00');d.setDate(d.getDate()-6+i);const ds=iso(d);labels.push(ds.slice(5));vals.push(netFor(ds,ds,s,m,e))}document.getElementById('chartSub').textContent='ย้อนหลัง 7 วัน'}else if(chartRange==='1m'){for(let i=0;i<30;i++){const d=new Date(end+'T12:00:00');d.setDate(d.getDate()-29+i);const ds=iso(d);labels.push(ds.slice(5));vals.push(netFor(ds,ds,s,m,e))}document.getElementById('chartSub').textContent='ย้อนหลัง 1 เดือน'}else{const first=new Date(start+'T12:00:00');for(let i=0;i<12;i++){const d=new Date(first.getFullYear(),first.getMonth()+i,1);const y=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0');const last=new Date(y,d.getMonth()+1,0).getDate();labels.push(`${mo}/${String(y).slice(2)}`);vals.push(netFor(`${y}-${mo}-01`,`${y}-${mo}-${String(last).padStart(2,'0')}`,s,m,e))}document.getElementById('chartSub').textContent='ย้อนหลัง 1 ปี'}if(chart)chart.destroy();chart=new Chart(document.getElementById('trendChart'),{type:'line',data:{labels,datasets:[{data:vals,borderColor:'#B59785',backgroundColor:'rgba(181,151,133,.09)',borderWidth:2,fill:true,tension:.38,pointRadius:2,pointHoverRadius:5,pointBackgroundColor:'#F3EDE7'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{color:'#8e8179',font:{size:9},maxTicksLimit:10}},y:{grid:{color:'rgba(243,237,231,.07)'},ticks:{color:'#8e8179',font:{size:9},callback:v=>Number(v).toLocaleString()}}}}})}
@@ -315,6 +400,11 @@ function renderMaterialCart(){
   const total=materialCart.reduce((a,x)=>a+x.total_amount,0);
   box.innerHTML=`<div class="cart-head"><div><div class="cart-title">รายการในตะกร้า</div><div class="cart-count">${materialCart.length} รายการ</div></div></div>${materialCart.length?`<div class="cart-list">${materialCart.map((x,i)=>`<div class="cart-item"><div class="cart-main"><div class="cart-name">${esc(x.ingredient_name)}</div><div class="cart-sub">${fmt(x.quantity_purchased)} ${esc(x.purchase_unit)} × ${fmt(x.unit_price)}</div></div><div class="cart-total">${fmt(x.total_amount)} THB</div><button class="cart-remove" title="ลบ" aria-label="ลบ" onclick="removeMaterialCart(${i})">${ICONS.trash}</button></div>`).join('')}</div>`:'<div class="cart-empty">ยังไม่มีรายการในตะกร้า</div>'}<div class="cart-summary"><span>รวมทั้งหมด</span><b>${fmt(total)} THB</b></div><button class="primary cart-save" ${materialCart.length?'':'disabled'} onclick="saveMaterialCart()">${ICONS.plus}<span>เพิ่มรายการทั้งหมด</span></button>`;
 }
+function invalidateDashboardYear(dateValue){
+  const y=String(dateValue||'').slice(0,4);
+  if(y)delete dashboardYearCache[y];
+}
+
 async function saveMaterialCart(){
   if(!db||!materialCart.length)return toast('ยังไม่มีรายการในตะกร้า');
   const date=document.getElementById('cart_material_date').value||iso(today);
@@ -324,7 +414,7 @@ async function saveMaterialCart(){
   try{
     const {error}=await db.from('materials').insert(rows);if(error)throw error;
     try{await saveToGoogleSheet('ซื้อวัตถุดิบ',googleRows)}catch(sheetError){console.error(sheetError);closeModal();toast('บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: '+sheetError.message);await loadManagement();await loadDashboard();return}
-    const total=rows.reduce((a,x)=>a+x.total_amount,0);const count=rows.length;materialCart=[];closeModal();toast(`บันทึกซื้อวัตถุดิบ ${count} รายการ · ${fmt(total)} THB แล้ว`);await loadManagement();await loadDashboard();
+    const total=rows.reduce((a,x)=>a+x.total_amount,0);const count=rows.length;invalidateDashboardYear(date);materialCart=[];closeModal();toast(`บันทึกซื้อวัตถุดิบ ${count} รายการ · ${fmt(total)} THB แล้ว`);await loadManagement();await loadDashboard();
   }catch(err){toast('บันทึกไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
 }
 
@@ -368,7 +458,7 @@ async function saveExpenseCart(){
   try{
     const {error}=await db.from('expenses').insert(rows);if(error)throw error;
     try{await saveToGoogleSheet('ค่าใช้จ่าย',googleRows)}catch(sheetError){console.error(sheetError);closeModal();toast('บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: '+sheetError.message);await loadManagement();await loadDashboard();return}
-    const total=rows.reduce((a,x)=>a+x.amount,0);const count=rows.length;expenseCart=[];closeModal();toast(`บันทึกค่าใช้จ่าย ${count} รายการ · ${fmt(total)} THB แล้ว`);await loadManagement();await loadDashboard();
+    const total=rows.reduce((a,x)=>a+x.amount,0);const count=rows.length;invalidateDashboardYear(date);expenseCart=[];closeModal();toast(`บันทึกค่าใช้จ่าย ${count} รายการ · ${fmt(total)} THB แล้ว`);await loadManagement();await loadDashboard();
   }catch(err){toast('บันทึกไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
 }
 
@@ -750,6 +840,7 @@ async function saveScannedSales(){
     // Save to Supabase first.
     const {error}=await db.from('sales').insert(rows);
     if(error)throw error;
+    invalidateDashboardYear(date);
 
     // Google Sheet: รายการขาย A-C only. D+ stay formula-driven.
     try{
