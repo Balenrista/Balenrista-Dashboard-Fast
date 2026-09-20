@@ -21,7 +21,7 @@
 /* modal */.overlay{position:fixed;inset:0;z-index:200;background:rgba(7,5,4,.72);backdrop-filter:blur(10px);display:none;align-items:flex-end;justify-content:center}.overlay.open{display:flex}.modal{width:min(680px,100%);max-height:88vh;overflow:auto;background:#191411;border:1px solid var(--line);border-radius:28px 28px 0 0;padding:22px;box-shadow:0 -20px 90px rgba(0,0,0,.55)}.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}.modal-title{font-size:17px;font-weight:800}.close{width:36px;height:36px;border:1px solid var(--line);background:var(--glass);color:var(--white);border-radius:11px;display:grid;place-items:center}.close svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.form-item{display:grid;gap:6px}.form-item.full{grid-column:1/-1}.form-label{font-size:10px;color:var(--muted)}.form-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:18px}.secondary{height:42px;padding:0 15px;border-radius:13px;border:1px solid var(--line);background:var(--glass);color:var(--white);font-size:11px;font-weight:700}.toast{position:fixed;z-index:400;left:50%;bottom:86px;transform:translateX(-50%) translateY(20px);opacity:0;pointer-events:none;background:#221b18;border:1px solid var(--line);padding:10px 14px;border-radius:12px;color:var(--white);font-size:11px;transition:.25s}.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 /* setup */.setup{display:none;margin:15px 0;padding:14px 16px;border:1px solid rgba(181,151,133,.28);background:rgba(181,151,133,.07);border-radius:16px;font-size:11px;color:var(--muted)}.setup strong{color:var(--paper)}.loading{position:fixed;inset:0;z-index:500;background:var(--black);display:grid;place-items:center}.loader-box{text-align:center}.loader-line{width:130px;height:2px;background:rgba(255,255,255,.08);overflow:hidden;margin:14px auto 0}.loader-line i{display:block;width:45%;height:100%;background:var(--paper);animation:load 1.1s infinite}@keyframes load{from{transform:translateX(-120%)}to{transform:translateX(300%)}}
 
-.scan-modal{max-width:620px}.scan-body{display:grid;gap:14px}.scan-drop{display:grid;place-items:center;text-align:center;border:1px dashed rgba(243,237,231,.22);border-radius:18px;padding:28px 18px;background:rgba(255,255,255,.025);cursor:pointer}.scan-drop:hover{background:rgba(255,255,255,.05);border-color:rgba(181,151,133,.5)}.scan-icon{width:52px;height:52px;border-radius:16px;background:rgba(181,151,133,.16);display:grid;place-items:center;color:var(--paper);margin-bottom:10px}.scan-icon svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.8}.scan-title{font-size:14px;font-weight:800}.scan-help{font-size:10px;color:var(--muted);margin-top:4px}.scan-previews{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.scan-preview-item{position:relative;min-width:0}.scan-preview-item img{display:block;width:100%;height:190px;object-fit:contain;border-radius:14px;border:1px solid var(--line);background:#0b0908}.scan-preview-badge{position:absolute;left:8px;top:8px;padding:4px 7px;border-radius:8px;background:rgba(17,14,13,.86);border:1px solid var(--line);font-size:9px;font-weight:800;color:var(--paper)}.scan-ai-btn{justify-content:center}.scan-results{border:1px solid var(--line);border-radius:16px;padding:14px;background:rgba(255,255,255,.025);max-height:310px;overflow:auto}.scan-result-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.scan-result-row:last-child{border-bottom:0}.scan-result-name{font-size:12px;font-weight:800}.scan-result-meta{font-size:10px;color:var(--muted);margin-top:3px}.scan-result-total{font-size:13px;font-weight:900;white-space:nowrap}.scan-summary{display:flex;justify-content:space-between;padding-top:12px;margin-top:4px;font-size:11px;font-weight:800}.scan-save{margin-top:12px;width:100%;justify-content:center}
+.scan-modal{max-width:620px}.scan-body{display:grid;gap:14px}.scan-drop{display:grid;place-items:center;text-align:center;border:1px dashed rgba(243,237,231,.22);border-radius:18px;padding:28px 18px;background:rgba(255,255,255,.025);cursor:pointer}.scan-drop:hover{background:rgba(255,255,255,.05);border-color:rgba(181,151,133,.5)}.scan-icon{width:52px;height:52px;border-radius:16px;background:rgba(181,151,133,.16);display:grid;place-items:center;color:var(--paper);margin-bottom:10px}.scan-icon svg{width:25px;height:25px;stroke:currentColor;fill:none;stroke-width:1.8}.scan-title{font-size:14px;font-weight:800}.scan-help{font-size:10px;color:var(--muted);margin-top:4px}.scan-previews{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.scan-preview-item{position:relative;min-width:0}.scan-preview-item img{display:block;width:100%;height:190px;object-fit:contain;border-radius:14px;border:1px solid var(--line);background:#0b0908}.scan-preview-badge{position:absolute;left:8px;top:8px;padding:4px 7px;border-radius:8px;background:rgba(17,14,13,.86);border:1px solid var(--line);font-size:9px;font-weight:800;color:var(--paper)}.scan-ai-btn{justify-content:center}.scan-results{border:1px solid var(--line);border-radius:16px;padding:14px;background:rgba(255,255,255,.025);max-height:310px;overflow:auto}.scan-result-row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.scan-result-row:last-child{border-bottom:0}.scan-result-name{font-size:12px;font-weight:800}.scan-result-meta{font-size:10px;color:var(--muted);margin-top:3px}.scan-result-total{font-size:13px;font-weight:900;white-space:nowrap}.scan-edit{width:100%;min-width:0;height:36px;border:1px solid var(--line);background:rgba(0,0,0,.18);color:var(--white);border-radius:10px;padding:0 9px;outline:none;font-size:11px}.scan-edit:focus{border-color:rgba(181,151,133,.55)}.scan-edit-name{font-weight:800}.scan-edit-row{display:grid;grid-template-columns:minmax(0,1fr) 82px 100px;gap:8px;align-items:center}.scan-edit-label{font-size:8px;color:var(--muted);margin-bottom:3px}.scan-summary{display:flex;justify-content:space-between;padding-top:12px;margin-top:4px;font-size:11px;font-weight:800}.scan-save{margin-top:12px;width:100%;justify-content:center}
 @media(max-width:800px){.app{padding:16px 15px 112px}.topbar{padding-bottom:16px}.brand-name{font-size:23px}.menu-btn span{display:none}.menu-btn{width:44px;padding:0;justify-content:center}.nav-row{align-items:flex-start;flex-direction:column}.date-control{width:100%}.date-control .field{flex:1}.hero{grid-template-columns:1fr}.hero-side{grid-template-columns:1fr 1fr}.grid{grid-template-columns:1fr}.hero-card{min-height:215px}.chart-wrap{height:245px}.section-head{align-items:flex-start}.section-title{font-size:21px}.form-grid{grid-template-columns:1fr}.form-item.full{grid-column:auto}.popover{right:12px;top:72px;width:calc(100vw - 24px)}}
 </style>
 </head>
@@ -73,12 +73,72 @@ const SUPABASE_ANON_KEY = 'sb_publishable_AezycpnUmhgvMWJlUsg2qA_SA3JbiR0';
 const sbReady = SUPABASE_URL.startsWith('http') && SUPABASE_ANON_KEY.length > 20;
 const db = sbReady ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
 
+// Google Sheets bridge (Apps Script Web App)
+// Writes are sent through Apps Script so the browser never talks to the Sheet directly.
+const GOOGLE_SHEET_BRIDGE = 'https://script.google.com/macros/s/AKfycbxzbdziXqODq4vx6V81_Rzw90FZfNHcoet82R_U49GxcOGIfrVFC9tK8ezP5cqv8fv5Gw/exec';
+
+// Supabase Edge Function for AI Loyverse Scan
+const LOYVERSE_SCAN_FUNCTION = 'https://iftsmcgvperrhjjfnhqa.supabase.co/functions/v1/loyverse-scan';
+
 const ICONS={plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',search:'<svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m16 16 5 5"/></svg>',refresh:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/></svg>',settings:'<svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19 13 .1-1-.1-1 2-1.4-2-3.4-2.3 1a8 8 0 0 0-1.7-1L14.7 3h-4l-.3 3.2a8 8 0 0 0-1.7 1l-2.3-1-2 3.4 2 1.4-.1 1 .1 1-2 1.4 2 3.4 2.3-1a8 8 0 0 0 1.7 1l.3 3.2h4l.3-3.2a8 8 0 0 0 1.7-1l2.3 1 2-3.4-2-1.4Z"/></svg>',scan:'<svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/></svg>'};
 const fmt=n=>Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmt0=n=>Number(n||0).toLocaleString('th-TH',{maximumFractionDigits:0});
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let period='daily', chart=null, managementType=null, cache={}, currentRows=[];
 const today=new Date(); const iso=d=>{const x=new Date(d);return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`};
+
+function setLoading(show,message=''){
+  const el=document.getElementById('loading');
+  if(!el)return;
+  el.style.display=show?'grid':'none';
+  if(message){
+    const sub=el.querySelector('.loader-box div:nth-child(2)');
+    if(sub)sub.textContent=message;
+  }
+}
+
+async function saveToGoogleSheet(sheetName, rows){
+  if(!GOOGLE_SHEET_BRIDGE) return {success:true,skipped:true};
+  if(!Array.isArray(rows) || !rows.length) return {success:true,skipped:true};
+
+  const response=await fetch(GOOGLE_SHEET_BRIDGE,{
+    method:'POST',
+    // text/plain keeps this as a simple cross-origin POST and avoids a JSON preflight.
+    headers:{'Content-Type':'text/plain;charset=utf-8'},
+    body:JSON.stringify({
+      action:'saveMultipleManual',
+      sheetName,
+      rows
+    })
+  });
+
+  const raw=await response.text();
+  let data=null;
+  try{data=JSON.parse(raw)}catch(_){data=null}
+
+  if(!response.ok){
+    throw new Error(`Google Sheet HTTP ${response.status}`);
+  }
+
+  if(data && data.success===false){
+    throw new Error(data.error || 'Google Sheet บันทึกไม่สำเร็จ');
+  }
+
+  return data || {success:true};
+}
+
+let googleSheetDataCache=null;
+
+async function getGoogleSheetData(){
+  if(googleSheetDataCache)return googleSheetDataCache;
+  const response=await fetch(`${GOOGLE_SHEET_BRIDGE}?year=${new Date().getFullYear()}`);
+  const raw=await response.text();
+  if(!response.ok)throw new Error(`Google Sheet HTTP ${response.status}`);
+  let data;
+  try{data=JSON.parse(raw)}catch(_){throw new Error('Google Sheet ส่งข้อมูลที่อ่านไม่ได้')}
+  googleSheetDataCache=data||{};
+  return googleSheetDataCache;
+}
 
 document.addEventListener('DOMContentLoaded',()=>{document.getElementById('dateDaily').value=iso(today);setupPeriods();setBottom('dashboard');if(!sbReady){document.getElementById('setup').style.display='block';document.getElementById('loading').style.display='none';renderDemo();}else{loadDashboard().finally(()=>document.getElementById('loading').style.display='none')}});
 function setupPeriods(){document.querySelectorAll('.period-tab').forEach(b=>b.onclick=()=>{period=b.dataset.period;document.querySelectorAll('.period-tab').forEach(x=>x.classList.toggle('active',x===b));document.getElementById('dateDaily').classList.toggle('hidden',period!=='daily');document.getElementById('monthSelect').classList.toggle('hidden',period!=='monthly');document.getElementById('yearSelect').classList.toggle('hidden',period==='daily');if(period==='monthly'&&!document.getElementById('monthSelect').options.length)buildMonth();if(period!=='daily'&&!document.getElementById('yearSelect').options.length)buildYears();loadDashboard()});['dateDaily','monthSelect','yearSelect'].forEach(id=>document.getElementById(id).addEventListener('change',loadDashboard));}
@@ -101,24 +161,209 @@ function renderManagement(){const qv=document.getElementById('searchInput').valu
 document.getElementById('searchInput').addEventListener('input',renderManagement);
 function setBottom(type){const a=[document.getElementById('actionOne'),document.getElementById('actionTwo'),document.getElementById('actionThree'),document.getElementById('actionFour')];if(type==='dashboard'){a[0].innerHTML=ICONS.plus;a[0].title='Add Expense';a[0].onclick=()=>openCrud('expenses');a.forEach(x=>x.classList.remove('scan-fab'));a[1].innerHTML=ICONS.scan;a[1].classList.add('scan-fab');a[1].title='Scan Loyverse Sale';a[1].onclick=()=>openScanModal();a[2].innerHTML=ICONS.plus;a[2].title='Buy Materials';a[2].onclick=()=>openCrud('materials');a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadDashboard()}else{a.forEach(x=>x.classList.remove('scan-fab'));a[0].innerHTML=ICONS.plus;a[0].title='Add';a[0].onclick=()=>openCrud(managementType);a[1].innerHTML=ICONS.search;a[1].title='Search';a[1].onclick=()=>document.getElementById('searchInput').focus();a[2].innerHTML=ICONS.plus;a[2].title='Add';a[2].onclick=()=>openCrud(managementType);a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadManagement()}}
 
-async function openCrud(type=managementType){type=type||'expenses';managementType=type;const title=managementMeta[type].add;document.getElementById('modalTitle').textContent=title;document.getElementById('modalBody').innerHTML='<div class="empty">กำลังเตรียมข้อมูล…</div>';document.getElementById('modalOverlay').classList.add('open');try{let html='';if(type==='ingredients')html=form([['name','Name','text'],['stock_unit','Stock Unit','text'],['purchase_unit','Purchase Unit','text'],['purchase_to_stock_ratio','Conversion Ratio','number'],['min_stock','Minimum Stock','number']]);if(type==='menus')html=await menuForm();if(type==='expenses')html=await expenseForm();if(type==='sales')html=await saleForm();if(type==='materials')html=await materialForm();if(type==='recipes')html=await recipeForm();document.getElementById('modalBody').innerHTML=html+'<div class="form-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="primary" onclick="saveCrud(\''+type+'\')"><span>Save</span></button></div>';if(type==='sales')bindSaleForm();if(type==='materials')bindMaterialForm();if(type==='recipes')bindRecipeForm()}catch(err){document.getElementById('modalBody').innerHTML='<div class="empty">โหลดข้อมูลไม่สำเร็จ: '+esc(err.message)+'</div>'}}
+async function openCrud(type=managementType){
+  type=type||'expenses';
+  managementType=type;
+  const title=managementMeta[type].add;
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalBody').innerHTML='<div class="empty">กำลังเตรียมข้อมูล…</div>';
+  document.getElementById('modalOverlay').classList.add('open');
+  try{
+    let html='';
+    if(type==='ingredients')html=form([
+      ['name','Name','text'],
+      ['stock_unit','Stock Unit','text'],
+      ['purchase_unit','Purchase Unit','text'],
+      ['purchase_to_stock_ratio','Conversion Ratio','number'],
+      ['min_stock','Minimum Stock','number']
+    ]);
+    if(type==='menus')html=await menuForm();
+    if(type==='expenses')html=await expenseForm();
+    if(type==='sales')html=await saleForm();
+    if(type==='materials')html=await materialForm();
+    if(type==='recipes')html=await recipeForm();
+
+    document.getElementById('modalBody').innerHTML=html+`<div class="form-actions"><button class="secondary" onclick="closeModal()">Cancel</button><button class="primary" onclick="saveCrud('${type}')"><span>Save</span></button></div>`;
+
+    if(type==='sales')bindSaleForm();
+    if(type==='materials')bindMaterialForm();
+    if(type==='recipes')bindRecipeForm();
+  }catch(err){
+    document.getElementById('modalBody').innerHTML='<div class="empty">โหลดข้อมูลไม่สำเร็จ: '+esc(err.message)+'</div>';
+  }
+}
 function form(fields){return '<div class="form-grid">'+fields.map(f=>`<label class="form-item"><span class="form-label">${f[1]}</span><input class="field" id="f_${f[0]}" type="${f[2]}" ${f[0]==='transaction_date'?`value="${iso(today)}"`:''}></label>`).join('')+'</div>'}
 async function getIngredients(){const r=await db.from('ingredients').select('id,name,stock_unit,purchase_unit,purchase_to_stock_ratio,min_stock,is_active').eq('is_active',true).order('name');if(r.error)throw r.error;return r.data||[]}
 async function getMenus(){const r=await db.from('menus').select('id,name,sale_price,avg_ingredient_cost,is_active').eq('is_active',true).order('name');if(r.error)throw r.error;return r.data||[]}
-async function expenseGroups(){const base=['อื่นๆ','ค่าเช่าที่'];if(!db)return base;const r=await db.from('expenses').select('expense_group').not('expense_group','is',null).limit(2000);if(r.error)throw r.error;return Array.from(new Set(base.concat((r.data||[]).map(x=>String(x.expense_group||'').trim()).filter(Boolean))));}
+async function expenseGroups(){
+  const base=['อื่นๆ','ค่าเช่าที่'];
+  try{
+    const data=await getGoogleSheetData();
+    const options=Array.isArray(data?.expenseOptions)?data.expenseOptions:[];
+    if(options.length)return Array.from(new Set(base.concat(options.map(x=>String(x||'').trim()).filter(Boolean))));
+  }catch(err){
+    console.warn('Google Sheet expense options unavailable:',err);
+  }
+  if(!db)return base;
+  const r=await db.from('expenses').select('expense_group').not('expense_group','is',null).limit(2000);
+  if(r.error)throw r.error;
+  return Array.from(new Set(base.concat((r.data||[]).map(x=>String(x.expense_group||'').trim()).filter(Boolean))));
+}
 function selectField(id,label,options,placeholder='เลือก…',extra=''){return `<label class="form-item"><span class="form-label">${label}</span><select class="field" id="f_${id}" ${extra}><option value="">${placeholder}</option>${options.map(o=>`<option value="${esc(o.value)}">${esc(o.label)}</option>`).join('')}</select></label>`}
 async function menuForm(){return `<div class="form-grid"><label class="form-item full"><span class="form-label">Menu Name</span><input class="field" id="f_name" type="text" placeholder="เช่น Matcha Latte"></label><label class="form-item full"><span class="form-label">Sale Price (THB)</span><input class="field" id="f_sale_price" type="number" min="0" step="0.01" placeholder="0"></label></div>`}
 async function expenseForm(){const groups=await expenseGroups();return `<div class="form-grid"><label class="form-item"><span class="form-label">Date</span><input class="field" id="f_transaction_date" type="date" value="${iso(today)}"></label>${selectField('expense_group','Group',groups.map(x=>({value:x,label:x})),'เลือกกลุ่ม')}</div><div class="form-grid"><label class="form-item full"><span class="form-label">Item</span><input class="field" id="f_item_name" type="text" placeholder="เช่น ค่าน้ำแข็ง"></label><label class="form-item full"><span class="form-label">Amount (THB)</span><input class="field" id="f_amount" type="number" min="0" step="0.01" placeholder="0"></label></div>`}
 async function saleForm(){const menus=await getMenus();window.__saleMenus=menus;return `<div class="form-grid"><label class="form-item full"><span class="form-label">Date</span><input class="field" id="f_transaction_date" type="date" value="${iso(today)}"></label>${selectField('menu_id','Menu',menus.map(x=>({value:x.id,label:x.name})),'เลือกเมนู')}</div><div class="form-grid"><label class="form-item"><span class="form-label">Sale Price / cup</span><input class="field" id="f_sale_price" type="number" readonly></label><label class="form-item"><span class="form-label">Average Ingredient Cost / cup</span><input class="field" id="f_avg_cost" type="number" readonly></label><label class="form-item"><span class="form-label">Quantity</span><input class="field" id="f_quantity" type="number" min="1" step="1" value="1"></label><label class="form-item"><span class="form-label">Total Amount</span><input class="field" id="f_total_amount" type="number" readonly></label><label class="form-item full"><span class="form-label">Estimated Gross Profit</span><input class="field" id="f_est_profit" type="text" readonly></label></div>`}
 function bindSaleForm(){const sel=document.getElementById('f_menu_id'),qty=document.getElementById('f_quantity');const update=()=>{const m=(window.__saleMenus||[]).find(x=>x.id===sel.value);const q=Number(qty.value||0),p=Number(m?.sale_price||0),c=Number(m?.avg_ingredient_cost||0);document.getElementById('f_sale_price').value=p||'';document.getElementById('f_avg_cost').value=c||'';document.getElementById('f_total_amount').value=(p*q).toFixed(2);document.getElementById('f_est_profit').value=((p-c)*q).toFixed(2)+' THB'};sel.onchange=update;qty.oninput=update;update()}
-async function recipeForm(){const [menus,ings]=await Promise.all([getMenus(),getIngredients()]);window.__recipeMenus=menus;window.__recipeIngredients=ings;return `<div class="form-grid"><label class="form-item full"><span class="form-label">Menu</span>${selectField('menu_id','',menus.map(x=>({value:x.id,label:x.name})),'เลือกเมนู')}</label><label class="form-item full"><span class="form-label">Ingredient</span>${selectField('ingredient_id','',ings.map(x=>({value:x.id,label:x.name})),'เลือกวัตถุดิบ')}</label><label class="form-item"><span class="form-label">Quantity</span><input class="field" id="f_quantity" type="number" min="0" step="0.0001" placeholder="0"></label><label class="form-item"><span class="form-label">Unit</span><input class="field" id="f_unit" type="text" readonly></label></div>`}
-function bindRecipeForm(){const ingSel=document.getElementById('f_ingredient_id'),unit=document.getElementById('f_unit');const update=()=>{const ing=(window.__recipeIngredients||[]).find(x=>x.id===ingSel.value);unit.value=ing?.stock_unit||''};ingSel.onchange=update;update()}
 async function materialForm(){const ings=await getIngredients();window.__materialIngredients=ings;return `<div class="form-grid"><label class="form-item"><span class="form-label">Date</span><input class="field" id="f_transaction_date" type="date" value="${iso(today)}"></label>${selectField('ingredient_id','Ingredient',ings.map(x=>({value:x.id,label:x.name})),'เลือกวัตถุดิบ')}</div><div class="form-grid"><label class="form-item"><span class="form-label">Purchase Unit</span><input class="field" id="f_purchase_unit" readonly></label><label class="form-item"><span class="form-label">Stock Unit</span><input class="field" id="f_stock_unit" readonly></label><label class="form-item"><span class="form-label">Conversion Ratio</span><input class="field" id="f_conversion_ratio" type="number" readonly></label><label class="form-item"><span class="form-label">Last Unit Price</span><input class="field" id="f_last_price" readonly></label><label class="form-item"><span class="form-label">Quantity Purchased</span><input class="field" id="f_quantity_purchased" type="number" min="0" step="0.001" value="1"></label><label class="form-item"><span class="form-label">Unit Price</span><input class="field" id="f_unit_price" type="number" min="0" step="0.01" value="0"></label><label class="form-item"><span class="form-label">Total Amount</span><input class="field" id="f_total_amount" type="number" readonly></label><label class="form-item"><span class="form-label">Stock Quantity</span><input class="field" id="f_stock_quantity" type="number" readonly></label><label class="form-item full"><span class="form-label">Price Check</span><input class="field" id="f_price_check" readonly></label></div>`}
 async function bindMaterialForm(){const sel=document.getElementById('f_ingredient_id'),qty=document.getElementById('f_quantity_purchased'),price=document.getElementById('f_unit_price');const update=async()=>{const ing=(window.__materialIngredients||[]).find(x=>x.id===sel.value);document.getElementById('f_purchase_unit').value=ing?.purchase_unit||'';document.getElementById('f_stock_unit').value=ing?.stock_unit||'';document.getElementById('f_conversion_ratio').value=ing?.purchase_to_stock_ratio??'';const q=Number(qty.value||0),p=Number(price.value||0),ratio=Number(ing?.purchase_to_stock_ratio||1);document.getElementById('f_total_amount').value=(q*p).toFixed(2);document.getElementById('f_stock_quantity').value=(q*ratio).toFixed(4);if(!ing){document.getElementById('f_last_price').value='';document.getElementById('f_price_check').value='';return}const r=await db.from('materials').select('unit_price,transaction_date').eq('ingredient_id',ing.id).order('transaction_date',{ascending:false}).limit(1);if(r.error)throw r.error;const last=r.data?.[0]?.unit_price;document.getElementById('f_last_price').value=last==null?'':Number(last).toFixed(2);if(last==null||!p){document.getElementById('f_price_check').value=last==null?'ยังไม่มีราคาซื้อเดิม':'กรอกราคา';}else if(p<Number(last))document.getElementById('f_price_check').value='ถูกกว่าครั้งล่าสุด ↓';else if(p>Number(last))document.getElementById('f_price_check').value='แพงกว่าครั้งล่าสุด ↑';else document.getElementById('f_price_check').value='ราคาเท่าเดิม ='};sel.onchange=update;qty.oninput=update;price.oninput=update;update()}
 
-async function saveCrud(type){if(!db){toast('กรุณาตั้งค่า Supabase ก่อนบันทึก');return}const get=id=>document.getElementById('f_'+id)?.value;let row={};if(type==='ingredients')row={name:get('name'),stock_unit:get('stock_unit'),purchase_unit:get('purchase_unit'),purchase_to_stock_ratio:Number(get('purchase_to_stock_ratio')||1),min_stock:Number(get('min_stock')||5)};if(type==='menus')row={name:get('name'),sale_price:Number(get('sale_price')||0)};if(type==='expenses')row={transaction_date:get('transaction_date'),item_name:get('item_name'),amount:Number(get('amount')||0),expense_group:get('expense_group')||null};if(type==='sales'){const m=(window.__saleMenus||[]).find(x=>x.id===get('menu_id'));const q=Number(get('quantity')||0),p=Number(get('sale_price')||m?.sale_price||0);row={transaction_date:get('transaction_date'),menu_id:m?.id||null,menu_name:m?.name||'',quantity:q,sale_price:p,total_amount:Number((p*q).toFixed(2))}}if(type==='materials'){const ing=(window.__materialIngredients||[]).find(x=>x.id===get('ingredient_id'));const q=Number(get('quantity_purchased')||0),p=Number(get('unit_price')||0),ratio=Number(ing?.purchase_to_stock_ratio||1);row={transaction_date:get('transaction_date'),ingredient_id:ing?.id||null,purchase_unit:ing?.purchase_unit||'',quantity_purchased:q,unit_price:p,total_amount:Number((q*p).toFixed(2)),conversion_ratio:ratio,stock_unit:ing?.stock_unit||'',stock_quantity:Number((q*ratio).toFixed(4))}}if(type==='recipes'){const ing=(window.__recipeIngredients||[]).find(x=>x.id===get('ingredient_id'));row={menu_id:get('menu_id'),ingredient_id:get('ingredient_id'),quantity:Number(get('quantity')||0),unit:get('unit')||ing?.stock_unit||''}}try{if(type==='recipes'&&(!row.menu_id||!row.ingredient_id||!(row.quantity>0)))throw new Error('กรุณาเลือกเมนู เลือกวัตถุดิบ และใส่ปริมาณให้ครบ');if((type==='sales'||type==='materials')&&!row.menu_name&&!row.ingredient_id)throw new Error('กรุณาเลือกข้อมูลก่อน');const {error}=await db.from(type).insert(row);if(error)throw error;closeModal();toast('บันทึกข้อมูลแล้ว');if(type==='expenses'||type==='materials'||type==='sales')await loadDashboard();await loadManagement()}catch(err){toast('บันทึกไม่สำเร็จ: '+err.message)}}
-const LOYVERSE_SCAN_API='https://script.google.com/macros/s/AKfycbxzbdziXqODq4vx6V81_Rzw90FZfNHcoet82R_U49GxcOGIfrVFC9tK8ezP5cqv8fv5Gw/exec';
+async function recipeForm(){
+  const [menus,ings]=await Promise.all([getMenus(),getIngredients()]);
+  window.__recipeMenus=menus;
+  window.__recipeIngredients=ings;
+  return `<div class="form-grid">${selectField('menu_id','Menu',menus.map(x=>({value:x.id,label:x.name})),'เลือกเมนู')}${selectField('ingredient_id','Ingredient',ings.map(x=>({value:x.id,label:x.name})),'เลือกวัตถุดิบ')}</div><div class="form-grid"><label class="form-item"><span class="form-label">Quantity</span><input class="field" id="f_quantity" type="number" min="0" step="0.001" value="0"></label><label class="form-item"><span class="form-label">Unit (auto)</span><input class="field" id="f_unit" type="text" readonly></label></div>`;
+}
+
+function bindRecipeForm(){
+  const sel=document.getElementById('f_ingredient_id');
+  const unit=document.getElementById('f_unit');
+  const update=()=>{
+    const ing=(window.__recipeIngredients||[]).find(x=>x.id===sel.value);
+    unit.value=ing?.stock_unit||'';
+  };
+  sel.onchange=update;
+  update();
+}
+
+async function saveCrud(type){
+  if(!db){toast('กรุณาตั้งค่า Supabase ก่อนบันทึก');return}
+
+  const get=id=>document.getElementById('f_'+id)?.value;
+  let row={};
+  let googleSheet='';
+  let googleRow=[];
+
+  if(type==='ingredients'){
+    row={
+      name:get('name'),
+      stock_unit:get('stock_unit'),
+      purchase_unit:get('purchase_unit'),
+      purchase_to_stock_ratio:Number(get('purchase_to_stock_ratio')||1),
+      min_stock:Number(get('min_stock')||5)
+    };
+    googleSheet='วัตถุดิบ';
+    googleRow=[row.name,row.stock_unit,row.purchase_unit,row.purchase_to_stock_ratio,row.min_stock];
+  }
+
+  if(type==='menus'){
+    row={name:get('name'),sale_price:Number(get('sale_price')||0)};
+    googleSheet='เมนู';
+    googleRow=[row.name,row.sale_price];
+  }
+
+  if(type==='expenses'){
+    row={
+      transaction_date:get('transaction_date'),
+      item_name:get('item_name'),
+      amount:Number(get('amount')||0),
+      expense_group:get('expense_group')||null
+    };
+    googleSheet='ค่าใช้จ่าย';
+    googleRow=[row.transaction_date,row.item_name,row.amount,row.expense_group||''];
+  }
+
+  if(type==='sales'){
+    const m=(window.__saleMenus||[]).find(x=>x.id===get('menu_id'));
+    const q=Number(get('quantity')||0);
+    const p=Number(get('sale_price')||m?.sale_price||0);
+    row={
+      transaction_date:get('transaction_date'),
+      menu_id:m?.id||null,
+      menu_name:m?.name||'',
+      quantity:q,
+      sale_price:p,
+      total_amount:Number((p*q).toFixed(2))
+    };
+    googleSheet='รายการขาย';
+    // A-C only. D+ are formulas in the Sheet.
+    googleRow=[row.transaction_date,row.menu_name,row.quantity];
+  }
+
+  if(type==='materials'){
+    const ing=(window.__materialIngredients||[]).find(x=>x.id===get('ingredient_id'));
+    const q=Number(get('quantity_purchased')||0);
+    const p=Number(get('unit_price')||0);
+    const ratio=Number(ing?.purchase_to_stock_ratio||1);
+    row={
+      transaction_date:get('transaction_date'),
+      ingredient_id:ing?.id||null,
+      purchase_unit:ing?.purchase_unit||'',
+      quantity_purchased:q,
+      unit_price:p,
+      total_amount:Number((q*p).toFixed(2)),
+      conversion_ratio:ratio,
+      stock_unit:ing?.stock_unit||'',
+      stock_quantity:Number((q*ratio).toFixed(4))
+    };
+    googleSheet='ซื้อวัตถุดิบ';
+    // A,B,D,E only. C/F and later columns are formulas.
+    googleRow=[row.transaction_date,ing?.name||'',null,row.quantity_purchased,row.unit_price];
+  }
+
+  if(type==='recipes'){
+    const m=(window.__recipeMenus||[]).find(x=>x.id===get('menu_id'));
+    const ing=(window.__recipeIngredients||[]).find(x=>x.id===get('ingredient_id'));
+    const quantity=Number(get('quantity')||0);
+    const unit=ing?.stock_unit||'';
+    row={
+      menu_id:m?.id||null,
+      ingredient_id:ing?.id||null,
+      quantity,
+      unit
+    };
+    googleSheet='สูตรอาหาร';
+    // A-C only. Unit/formula columns are maintained by the Sheet.
+    googleRow=[m?.name||'',ing?.name||'',quantity];
+  }
+
+  try{
+    if(type==='ingredients' && !row.name)throw new Error('กรุณากรอกชื่อวัตถุดิบ');
+    if(type==='menus' && !row.name)throw new Error('กรุณากรอกชื่อเมนู');
+    if(type==='expenses' && (!row.transaction_date || !row.item_name))throw new Error('กรุณากรอกวันที่และรายการ');
+    if(type==='sales' && (!row.menu_name || row.quantity<=0))throw new Error('กรุณาเลือกเมนูและจำนวน');
+    if(type==='materials' && (!row.ingredient_id || row.quantity_purchased<=0))throw new Error('กรุณาเลือกวัตถุดิบและจำนวน');
+    if(type==='recipes' && (!row.menu_id || !row.ingredient_id || row.quantity<=0))throw new Error('กรุณาเลือกเมนู วัตถุดิบ และจำนวน');
+
+    setLoading(true,'กำลังบันทึกข้อมูล...');
+
+    // Save to Supabase first.
+    const {error}=await db.from(type).insert(row);
+    if(error)throw error;
+
+    // Then mirror the exact write columns to Google Sheet.
+    try{
+      await saveToGoogleSheet(googleSheet,[googleRow]);
+    }catch(sheetError){
+      console.error('Google Sheet sync error:',sheetError);
+      closeModal();
+      toast('บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: '+sheetError.message);
+      await loadManagement();
+      return;
+    }
+
+    closeModal();
+    toast('บันทึก Supabase + Google Sheet แล้ว');
+    if(type==='expenses'||type==='materials'||type==='sales')await loadDashboard();
+    await loadManagement();
+  }catch(err){
+    toast('บันทึกไม่สำเร็จ: '+err.message);
+  }finally{
+    setLoading(false);
+  }
+}
+
 let scanFiles=[],scannedSales=[];
+
 function openScanModal(){
   document.getElementById('scanDate').value=iso(today);
   document.getElementById('scanFile').value='';
@@ -128,15 +373,39 @@ function openScanModal(){
   document.getElementById('scanAiText').textContent='ให้ AI อ่านยอดขาย';
   document.getElementById('scanResults').classList.add('hidden');
   document.getElementById('scanResults').innerHTML='';
-  scanFiles=[];scannedSales=[];
+  scanFiles=[];
+  scannedSales=[];
   document.getElementById('scanOverlay').classList.add('open');
 }
-function closeScanModal(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('scanOverlay').classList.remove('open')}
-function readFileAsBase64(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>{const src=String(reader.result||'');resolve({file,mime:file.type||'image/jpeg',src,base64:src.split(',')[1]||''})};reader.onerror=()=>reject(reader.error||new Error('อ่านไฟล์ไม่สำเร็จ'));reader.readAsDataURL(file)})}
+
+function closeScanModal(e){
+  if(e&&e.target!==e.currentTarget)return;
+  document.getElementById('scanOverlay').classList.remove('open');
+}
+
+function readFileAsBase64(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>{
+      const src=String(reader.result||'');
+      resolve({
+        file,
+        mime:file.type||'image/jpeg',
+        src,
+        base64:src.split(',')[1]||''
+      });
+    };
+    reader.onerror=()=>reject(reader.error||new Error('อ่านไฟล์ไม่สำเร็จ'));
+    reader.readAsDataURL(file);
+  });
+}
+
 document.getElementById('scanFile').addEventListener('change',async e=>{
-  const files=Array.from(e.target.files||[]).slice(0,5);
+  const selected=Array.from(e.target.files||[]);
+  const files=selected.slice(0,5);
   if(!files.length)return;
-  if((e.target.files||[]).length>5)toast('เลือกได้สูงสุด 5 รูป');
+  if(selected.length>5)toast('เลือกได้สูงสุด 5 รูป');
+
   try{
     scanFiles=await Promise.all(files.map(readFileAsBase64));
     const previews=document.getElementById('scanPreviews');
@@ -146,58 +415,181 @@ document.getElementById('scanFile').addEventListener('change',async e=>{
     document.getElementById('scanAiBtn').classList.remove('hidden');
     document.getElementById('scanResults').classList.add('hidden');
     scannedSales=[];
-  }catch(err){toast('เปิดรูปไม่สำเร็จ: '+err.message)}
+  }catch(err){
+    toast('เปิดรูปไม่สำเร็จ: '+err.message);
+  }
 });
+
 async function processLoyverseScan(){
-  if(!scanFiles.length){toast('กรุณาเลือกรูปก่อน');return}
-  if(typeof setLoading==='function')setLoading(true,`AI กำลังอ่าน Loyverse ${scanFiles.length} รูป...`);
+  if(!scanFiles.length){toast('กรุณาเลือกรูปก่อน');return;}
+
+  setLoading(true,`AI กำลังอ่าน Loyverse ${scanFiles.length} รูป...`);
+  const button=document.getElementById('scanAiBtn');
+  const originalText=document.getElementById('scanAiText').textContent;
+  button.disabled=true;
+
   try{
-    const all=[];
-    for(let i=0;i<scanFiles.length;i++){
-      const x=scanFiles[i];
-      if(typeof setLoading==='function')setLoading(true,`AI กำลังอ่านรูปที่ ${i+1}/${scanFiles.length}...`);
-      const r=await fetch(LOYVERSE_SCAN_API,{method:'POST',body:JSON.stringify({action:'scanImage',imageBase64:x.base64,mimeType:x.mime})});
-      if(!r.ok)throw new Error(`รูปที่ ${i+1}: HTTP ${r.status}`);
-      const data=await r.json();
-      if(data?.error)throw new Error(`รูปที่ ${i+1}: ${data.error}`);
-      const rows=Array.isArray(data)?data:[data];
-      rows.filter(x=>x&&x.menu).forEach(x=>all.push(x));
+    const payload={
+      images:scanFiles.map(x=>({
+        base64:x.base64,
+        mimeType:x.mime
+      }))
+    };
+
+    const response=await fetch(LOYVERSE_SCAN_FUNCTION,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':SUPABASE_ANON_KEY
+      },
+      body:JSON.stringify(payload)
+    });
+
+    const raw=await response.text();
+    let data=null;
+    try{data=JSON.parse(raw)}catch(_){data=null}
+
+    if(!response.ok){
+      const detail=data?.message||data?.error||data?.details||`HTTP ${response.status}`;
+      throw new Error(detail);
     }
+
+    if(!data?.success){
+      throw new Error(data?.message||data?.error||'AI ไม่สามารถอ่านภาพได้');
+    }
+
+    scannedSales=(Array.isArray(data.items)?data.items:[])
+      .map(x=>({
+        menu:String(x.menu_name||'').trim(),
+        qty:Number(x.quantity||0),
+        total:Number(x.total||0)
+      }))
+      .filter(x=>x.menu && x.qty>0);
+
+    // Defensive merge in the browser too, so duplicate names are never shown twice.
     const merged=new Map();
-    all.forEach(x=>{
-      const name=String(x.menu||'').trim();
-      const key=name.toLowerCase();
-      const qty=Number(x.qty||0),total=Number(x.total||0);
-      if(!name)return;
-      if(!merged.has(key))merged.set(key,{menu:name,qty:0,total:0});
-      const row=merged.get(key);row.qty+=qty;row.total+=total;
+    scannedSales.forEach(x=>{
+      const key=x.menu.toLowerCase();
+      if(!merged.has(key))merged.set(key,{...x});
+      else{
+        const row=merged.get(key);
+        row.qty+=x.qty;
+        row.total+=x.total;
+      }
     });
     scannedSales=Array.from(merged.values());
-    renderScanResults();
-  }catch(err){toast('สแกนไม่สำเร็จ: '+err.message)}finally{if(typeof setLoading==='function')setLoading(false)}
+
+    renderScanResults(data.model||'Gemini');
+  }catch(err){
+    console.error('Loyverse scan error:',err);
+    toast('สแกนไม่สำเร็จ: '+err.message);
+  }finally{
+    button.disabled=false;
+    document.getElementById('scanAiText').textContent=originalText;
+    setLoading(false);
+  }
 }
-function renderScanResults(){
+
+function renderScanResults(modelName='Gemini'){
   const box=document.getElementById('scanResults');
-  if(!scannedSales.length){box.innerHTML='<div class="empty">ไม่พบรายการขาย</div>';box.classList.remove('hidden');return}
-  let qty=0,total=0;
-  const rows=scannedSales.map(x=>{const q=Number(x.qty||0),t=Number(x.total||0);qty+=q;total+=t;return `<div class="scan-result-row"><div><div class="scan-result-name">${esc(x.menu||'Unknown')}</div><div class="scan-result-meta">จำนวน ${fmt0(q)} แก้ว · ${fmt(q?t/q:0)} THB/แก้ว</div></div><div class="scan-result-total">${fmt(t)} THB</div></div>`}).join('');
-  box.innerHTML=`<div style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:800">รวมจาก ${scanFiles.length} รูป · ${scannedSales.length} รายการ</div>${rows}<div class="scan-summary"><span>รวม ${fmt0(qty)} cups</span><span>${fmt(total)} THB</span></div><button class="primary scan-save" onclick="saveScannedSales()"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span>ยืนยันบันทึกยอดขาย</span></button>`;
+  if(!scannedSales.length){
+    box.innerHTML='<div class="empty">ไม่พบรายการขายจากภาพที่เลือก</div>';
+    box.classList.remove('hidden');
+    return;
+  }
+
+  const rows=scannedSales.map((x,i)=>`<div class="scan-result-row"><div class="scan-edit-row" style="width:100%"><div><div class="scan-edit-label">MENU</div><input class="scan-edit scan-edit-name" value="${esc(x.menu)}" oninput="updateScannedSale(${i},'menu',this.value)"></div><div><div class="scan-edit-label">จำนวน</div><input class="scan-edit" type="number" min="0" step="1" value="${Number(x.qty||0)}" oninput="updateScannedSale(${i},'qty',this.value)"></div><div><div class="scan-edit-label">ยอดรวม (THB)</div><input class="scan-edit" type="number" min="0" step="0.01" value="${Number(x.total||0)}" oninput="updateScannedSale(${i},'total',this.value)"></div></div></div>`).join('');
+
+  box.innerHTML=`<div style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:800">AI: ${esc(modelName)} · ${scanFiles.length} รูป · ตรวจสอบและแก้ไขรายการได้</div>${rows}<div id="scanSummary" class="scan-summary"></div><button class="primary scan-save" onclick="saveScannedSales()"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span>ยืนยันบันทึกทั้งหมด</span></button>`;
   box.classList.remove('hidden');
+  refreshScanSummary();
 }
+
+function updateScannedSale(index,key,value){
+  if(!scannedSales[index])return;
+  if(key==='menu')scannedSales[index].menu=String(value||'').trimStart();
+  if(key==='qty')scannedSales[index].qty=Math.max(0,Number(value||0));
+  if(key==='total')scannedSales[index].total=Math.max(0,Number(value||0));
+  refreshScanSummary();
+}
+
+function refreshScanSummary(){
+  const el=document.getElementById('scanSummary');
+  if(!el)return;
+  const valid=scannedSales.filter(x=>String(x.menu||'').trim()&&Number(x.qty||0)>0);
+  const qty=valid.reduce((sum,x)=>sum+Number(x.qty||0),0);
+  const total=valid.reduce((sum,x)=>sum+Number(x.total||0),0);
+  el.innerHTML=`<span>รวมทั้งหมด: ${fmt0(qty)} แก้ว</span><span>${fmt(total)} THB</span>`;
+}
+
 async function saveScannedSales(){
-  if(!db||!scannedSales.length)return;
+  if(!db||!scannedSales.length){toast('ไม่พบรายการสำหรับบันทึก');return}
+
   const date=document.getElementById('scanDate').value||iso(today);
-  if(typeof setLoading==='function')setLoading(true,'กำลังบันทึกยอดขายลง Supabase...');
+  setLoading(true,'กำลังบันทึกยอดขายลง Supabase + Google Sheet...');
+
   try{
-    const menuNames=scannedSales.map(x=>String(x.menu||'').trim()).filter(Boolean);
+    const edited=scannedSales
+      .map(x=>({
+        menu:String(x.menu||'').trim(),
+        qty:Number(x.qty||0),
+        total:Number(x.total||0)
+      }))
+      .filter(x=>x.menu&&x.qty>0);
+
+    if(!edited.length)throw new Error('ไม่มีรายการที่พร้อมบันทึก');
+
+    const menuNames=Array.from(new Set(edited.map(x=>x.menu)));
     let menus=[];
-    if(menuNames.length){const res=await db.from('menus').select('id,name').in('name',menuNames);if(res.error)throw res.error;menus=res.data||[]}
+    const res=await db.from('menus').select('id,name').in('name',menuNames);
+    if(res.error)throw res.error;
+    menus=res.data||[];
+
     const map=new Map(menus.map(x=>[x.name.toLowerCase(),x.id]));
-    const rows=scannedSales.map(x=>{const q=Number(x.qty||0),t=Number(x.total||0),name=String(x.menu||'').trim();return{transaction_date:date,menu_id:map.get(name.toLowerCase())||null,menu_name:name,quantity:q,sale_price:q?t/q:0,total_amount:t}});
-    const {error}=await db.from('sales').insert(rows);if(error)throw error;
-    toast(`บันทึกยอดขาย ${rows.length} รายการแล้ว`);closeScanModal();await loadDashboard();if(managementType==='sales')await loadManagement();
-  }catch(err){toast('บันทึกไม่สำเร็จ: '+err.message)}finally{if(typeof setLoading==='function')setLoading(false)}
+
+    const rows=edited.map(x=>({
+      transaction_date:date,
+      menu_id:map.get(x.menu.toLowerCase())||null,
+      menu_name:x.menu,
+      quantity:x.qty,
+      sale_price:x.qty?x.total/x.qty:0,
+      total_amount:x.total
+    }));
+
+    // Save to Supabase first.
+    const {error}=await db.from('sales').insert(rows);
+    if(error)throw error;
+
+    // Google Sheet: รายการขาย A-C only. D+ stay formula-driven.
+    try{
+      await saveToGoogleSheet('รายการขาย',rows.map(x=>[
+        x.transaction_date,
+        x.menu_name,
+        x.quantity
+      ]));
+    }catch(sheetError){
+      console.error('Google Sheet scan sync error:',sheetError);
+      toast(`บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: ${sheetError.message}`);
+      await loadDashboard();
+      if(managementType==='sales')await loadManagement();
+      return;
+    }
+
+    const totalCups=rows.reduce((sum,x)=>sum+Number(x.quantity||0),0);
+    const totalAmount=rows.reduce((sum,x)=>sum+Number(x.total_amount||0),0);
+    toast(`บันทึกทั้งหมด ${fmt0(totalCups)} แก้ว · ${fmt(totalAmount)} THB`);
+    closeScanModal();
+    scannedSales=[];
+    await loadDashboard();
+    if(managementType==='sales')await loadManagement();
+  }catch(err){
+    console.error('Save scanned sales error:',err);
+    toast('บันทึกไม่สำเร็จ: '+err.message);
+  }finally{
+    setLoading(false);
+  }
 }
+
 function closeModal(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('modalOverlay').classList.remove('open')}
 function togglePopover(id){const el=document.getElementById(id);if(!el)return;const open=el.classList.contains('hidden');closePopovers();if(open)el.classList.remove('hidden')}
 function closePopovers(){document.querySelectorAll('.popover').forEach(x=>x.classList.add('hidden'))}
@@ -205,7 +597,77 @@ document.addEventListener('click',e=>{if(!e.target.closest('.popover')&&!e.targe
 document.getElementById('managementBtn').addEventListener('click',e=>{e.stopPropagation();togglePopover('managementMenu')});
 document.getElementById('appsBtn').addEventListener('click',e=>{e.stopPropagation();togglePopover('appsMenu')});
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');clearTimeout(window._toast);window._toast=setTimeout(()=>t.classList.remove('show'),2600)}
-async function saveAsImage(){const area=document.getElementById('capture-area'),bar=document.getElementById('bottomActions'),menus=document.querySelectorAll('.popover');menus.forEach(x=>x.classList.add('hidden'));const old={width:area.style.width,maxWidth:area.style.maxWidth,paddingBottom:area.style.paddingBottom,paddingTop:area.style.paddingTop};bar.style.display='none';area.style.width='100%';area.style.maxWidth='1180px';area.style.paddingTop='24px';area.style.paddingBottom='90px';await document.fonts?.ready;await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));try{const width=Math.max(document.documentElement.clientWidth,area.scrollWidth);const height=area.scrollHeight;const canvas=await html2canvas(area,{backgroundColor:'#110E0D',scale:3,useCORS:true,allowTaint:false,logging:false,scrollX:0,scrollY:0,windowWidth:width,windowHeight:height,width:width,height:height});const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));if(!blob)throw new Error('PNG generation failed');const file=new File([blob],`Balenrista_${period}.png`,{type:'image/png'});if(navigator.share&&navigator.canShare?.({files:[file]})){try{await navigator.share({files:[file],title:'Balenrista Dashboard'})}catch(e){}}else{const a=document.createElement('a');a.download=file.name;a.href=URL.createObjectURL(blob);a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}}catch(err){toast('สร้างภาพไม่สำเร็จ: '+err.message)}finally{area.style.width=old.width;area.style.maxWidth=old.maxWidth;area.style.paddingTop=old.paddingTop;area.style.paddingBottom=old.paddingBottom;bar.style.display='flex'}}
+async function saveAsImage(){
+  const area=document.getElementById('capture-area');
+  const bar=document.getElementById('bottomActions');
+  const menus=document.querySelectorAll('.popover');
+  menus.forEach(x=>x.classList.add('hidden'));
+
+  const old={
+    width:area.style.width,
+    maxWidth:area.style.maxWidth,
+    paddingBottom:area.style.paddingBottom,
+    paddingTop:area.style.paddingTop,
+    overflow:area.style.overflow
+  };
+
+  bar.style.display='none';
+  area.style.width='100%';
+  area.style.maxWidth='1180px';
+  area.style.paddingTop='34px';
+  area.style.paddingBottom='120px';
+  area.style.overflow='visible';
+
+  await document.fonts?.ready;
+  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+
+  try{
+    const width=Math.max(area.scrollWidth,document.documentElement.clientWidth);
+    const height=area.scrollHeight+24;
+    const canvas=await html2canvas(area,{
+      backgroundColor:'#110E0D',
+      scale:3,
+      useCORS:true,
+      allowTaint:false,
+      logging:false,
+      scrollX:0,
+      scrollY:0,
+      windowWidth:width,
+      windowHeight:height,
+      width,
+      height
+    });
+
+    const blob=await new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+    if(!blob)throw new Error('PNG generation failed');
+
+    const file=new File([blob],`Balenrista_${period}.png`,{type:'image/png'});
+
+    if(navigator.share&&navigator.canShare?.({files:[file]})){
+      try{
+        await navigator.share({files:[file],title:'Balenrista Dashboard'});
+      }catch(_){
+        // User cancelled the share sheet.
+      }
+    }else{
+      const a=document.createElement('a');
+      a.download=file.name;
+      a.href=URL.createObjectURL(blob);
+      a.click();
+      setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+    }
+  }catch(err){
+    toast('สร้างภาพไม่สำเร็จ: '+err.message);
+  }finally{
+    area.style.width=old.width;
+    area.style.maxWidth=old.maxWidth;
+    area.style.paddingTop=old.paddingTop;
+    area.style.paddingBottom=old.paddingBottom;
+    area.style.overflow=old.overflow;
+    bar.style.display='flex';
+  }
+}
+
 </script>
 </body>
 </html>
