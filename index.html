@@ -55,6 +55,7 @@
 .mgmt-date-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .mgmt-date-value{height:42px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.035);display:flex;align-items:center;justify-content:center;gap:9px;font-size:12px;font-weight:700;white-space:nowrap}
 .mgmt-date-value svg{width:17px;height:17px;stroke:var(--muted);fill:none;stroke-width:1.7}
+.mgmt-date-value{border:1px solid var(--line);color:var(--white);padding:0 10px;cursor:pointer;font:inherit}.mgmt-date-value span{overflow:hidden;text-overflow:ellipsis}.mgmt-hidden-picker{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 .mgmt-today{height:42px;padding:0 14px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.035);color:var(--white);font-size:11px;font-weight:700}
 .mgmt-range{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px;padding:4px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025)}
 .mgmt-range button{height:34px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-size:10px;font-weight:700}
@@ -520,6 +521,18 @@ async function openManagement(type){
   setBottom(type);
   await loadManagement();
 }
+async function fetchAllManagementRows(table,selectClause,orderColumn='transaction_date'){
+  const all=[]; const pageSize=1000; let from=0;
+  while(true){
+    const {data,error}=await db.from(table).select(selectClause).order(orderColumn,{ascending:false}).range(from,from+pageSize-1);
+    if(error)throw error;
+    const rows=Array.isArray(data)?data:[];
+    all.push(...rows);
+    if(rows.length<pageSize)break;
+    from+=pageSize;
+  }
+  return all;
+}
 async function loadManagement(){
   if(!db){renderManagementDemo();return}
   try{
@@ -527,9 +540,10 @@ async function loadManagement(){
     if(managementType==='ingredients')data=await db.from('ingredients').select('*').order('name').limit(500).then(r=>{if(r.error)throw r.error;return r.data});
     if(managementType==='menus')data=await db.from('menus').select('*').order('name').limit(500).then(r=>{if(r.error)throw r.error;return r.data});
     if(managementType==='recipes')data=await db.from('recipes').select('*,menus(name),ingredients(name)').order('created_at',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});
-    if(managementType==='materials')data=await db.from('materials').select('*,ingredients(name)').order('transaction_date',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});
-    if(managementType==='expenses')data=await db.from('expenses').select('*').order('transaction_date',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});
-    if(managementType==='sales')data=await db.from('sales').select('*').order('transaction_date',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});
+    // Sales / Expenses / Materials: load the complete history, not only the latest 500 rows.
+    if(managementType==='materials')data=await fetchAllManagementRows('materials','*,ingredients(name)','transaction_date');
+    if(managementType==='expenses')data=await fetchAllManagementRows('expenses','*','transaction_date');
+    if(managementType==='sales')data=await fetchAllManagementRows('sales','*','transaction_date');
     cache[managementType]=data||[];
     renderManagement();
   }catch(err){toast('โหลดข้อมูลไม่สำเร็จ: '+err.message)}
@@ -563,17 +577,53 @@ function managementRangeBounds(){
     const [y,m]=d.split('-').map(Number),last=new Date(y,m,0).getDate();
     return [`${y}-${String(m).padStart(2,'0')}-01`,`${y}-${String(m).padStart(2,'0')}-${String(last).padStart(2,'0')}`];
   }
+  // All = every record stored in Supabase, from the oldest recorded transaction onward.
   return ['', ''];
 }
 function renderManagementControls(){
   const box=document.getElementById('managementViewControls');
   if(!box)return;
   const d=managementView.date;
-  box.innerHTML=`<div class="mgmt-datebar"><button class="mgmt-date-btn" onclick="moveManagementDate(-1)" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg></button><div class="mgmt-date-value"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>${d}</div><button class="mgmt-date-btn" onclick="moveManagementDate(1)" aria-label="Next"><svg viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></svg></button><button class="mgmt-today" onclick="setManagementToday()">Today</button></div><div class="mgmt-range"><button class="${managementView.range==='day'?'active':''}" onclick="setManagementRange('day')">Day</button><button class="${managementView.range==='week'?'active':''}" onclick="setManagementRange('week')">Week</button><button class="${managementView.range==='month'?'active':''}" onclick="setManagementRange('month')">Month</button><button class="${managementView.range==='all'?'active':''}" onclick="setManagementRange('all')">All</button></div>`;
+  const range=managementView.range;
+  let display=d;
+  if(range==='month')display=d.slice(0,7);
+  if(range==='all')display='ทั้งหมด';
+  const pickerType=range==='month'?'month':range==='year'?'number':'date';
+  const pickerValue=range==='month'?d.slice(0,7):range==='year'?d.slice(0,4):d;
+  box.innerHTML=`<div class="mgmt-datebar"><button class="mgmt-date-btn" onclick="moveManagementDate(-1)" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg></button><button class="mgmt-date-value" type="button" onclick="openManagementDatePicker()"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><span>${display}</span></button><button class="mgmt-date-btn" onclick="moveManagementDate(1)" aria-label="Next"><svg viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></svg></button><button class="mgmt-today" onclick="setManagementToday()">Today</button></div><input id="mgmtDatePicker" class="mgmt-hidden-picker" type="${pickerType}" value="${pickerValue}" ${range==='year'?`min="2020" max="${today.getFullYear()}"`:''} onchange="applyManagementDatePicker(this.value)"><div class="mgmt-range"><button class="${range==='day'?'active':''}" onclick="setManagementRange('day')">Day</button><button class="${range==='week'?'active':''}" onclick="setManagementRange('week')">Week</button><button class="${range==='month'?'active':''}" onclick="setManagementRange('month')">Month</button><button class="${range==='all'?'active':''}" onclick="setManagementRange('all')">All</button></div>`;
 }
-function moveManagementDate(days){if(managementView.range==='month'){managementView.date=addLocalDays(managementView.date,days*28);const [y,m]=managementView.date.split('-');managementView.date=`${y}-${m}-01`}else managementView.date=addLocalDays(managementView.date,days);renderManagementControls();renderManagement()}
+function openManagementDatePicker(){
+  const el=document.getElementById('mgmtDatePicker');
+  if(!el)return;
+  try{if(el.showPicker)el.showPicker();else el.click()}catch(_){el.click()}
+}
+function applyManagementDatePicker(value){
+  if(!value)return;
+  if(managementView.range==='month')managementView.date=`${value}-01`;
+  else if(managementView.range==='year')managementView.date=`${value}-01-01`;
+  else managementView.date=value;
+  renderManagementControls();renderManagement();
+}
+function moveManagementDate(step){
+  if(managementView.range==='all')return;
+  if(managementView.range==='month'){
+    const [y,m]=managementView.date.split('-').map(Number);
+    const x=new Date(y,m-1+step,1);
+    managementView.date=`${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-01`;
+  }else if(managementView.range==='week')managementView.date=addLocalDays(managementView.date,step*7);
+  else if(managementView.range==='year'){
+    const y=Number(managementView.date.slice(0,4))+step;
+    managementView.date=`${y}-01-01`;
+  }else managementView.date=addLocalDays(managementView.date,step);
+  renderManagementControls();renderManagement();
+}
 function setManagementToday(){managementView.date=iso(today);renderManagementControls();renderManagement()}
-function setManagementRange(range){managementView.range=range;renderManagementControls();renderManagement()}
+function setManagementRange(range){
+  managementView.range=range;
+  if(range==='month')managementView.date=`${managementView.date.slice(0,7)}-01`;
+  if(range==='all')managementView.date=iso(today);
+  renderManagementControls();renderManagement();
+}
 function formatMgmtTime(x){
   const raw=x?.created_at||x?.updated_at||x?.transaction_time||x?.sale_time||'';
   const m=String(raw).match(/T(\d{2}):(\d{2})/);
@@ -667,6 +717,17 @@ function renderManagement(){
   document.getElementById('dataBody').innerHTML=html||'<tr><td colspan="10"><div class="empty">No data</div></td></tr>';
 }
 document.getElementById('searchInput').addEventListener('input',renderManagement);
+
+function goHome(){
+  managementType=null;
+  const management=document.getElementById('managementSection');
+  const dashboard=document.getElementById('dashboardSection');
+  if(management)management.classList.remove('active');
+  if(management)management.classList.remove('management-mobile-mode');
+  if(dashboard)dashboard.classList.add('active');
+  setBottom('dashboard');
+  loadDashboard();
+}
 
 function setBottom(type){
   const home=document.getElementById('actionHome');
