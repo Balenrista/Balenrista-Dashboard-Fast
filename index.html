@@ -36,6 +36,96 @@
 .date-group-line{height:1px;flex:1;background:rgba(255,255,255,.10);}
 
 .date-group-row td{padding:10px 14px!important;border-top:1px solid var(--border)!important;border-bottom:1px solid var(--border)!important;background:rgba(255,255,255,.035)!important;position:sticky;top:0;z-index:2}.date-group-label{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:12px;font-weight:800;letter-spacing:.7px;color:var(--text)}.date-group-label span:last-child{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.2px}
+
+/* ===== Mobile management views: Sales / Expenses / Materials ===== */
+.management-view-controls{display:none}
+.management-mobile-list{display:none}
+.management-mobile-summary{display:none}
+.management-mobile-mode .toolbar,.management-mobile-mode .table-wrap{display:none!important}
+.management-mobile-mode .management-view-controls{display:block}
+.management-mobile-mode .management-mobile-list{display:grid}
+.management-mobile-mode .management-mobile-summary{display:block}
+.management-mobile-mode .section-head{margin-bottom:14px}
+.management-mobile-mode .section-title{font-size:26px}
+.management-mobile-mode .section-desc{font-size:12px;margin-top:5px}
+.management-mobile-mode .primary{min-width:196px;height:48px;border-radius:17px;font-size:13px;justify-content:center}
+.management-view-controls{margin:0 0 14px}
+.mgmt-datebar{display:grid;grid-template-columns:42px 1fr auto 42px;gap:8px;align-items:center}
+.mgmt-date-btn{height:42px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.035);color:var(--white);display:grid;place-items:center;font-size:22px}
+.mgmt-date-btn svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mgmt-date-value{height:42px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.035);display:flex;align-items:center;justify-content:center;gap:9px;font-size:12px;font-weight:700;white-space:nowrap}
+.mgmt-date-value svg{width:17px;height:17px;stroke:var(--muted);fill:none;stroke-width:1.7}
+.mgmt-today{height:42px;padding:0 14px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.035);color:var(--white);font-size:11px;font-weight:700}
+.mgmt-range{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px;padding:4px;border:1px solid var(--line);border-radius:13px;background:rgba(255,255,255,.025)}
+.mgmt-range button{height:34px;border:0;border-radius:10px;background:transparent;color:var(--muted);font-size:10px;font-weight:700}
+.mgmt-range button.active{background:var(--paper);color:var(--black);box-shadow:0 5px 18px rgba(181,151,133,.15)}
+.management-mobile-summary{margin:0 0 12px}
+.mgmt-summary-card{display:grid;grid-template-columns:40px 1fr auto;gap:11px;align-items:center;padding:13px 14px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(255,255,255,.018));box-shadow:0 12px 35px rgba(0,0,0,.16)}
+.mgmt-summary-icon{width:40px;height:40px;border-radius:12px;display:grid;place-items:center}
+.mgmt-summary-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.mgmt-summary-icon.sales{background:rgba(181,151,133,.18);color:var(--paper)}
+.mgmt-summary-icon.expenses{background:rgba(232,72,72,.18);color:#ef6868}
+.mgmt-summary-icon.materials{background:rgba(76,185,110,.17);color:#64c27e}
+.mgmt-summary-label{font-size:9px;color:var(--muted);margin-bottom:2px}
+.mgmt-summary-total{font-size:16px;font-weight:900;letter-spacing:-.2px}
+.mgmt-summary-right{text-align:right}
+.mgmt-summary-count{font-size:10px;font-weight:700}
+.mgmt-summary-sub{font-size:8px;color:var(--muted);margin-top:2px}
+.management-mobile-list{gap:9px}
+.mgmt-date-card{border:1px solid rgba(243,237,231,.11);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.015));overflow:hidden}
+.mgmt-date-head{width:100%;border:0;background:transparent;color:var(--white);display:flex;align-items:center;justify-content:space-between;padding:13px 14px;text-align:left}
+.mgmt-date-main{min-width:0}
+.mgmt-date-title{font-size:14px;font-weight:800;letter-spacing:.1px}
+.mgmt-date-meta{text-align:right}
+.mgmt-date-count{font-size:10px;font-weight:700}
+.mgmt-date-total{font-size:9px;color:var(--muted);margin-top:2px}
+.mgmt-chevron{width:18px;height:18px;stroke:var(--muted);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:.18s}
+.mgmt-date-card.open .mgmt-chevron{transform:rotate(180deg);stroke:var(--white)}
+.mgmt-date-items{display:none;border-top:1px solid var(--line)}
+.mgmt-date-card.open .mgmt-date-items{display:block}
+.mgmt-item{display:grid;grid-template-columns:38px minmax(0,1fr) auto 20px;gap:10px;align-items:center;padding:11px 12px;border-bottom:1px solid rgba(243,237,231,.075)}
+.mgmt-item:last-child{border-bottom:0}
+.mgmt-item-icon{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;overflow:hidden}
+.mgmt-item-icon svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.mgmt-item-icon.sales{background:rgba(181,151,133,.13);color:var(--paper)}
+.mgmt-item-icon.expenses{background:rgba(232,72,72,.13);color:#e65f61}
+.mgmt-item-icon.materials{background:rgba(76,185,110,.13);color:#61bd7a}
+.mgmt-item-name{font-size:10.5px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mgmt-item-sub{font-size:8.5px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mgmt-item-qty{font-size:9px;color:var(--white);text-align:right;white-space:nowrap}
+.mgmt-item-amount{font-size:10.5px;font-weight:800;text-align:right;white-space:nowrap}
+.mgmt-more{width:20px;height:30px;border:0;background:transparent;color:var(--muted);font-size:18px;line-height:1;display:grid;place-items:center}
+.mgmt-empty{padding:28px;text-align:center;color:var(--muted);font-size:10px;border:1px dashed var(--line);border-radius:14px}
+.management-mobile-mode .bottom-actions{gap:4px;padding:5px;border-radius:18px}
+.management-mobile-mode .bottom-actions .fab.main{display:none}
+.management-mobile-mode .bottom-actions .fab{width:60px;height:52px;border-radius:14px;display:flex;flex-direction:column;gap:2px;font-size:8px;font-weight:700}
+.management-mobile-mode .bottom-actions .fab svg{width:17px;height:17px}
+.management-mobile-mode .bottom-actions .fab .bottom-label{display:block;font-size:8px;line-height:1}
+.management-mobile-mode .bottom-actions .fab.active{background:var(--paper);color:var(--black)}
+.management-mobile-mode .visitor-fab{display:none}
+@media(max-width:520px){
+  .management-mobile-mode .app{padding-bottom:108px}
+  .management-mobile-mode .section-head{gap:10px}
+  .management-mobile-mode .section-title{font-size:25px}
+  .management-mobile-mode .section-desc{font-size:11px}
+  .management-mobile-mode .primary{min-width:0;width:154px;height:46px;font-size:12px}
+  .mgmt-datebar{grid-template-columns:38px minmax(0,1fr) 38px auto;gap:6px}
+  .mgmt-date-btn,.mgmt-date-value,.mgmt-today{height:40px}
+  .mgmt-date-value{font-size:10.5px;gap:6px}
+  .mgmt-today{padding:0 10px;font-size:9px}
+  .mgmt-date-btn svg{width:16px;height:16px}
+  .mgmt-range{margin-top:7px}
+  .mgmt-range button{height:32px;font-size:9px}
+  .mgmt-summary-card{padding:12px}
+  .mgmt-summary-total{font-size:15px}
+  .mgmt-item{grid-template-columns:36px minmax(0,1fr) auto 18px;padding:10px 11px;gap:8px}
+  .mgmt-item-icon{width:36px;height:36px;border-radius:10px}
+  .mgmt-item-name{font-size:10px}
+  .mgmt-item-qty{font-size:8.5px}
+  .mgmt-item-amount{font-size:10px}
+  .management-mobile-mode .bottom-actions .fab{width:59px;height:50px}
+}
+
 </style>
 </head>
 <body>
@@ -70,7 +160,7 @@
   <div class="grid"><div class="panel"><div class="panel-head"><div><div class="panel-title">Net Income Trend</div><div class="panel-sub" id="chartSub">Last 7 days</div></div><div class="chart-range"><button class="active" data-chart-range="7d">7D</button><button data-chart-range="1m">1M</button><button data-chart-range="1y">1Y</button></div></div><div class="chart-wrap"><canvas id="trendChart"></canvas></div></div><div class="panel"><div class="panel-head"><div><div class="panel-title">Top 10 Menu</div><div class="panel-sub">By revenue</div></div><button class="panel-action" onclick="openMenuDetails()">ดูทั้งหมด</button></div><div id="topList" class="top-list"></div></div></div>
   <div class="grid" style="margin-top:14px"><div class="panel"><div class="panel-head"><div><div class="panel-title">Cost Breakdown</div><div class="panel-sub">Materials + expenses</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div class="metric" style="box-shadow:none"><div class="metric-label">Materials</div><div class="metric-value" style="font-size:22px" id="materialsCost">0 <small>THB</small></div></div><div class="metric" style="box-shadow:none"><div class="metric-label">Expenses</div><div class="metric-value" style="font-size:22px" id="expensesCost">0 <small>THB</small></div></div></div></div><div class="panel"><div class="panel-head"><div><div class="panel-title">System Snapshot</div><div class="panel-sub">Master data</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px"><div class="metric" style="box-shadow:none;padding:14px"><div class="metric-label">Ingredients</div><div class="metric-value" style="font-size:20px" id="countIngredients">0</div></div><div class="metric" style="box-shadow:none;padding:14px"><div class="metric-label">Menus</div><div class="metric-value" style="font-size:20px" id="countMenus">0</div></div><div class="metric" style="box-shadow:none;padding:14px"><div class="metric-label">Recipes</div><div class="metric-value" style="font-size:20px" id="countRecipes">0</div></div></div></div></div>
 </div>
-<div id="managementSection" class="section"><div class="section-head"><div><div class="section-title" id="managementTitle">Management</div><div class="section-desc" id="managementDesc">จัดการข้อมูลของ Balenrista</div></div><button class="primary" id="addButton" onclick="openCrud()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Add</span></button></div><div class="toolbar"><input id="searchInput" class="field search" placeholder="Search..."><select id="groupFilter" class="field"><option value="">All</option></select></div><div class="table-wrap"><table><thead id="dataHead"></thead><tbody id="dataBody"></tbody></table></div></div>
+<div id="managementSection" class="section"><div class="section-head"><div><div class="section-title" id="managementTitle">Management</div><div class="section-desc" id="managementDesc">จัดการข้อมูลของ Balenrista</div></div><button class="primary" id="addButton" onclick="openCrud()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>Add</span></button></div><div id="managementViewControls" class="management-view-controls"></div><div id="managementMobileSummary" class="management-mobile-summary"></div><div id="managementMobileList" class="management-mobile-list"></div><div class="toolbar"><input id="searchInput" class="field search" placeholder="Search..."><select id="groupFilter" class="field"><option value="">All</option></select></div><div class="table-wrap"><table><thead id="dataHead"></thead><tbody id="dataBody"></tbody></table></div></div>
 </div>
 <div id="managementMenu" class="popover hidden"><div class="popover-title">Management</div><a class="menu-item" href="#ingredients" onclick="openManagement('ingredients')"><svg viewBox="0 0 24 24"><path d="M5 7h14M7 4h10M7 10h10M6 13h12M5 17h14M8 20h8"/></svg>Ingredients</a><a class="menu-item" href="#menus" onclick="openManagement('menus')"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5z"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Menu</a><a class="menu-item" href="#recipes" onclick="openManagement('recipes')"><svg viewBox="0 0 24 24"><path d="M7 3h10v18H7z"/><path d="M10 7h4M10 11h4M10 15h4"/></svg>Recipes</a><a class="menu-item" href="#materials" onclick="openManagement('materials')"><svg viewBox="0 0 24 24"><path d="M4 7h16l-2 13H6L4 7Z"/><path d="M8 7a4 4 0 0 1 8 0"/></svg>Materials</a><a class="menu-item" href="#expenses" onclick="openManagement('expenses')"><svg viewBox="0 0 24 24"><path d="M6 3h12v18H6z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>Expenses</a><a class="menu-item" href="#sales" onclick="openManagement('sales')"><svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z"/><path d="M8 15l2-3 2 2 4-5"/></svg>Sales</a><div class="menu-sep"></div><div id="authUserMenu" class="auth-user"><div class="auth-avatar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></div><div class="auth-user-main"><div id="authUserName" class="auth-user-name">Balenrista</div><div id="authUserRole" class="auth-user-role">admin</div></div></div><a class="menu-item logout-item" href="#" onclick="logout();return false"><svg viewBox="0 0 24 24"><path d="M10 5H5v14h5"/><path d="M14 8l4 4-4 4M8 12h10"/></svg>Sign out</a></div>
 <div id="appsMenu" class="popover hidden"><div class="popover-title">Apps</div><a class="menu-item" href="https://balenrista.github.io/Balenrista-slip/" target="_blank"><svg viewBox="0 0 24 24"><path d="M7 3h10v18H7z"/><path d="M9 7h6M9 11h6M9 15h4"/></svg>Slips</a><a class="menu-item" href="https://balenrista.github.io/Balenrista-Recips/" target="_blank"><svg viewBox="0 0 24 24"><path d="M4 6h16v13H4z"/><path d="M8 6V4h8v2M8 10h8M8 14h5"/></svg>Recips</a><a class="menu-item" href="https://balenrista.github.io/balenrista-queue/Admin.html" target="_blank"><svg viewBox="0 0 24 24"><path d="M6 4h12v16H6z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg>Queue Systems</a><a class="menu-item" href="https://balenrista.github.io/BalenristaAIChatBot/" target="_blank"><svg viewBox="0 0 24 24"><path d="M5 5h14v11H8l-3 3V5Z"/><path d="M9 10h.01M12 10h.01M15 10h.01"/></svg>AI Chat Bot</a><div class="menu-note">External apps are kept separate from the Balenrista management database.</div></div>
@@ -415,8 +505,43 @@ function netFor(a,b,s,m,e){const ok=x=>x>=a&&x<=b;return s.filter(x=>ok(x.transa
 function renderDemo(){renderKpi({revenue:3176119,cups:60275,mc:663534.42,ec:660725.87,rows:13636,ingredients:53,menus:90,recipes:169});document.getElementById('topList').innerHTML='<div class="empty">Connect Supabase to load live menu ranking</div>';document.getElementById('chartSub').textContent='Waiting for Supabase connection'}
 
 const managementMeta={ingredients:{title:'Ingredients',desc:'วัตถุดิบและระดับสต็อก',add:'Add Ingredient',cols:['Name','Stock Unit','Purchase Unit','Min Stock','Status']},menus:{title:'Menu',desc:'เมนู ราคา และต้นทุนเฉลี่ย',add:'Add Menu',cols:['Menu','Price','Group','Avg Cost','Status']},recipes:{title:'Recipes',desc:'สูตรและปริมาณวัตถุดิบต่อเมนู',add:'Add Recipe',cols:['Menu','Ingredient','Quantity','Unit']},materials:{title:'Materials',desc:'ประวัติการซื้อวัตถุดิบ',add:'Add Material',cols:['Date','Ingredient','Qty','Unit Price','Total']},expenses:{title:'Expenses',desc:'ค่าใช้จ่ายของร้าน',add:'Add Expense',cols:['Date','Item','Amount','Group']},sales:{title:'Sales',desc:'รายการขายทั้งหมด',add:'Add Sale',cols:['Date','Menu','Qty','Price','Total']}};
-async function openManagement(type){if(!currentUser){showLogin();return}closePopovers();managementType=type;document.getElementById('dashboardSection').classList.remove('active');document.getElementById('managementSection').classList.add('active');const m=managementMeta[type];document.getElementById('managementTitle').textContent=m.title;document.getElementById('managementDesc').textContent=m.desc;document.getElementById('addButton').querySelector('span').textContent=m.add;document.getElementById('searchInput').value='';document.getElementById('groupFilter').innerHTML='<option value="">All</option>';setBottom(type);await loadManagement()}
-async function loadManagement(){if(!db){renderManagementDemo();return}try{let data=[];if(managementType==='ingredients')data=await db.from('ingredients').select('*').order('name').limit(500).then(r=>{if(r.error)throw r.error;return r.data});if(managementType==='menus')data=await db.from('menus').select('*').order('name').limit(500).then(r=>{if(r.error)throw r.error;return r.data});if(managementType==='recipes')data=await db.from('recipes').select('*,menus(name),ingredients(name)').order('created_at',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});if(managementType==='materials')data=await db.from('materials').select('*,ingredients(name)').order('transaction_date',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});if(managementType==='expenses')data=await db.from('expenses').select('*').order('transaction_date',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});if(managementType==='sales')data=await db.from('sales').select('*').order('transaction_date',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});cache[managementType]=data||[];renderManagement()}catch(err){toast('โหลดข้อมูลไม่สำเร็จ: '+err.message)}}
+async function openManagement(type){
+  if(!currentUser){showLogin();return}
+  closePopovers();
+  managementType=type;
+  document.getElementById('dashboardSection').classList.remove('active');
+  document.getElementById('managementSection').classList.add('active');
+  const m=managementMeta[type];
+  document.getElementById('managementTitle').textContent=m.title;
+  document.getElementById('managementDesc').textContent=m.desc;
+  document.getElementById('addButton').querySelector('span').textContent=m.add;
+  document.getElementById('searchInput').value='';
+  document.getElementById('groupFilter').innerHTML='<option value="">All</option>';
+  if(['sales','expenses','materials'].includes(type)){
+    document.getElementById('managementSection').classList.add('management-mobile-mode');
+    managementView.date=iso(today);
+    managementView.range='day';
+    renderManagementControls();
+  }else{
+    document.getElementById('managementSection').classList.remove('management-mobile-mode');
+  }
+  setBottom(type);
+  await loadManagement();
+}
+async function loadManagement(){
+  if(!db){renderManagementDemo();return}
+  try{
+    let data=[];
+    if(managementType==='ingredients')data=await db.from('ingredients').select('*').order('name').limit(500).then(r=>{if(r.error)throw r.error;return r.data});
+    if(managementType==='menus')data=await db.from('menus').select('*').order('name').limit(500).then(r=>{if(r.error)throw r.error;return r.data});
+    if(managementType==='recipes')data=await db.from('recipes').select('*,menus(name),ingredients(name)').order('created_at',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});
+    if(managementType==='materials')data=await db.from('materials').select('*,ingredients(name)').order('transaction_date',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});
+    if(managementType==='expenses')data=await db.from('expenses').select('*').order('transaction_date',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});
+    if(managementType==='sales')data=await db.from('sales').select('*').order('transaction_date',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});
+    cache[managementType]=data||[];
+    renderManagement();
+  }catch(err){toast('โหลดข้อมูลไม่สำเร็จ: '+err.message)}
+}
 function renderManagementDemo(){cache[managementType]=[];renderManagement()}
 function formatManagementDate(value){
   if(!value)return 'ไม่ระบุวันที่';
@@ -424,38 +549,164 @@ function formatManagementDate(value){
   if(m)return `${m[3]}/${m[2]}/${m[1]}`;
   return esc(String(value));
 }
-function renderManagement(){
+const managementView={date:iso(today),range:'day'};
+function localDateOnly(value){
+  const m=String(value||'').match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m?`${m[1]}-${m[2]}-${m[3]}`:'';
+}
+function addLocalDays(dateStr,days){
+  const [y,m,d]=String(dateStr).split('-').map(Number);
+  const x=new Date(y,m-1,d);x.setDate(x.getDate()+days);
+  return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,'0')}-${String(x.getDate()).padStart(2,'0')}`;
+}
+function weekStart(dateStr){
+  const [y,m,d]=dateStr.split('-').map(Number),x=new Date(y,m-1,d),day=x.getDay();
+  return addLocalDays(dateStr,-day);
+}
+function managementRangeBounds(){
+  const d=managementView.date;
+  if(managementView.range==='day')return [d,d];
+  if(managementView.range==='week')return [weekStart(d),addLocalDays(weekStart(d),6)];
+  if(managementView.range==='month'){
+    const [y,m]=d.split('-').map(Number),last=new Date(y,m,0).getDate();
+    return [`${y}-${String(m).padStart(2,'0')}-01`,`${y}-${String(m).padStart(2,'0')}-${String(last).padStart(2,'0')}`];
+  }
+  return ['', ''];
+}
+function renderManagementControls(){
+  const box=document.getElementById('managementViewControls');
+  if(!box)return;
+  const d=managementView.date;
+  box.innerHTML=`<div class="mgmt-datebar"><button class="mgmt-date-btn" onclick="moveManagementDate(-1)" aria-label="Previous"><svg viewBox="0 0 24 24"><path d="m14 6-6 6 6 6"/></svg></button><div class="mgmt-date-value"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg>${d}</div><button class="mgmt-date-btn" onclick="moveManagementDate(1)" aria-label="Next"><svg viewBox="0 0 24 24"><path d="m10 6 6 6-6 6"/></svg></button><button class="mgmt-today" onclick="setManagementToday()">Today</button></div><div class="mgmt-range"><button class="${managementView.range==='day'?'active':''}" onclick="setManagementRange('day')">Day</button><button class="${managementView.range==='week'?'active':''}" onclick="setManagementRange('week')">Week</button><button class="${managementView.range==='month'?'active':''}" onclick="setManagementRange('month')">Month</button><button class="${managementView.range==='all'?'active':''}" onclick="setManagementRange('all')">All</button></div>`;
+}
+function moveManagementDate(days){if(managementView.range==='month'){managementView.date=addLocalDays(managementView.date,days*28);const [y,m]=managementView.date.split('-');managementView.date=`${y}-${m}-01`}else managementView.date=addLocalDays(managementView.date,days);renderManagementControls();renderManagement()}
+function setManagementToday(){managementView.date=iso(today);renderManagementControls();renderManagement()}
+function setManagementRange(range){managementView.range=range;renderManagementControls();renderManagement()}
+function formatMgmtTime(x){
+  const raw=x?.created_at||x?.updated_at||x?.transaction_time||x?.sale_time||'';
+  const m=String(raw).match(/T(\d{2}):(\d{2})/);
+  if(m)return `${m[1]}:${m[2]}`;
+  const m2=String(raw).match(/(\d{1,2}):(\d{2})/);
+  return m2?`${String(m2[1]).padStart(2,'0')}:${m2[2]}`:'';
+}
+function managementIcon(type){
+  if(type==='sales')return '<svg viewBox="0 0 24 24"><path d="M7 5h10v7.5A5.5 5.5 0 0 1 11.5 18h-1A5.5 5.5 0 0 1 5 12.5V7a2 2 0 0 1 2-2Z"/><path d="M17 8h1.5A3.5 3.5 0 0 1 22 11.5 3.5 3.5 0 0 1 18.5 15H17M4 20h16"/></svg>';
+  if(type==='expenses')return '<svg viewBox="0 0 24 24"><rect x="4" y="6" width="16" height="13" rx="2"/><path d="M8 6V4h8v2M7 11h10M9 15h6"/></svg>';
+  return '<svg viewBox="0 0 24 24"><path d="M4 7h16l-2 13H6L4 7Z"/><path d="M8 7a4 4 0 0 1 8 0M8 11h8"/></svg>';
+}
+function managementItemIcon(type,x){
+  return `<div class="mgmt-item-icon ${type}">${managementIcon(type)}</div>`;
+}
+function managementItemAction(type,id){
+  const safe=String(id||'').replace(/'/g,"\\'");
+  return `<button class="mgmt-more" aria-label="More" onclick="mobileRowMenu(event,'${type}','${safe}')">⋮</button>`;
+}
+function mobileRowMenu(event,type,id){
+  event.stopPropagation();
+  const target=(cache[type]||[]).find(x=>String(x.id)===String(id));
+  if(!target)return;
+  const edit=type==='sales'?`แก้ไข`:'ลบรายการ';
+  const action=type==='sales'?`editSalesRow('${String(id).replace(/'/g,"\\'")}')`:`deleteManagementRow('${type}','${String(id).replace(/'/g,"\\'")}')`;
+  if(confirm(`${edit}?`))window[action.split('(')[0]]&&eval(action);
+}
+function managementFilterRows(rows){
   const qv=document.getElementById('searchInput').value.toLowerCase();
-  let rows=(cache[managementType]||[]).filter(x=>JSON.stringify(x).toLowerCase().includes(qv));
-  currentRows=rows;
+  let out=(rows||[]).filter(x=>JSON.stringify(x).toLowerCase().includes(qv));
+  if(!['sales','expenses','materials'].includes(managementType))return out;
+  const [start,end]=managementRangeBounds();
+  if(!start)return out;
+  return out.filter(x=>{const d=localDateOnly(x.transaction_date);return d>=start&&d<=end});
+}
+function mobileGroupedData(rows,type){
+  const map={};
+  rows.forEach(x=>{const d=localDateOnly(x.transaction_date)||'ไม่ระบุวันที่';if(!map[d])map[d]=[];map[d].push(x)});
+  return Object.entries(map).sort((a,b)=>b[0].localeCompare(a[0]));
+}
+function renderManagementMobile(rows,t){
+  const summary=document.getElementById('managementMobileSummary');
+  const list=document.getElementById('managementMobileList');
+  const label=t==='sales'?'ยอดขายวันนี้':t==='expenses'?'ค่าใช้จ่ายวันนี้':'ซื้อวัตถุดิบวันนี้';
+  const total=rows.reduce((n,x)=>n+Number(t==='sales'||t==='materials'?x.total_amount:x.amount||0),0);
+  const qty=t==='sales'?rows.reduce((n,x)=>n+Number(x.quantity||0),0):0;
+  const icon=managementIcon(t);
+  summary.innerHTML=`<div class="mgmt-summary-card"><div class="mgmt-summary-icon ${t}">${icon}</div><div><div class="mgmt-summary-label">${label}</div><div class="mgmt-summary-total">${fmt(total)} THB</div></div><div class="mgmt-summary-right"><div class="mgmt-summary-count">${fmt0(rows.length)} รายการ</div>${t==='sales'?`<div class="mgmt-summary-sub">${fmt0(qty)} แก้ว</div>`:''}</div></div>`;
+  const groups=mobileGroupedData(rows,t);
+  if(!groups.length){list.innerHTML='<div class="mgmt-empty">ไม่มีรายการในช่วงเวลานี้</div>';return}
+  list.innerHTML=groups.map(([date,items],idx)=>{
+    const totalDay=items.reduce((n,x)=>n+Number(t==='sales'||t==='materials'?x.total_amount:x.amount||0),0);
+    const dayQty=t==='sales'?items.reduce((n,x)=>n+Number(x.quantity||0),0):0;
+    const itemHtml=items.map(x=>{
+      const name=t==='sales'?(x.menu_name||'ไม่ระบุเมนู'):t==='expenses'?(x.item_name||'ไม่ระบุรายการ'):(x.ingredients?.name||x.ingredient_name||x.ingredient_id||'ไม่ระบุวัตถุดิบ');
+      const time=formatMgmtTime(x);
+      let sub=time||'';
+      let middle='';
+      let amount='';
+      if(t==='sales'){middle=fmt0(x.quantity||0);amount=fmt(x.total_amount)+' THB';sub=time||'รายการขาย'}
+      if(t==='expenses'){middle='1';amount=fmt(x.amount)+' THB';sub=[time,x.expense_group].filter(Boolean).join(' · ')||'ค่าใช้จ่าย'}
+      if(t==='materials'){middle=`${fmt(x.quantity_purchased)} ${x.purchase_unit||x.unit||''}`.trim();amount=fmt(x.total_amount)+' THB';sub=[time,x.unit_price?`${fmt(x.unit_price)} / หน่วย`:'' ].filter(Boolean).join(' · ')||'ซื้อวัตถุดิบ'}
+      return `<div class="mgmt-item">${managementItemIcon(t)}<div><div class="mgmt-item-name">${esc(name)}</div><div class="mgmt-item-sub">${esc(sub)}</div></div><div><div class="mgmt-item-qty">${esc(middle)}</div><div class="mgmt-item-amount">${esc(amount)}</div></div>${managementItemAction(t,x.id)}</div>`;
+    }).join('');
+    return `<div class="mgmt-date-card ${idx===0?'open':''}"><button class="mgmt-date-head" onclick="this.parentElement.classList.toggle('open')"><div class="mgmt-date-main"><div class="mgmt-date-title">${esc(date)}</div></div><div class="mgmt-date-meta"><div class="mgmt-date-count">${fmt0(items.length)} รายการ</div><div class="mgmt-date-total">${fmt(totalDay)} THB${t==='sales'?` · ${fmt0(dayQty)} แก้ว`:''}</div></div><svg class="mgmt-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="mgmt-date-items">${itemHtml}</div></div>`;
+  }).join('');
+}
+function renderManagement(){
   const t=managementType;
-  let head=managementMeta[t].cols;
+  const rows=managementFilterRows(cache[t]||[]);
+  currentRows=rows;
+  if(['sales','expenses','materials'].includes(t)){
+    renderManagementControls();
+    renderManagementMobile(rows,t);
+    document.getElementById('dataHead').innerHTML='';
+    document.getElementById('dataBody').innerHTML='';
+    return;
+  }
+  const qv=document.getElementById('searchInput').value.toLowerCase();
+  const classicRows=(cache[t]||[]).filter(x=>JSON.stringify(x).toLowerCase().includes(qv));
+  const head=managementMeta[t].cols;
   document.getElementById('dataHead').innerHTML='<tr>'+head.map(x=>`<th>${x}</th>`).join('')+'<th style="text-align:right;width:62px">Delete</th></tr>';
-
-  const groupByDate=['materials','expenses','sales'].includes(t);
   let html='';
-  let lastDate=null;
-  rows.forEach(x=>{
-    const date=String(x.transaction_date||'').slice(0,10);
-    if(groupByDate && date!==lastDate){
-      const label=date ? date.split('-').reverse().join('/') : 'ไม่ระบุวันที่';
-      html+=`<tr class="date-group-row"><td colspan="${head.length+1}"><div class="date-group-label"><span>${label}</span><span>${rows.filter(r=>String(r.transaction_date||'').slice(0,10)===date).length} รายการ</span></div></td></tr>`;
-      lastDate=date;
-    }
+  classicRows.forEach(x=>{
     let cells=[];
     if(t==='ingredients')cells=[x.name,x.stock_unit,x.purchase_unit,fmt(x.min_stock),x.is_active?'Active':'Inactive'];
     if(t==='menus')cells=[x.name,fmt(x.sale_price)+' THB',x.group_name||'—',fmt(x.avg_ingredient_cost)+' THB',x.is_active?'Active':'Inactive'];
     if(t==='recipes')cells=[x.menus?.name||'—',x.ingredients?.name||'—',fmt(x.quantity),x.unit];
-    if(t==='materials')cells=[x.transaction_date,x.ingredients?.name||'—',fmt(x.quantity_purchased),fmt(x.unit_price)+' THB',fmt(x.total_amount)+' THB'];
-    if(t==='expenses')cells=[x.transaction_date,x.item_name,fmt(x.amount)+' THB',x.expense_group||'—'];
-    if(t==='sales')cells=[x.transaction_date,x.menu_name,fmt(x.quantity),fmt(x.sale_price)+' THB',fmt(x.total_amount)+' THB'];
-    html+='<tr>'+cells.map((c,i)=>`<td class="${i===cells.length-1&&t==='ingredients'?'status':''}">${esc(c)}</td>`).join('')+`<td><div class="row-actions">${t==='sales'?`<button class="edit-row" title="Edit" aria-label="Edit" onclick="editSalesRow('${String(x.id||'').replace(/'/g,"\\'")}')">${ICONS.edit}</button>`:''}<button class="delete-row" title="Delete" aria-label="Delete" onclick="deleteManagementRow('${t}','${String(x.id||'').replace(/'/g,"\\'")}')">${ICONS.trash}</button></div></td></tr>`;
+    html+='<tr>'+cells.map((c,i)=>`<td class="${i===cells.length-1&&t==='ingredients'?'status':''}">${esc(c)}</td>`).join('')+`<td><div class="row-actions"><button class="delete-row" title="Delete" aria-label="Delete" onclick="deleteManagementRow('${t}','${String(x.id||'').replace(/'/g,"\\'")}')">${ICONS.trash}</button></div></td></tr>`;
   });
   document.getElementById('dataBody').innerHTML=html||'<tr><td colspan="10"><div class="empty">No data</div></td></tr>';
 }
 document.getElementById('searchInput').addEventListener('input',renderManagement);
-function goHome(){managementType=null;document.getElementById('managementSection').classList.remove('active');document.getElementById('dashboardSection').classList.add('active');setBottom('dashboard');loadDashboard()}
-function setBottom(type){const home=document.getElementById('actionHome');const a=[document.getElementById('actionOne'),document.getElementById('actionTwo'),document.getElementById('actionThree'),document.getElementById('actionFour')];home.innerHTML=ICONS.home;home.title='Home';home.onclick=()=>goHome();if(type==='dashboard'){a[0].innerHTML=ICONS.plus;a[0].title='Add Expense';a[0].onclick=()=>openCrud('expenses');a.forEach(x=>x.classList.remove('scan-fab'));a[1].innerHTML=ICONS.scan;a[1].classList.add('scan-fab');a[1].title='Scan Loyverse Sale';a[1].onclick=()=>openScanModal();a[2].innerHTML=ICONS.plus;a[2].title='Buy Materials';a[2].onclick=()=>openCrud('materials');a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadDashboard()}else{a.forEach(x=>x.classList.remove('scan-fab'));a[0].innerHTML=ICONS.plus;a[0].title='Add';a[0].onclick=()=>openCrud(managementType);a[1].innerHTML=ICONS.search;a[1].title='Search';a[1].onclick=()=>document.getElementById('searchInput').focus();a[2].innerHTML=ICONS.plus;a[2].title='Add';a[2].onclick=()=>openCrud(managementType);a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadManagement()}}
+
+function setBottom(type){
+  const home=document.getElementById('actionHome');
+  const a=[document.getElementById('actionOne'),document.getElementById('actionTwo'),document.getElementById('actionThree'),document.getElementById('actionFour')];
+  const main=document.querySelector('#bottomActions .fab.main');
+  const isMobileMgmt=['sales','expenses','materials'].includes(type);
+  document.getElementById('managementSection').classList.toggle('management-mobile-mode',isMobileMgmt);
+  home.innerHTML=ICONS.home;home.title='Home';home.onclick=()=>goHome();
+  a.forEach(x=>{x.classList.remove('scan-fab','active');x.innerHTML='';x.onclick=null});
+  if(main)main.style.display=isMobileMgmt?'none':'';
+  if(type==='dashboard'){
+    a[0].innerHTML=ICONS.plus;a[0].title='Add Expense';a[0].onclick=()=>openCrud('expenses');
+    a[1].innerHTML=ICONS.scan;a[1].classList.add('scan-fab');a[1].title='Scan Loyverse Sale';a[1].onclick=()=>openScanModal();
+    a[2].innerHTML=ICONS.plus;a[2].title='Buy Materials';a[2].onclick=()=>openCrud('materials');
+    a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadDashboard();
+    if(main)main.style.display='';
+    return;
+  }
+  if(isMobileMgmt){
+    const items=[['sales','Sales',ICONS.search],['expenses','Expenses',ICONS.plus],['materials','Materials',ICONS.plus]];
+    a[0].innerHTML=`${ICONS.search}<span class="bottom-label">Sales</span>`;a[0].title='Sales';a[0].onclick=()=>openManagement('sales');
+    a[1].innerHTML=`${ICONS.plus}<span class="bottom-label">Expenses</span>`;a[1].title='Expenses';a[1].onclick=()=>openManagement('expenses');
+    a[2].innerHTML=`${ICONS.plus}<span class="bottom-label">Materials</span>`;a[2].title='Materials';a[2].onclick=()=>openManagement('materials');
+    a[3].innerHTML=`${ICONS.settings}<span class="bottom-label">More</span>`;a[3].title='More';a[3].onclick=()=>document.getElementById('managementMenu').classList.toggle('hidden');
+    const activeIndex={sales:0,expenses:1,materials:2}[type];if(activeIndex!==undefined)a[activeIndex].classList.add('active');
+    return;
+  }
+  a[0].innerHTML=ICONS.plus;a[0].title='Add';a[0].onclick=()=>openCrud(managementType);
+  a[1].innerHTML=ICONS.search;a[1].title='Search';a[1].onclick=()=>document.getElementById('searchInput').focus();
+  a[2].innerHTML=ICONS.plus;a[2].title='Add';a[2].onclick=()=>openCrud(managementType);
+  a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadManagement();
+}
 
 async function openCrud(type=managementType){
   if(!currentUser){showLogin();return}
