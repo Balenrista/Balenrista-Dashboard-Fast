@@ -96,13 +96,6 @@
 .mgmt-item-amount{font-size:10.5px;font-weight:800;text-align:right;white-space:nowrap}
 .mgmt-more{width:20px;height:30px;border:0;background:transparent;color:var(--muted);font-size:18px;line-height:1;display:grid;place-items:center}
 .mgmt-empty{padding:28px;text-align:center;color:var(--muted);font-size:10px;border:1px dashed var(--line);border-radius:14px}
-.management-mobile-mode .bottom-actions{gap:4px;padding:5px;border-radius:18px}
-.management-mobile-mode .bottom-actions .fab.main{display:none}
-.management-mobile-mode .bottom-actions .fab{width:60px;height:52px;border-radius:14px;display:flex;flex-direction:column;gap:2px;font-size:8px;font-weight:700}
-.management-mobile-mode .bottom-actions .fab svg{width:17px;height:17px}
-.management-mobile-mode .bottom-actions .fab .bottom-label{display:block;font-size:8px;line-height:1}
-.management-mobile-mode .bottom-actions .fab.active{background:var(--paper);color:var(--black)}
-.management-mobile-mode .visitor-fab{display:none}
 @media(max-width:520px){
   .management-mobile-mode .app{padding-bottom:108px}
   .management-mobile-mode .section-head{gap:10px}
@@ -123,7 +116,6 @@
   .mgmt-item-name{font-size:10px}
   .mgmt-item-qty{font-size:8.5px}
   .mgmt-item-amount{font-size:10px}
-  .management-mobile-mode .bottom-actions .fab{width:59px;height:50px}
 }
 
 </style>
@@ -679,33 +671,19 @@ document.getElementById('searchInput').addEventListener('input',renderManagement
 function setBottom(type){
   const home=document.getElementById('actionHome');
   const a=[document.getElementById('actionOne'),document.getElementById('actionTwo'),document.getElementById('actionThree'),document.getElementById('actionFour')];
-  const main=document.querySelector('#bottomActions .fab.main');
-  const isMobileMgmt=['sales','expenses','materials'].includes(type);
-  document.getElementById('managementSection').classList.toggle('management-mobile-mode',isMobileMgmt);
   home.innerHTML=ICONS.home;home.title='Home';home.onclick=()=>goHome();
-  a.forEach(x=>{x.classList.remove('scan-fab','active');x.innerHTML='';x.onclick=null});
-  if(main)main.style.display=isMobileMgmt?'none':'';
+  a.forEach(x=>{x.classList.remove('scan-fab');x.classList.remove('active');x.innerHTML='';x.onclick=null});
   if(type==='dashboard'){
     a[0].innerHTML=ICONS.plus;a[0].title='Add Expense';a[0].onclick=()=>openCrud('expenses');
     a[1].innerHTML=ICONS.scan;a[1].classList.add('scan-fab');a[1].title='Scan Loyverse Sale';a[1].onclick=()=>openScanModal();
     a[2].innerHTML=ICONS.plus;a[2].title='Buy Materials';a[2].onclick=()=>openCrud('materials');
     a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadDashboard();
-    if(main)main.style.display='';
-    return;
+  }else{
+    a[0].innerHTML=ICONS.plus;a[0].title='Add';a[0].onclick=()=>openCrud(managementType);
+    a[1].innerHTML=ICONS.search;a[1].title='Search';a[1].onclick=()=>document.getElementById('searchInput').focus();
+    a[2].innerHTML=ICONS.plus;a[2].title='Add';a[2].onclick=()=>openCrud(managementType);
+    a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadManagement();
   }
-  if(isMobileMgmt){
-    const items=[['sales','Sales',ICONS.search],['expenses','Expenses',ICONS.plus],['materials','Materials',ICONS.plus]];
-    a[0].innerHTML=`${ICONS.search}<span class="bottom-label">Sales</span>`;a[0].title='Sales';a[0].onclick=()=>openManagement('sales');
-    a[1].innerHTML=`${ICONS.plus}<span class="bottom-label">Expenses</span>`;a[1].title='Expenses';a[1].onclick=()=>openManagement('expenses');
-    a[2].innerHTML=`${ICONS.plus}<span class="bottom-label">Materials</span>`;a[2].title='Materials';a[2].onclick=()=>openManagement('materials');
-    a[3].innerHTML=`${ICONS.settings}<span class="bottom-label">More</span>`;a[3].title='More';a[3].onclick=()=>document.getElementById('managementMenu').classList.toggle('hidden');
-    const activeIndex={sales:0,expenses:1,materials:2}[type];if(activeIndex!==undefined)a[activeIndex].classList.add('active');
-    return;
-  }
-  a[0].innerHTML=ICONS.plus;a[0].title='Add';a[0].onclick=()=>openCrud(managementType);
-  a[1].innerHTML=ICONS.search;a[1].title='Search';a[1].onclick=()=>document.getElementById('searchInput').focus();
-  a[2].innerHTML=ICONS.plus;a[2].title='Add';a[2].onclick=()=>openCrud(managementType);
-  a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadManagement();
 }
 
 async function openCrud(type=managementType){
