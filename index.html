@@ -2519,3 +2519,14 @@ async function deleteBillFromGoogleSheet(documentNo){
 </script>
 </body>
 </html>
+<style id="bills-item-note-final-fix">
+/* Final fix: prevent amount/note inputs from touching or overflowing each other on mobile */
+.bill-edit-subgrid{gap:8px!important;min-width:0!important}
+.bill-edit-subgrid>div{min-width:0!important;width:100%!important}
+.bill-edit-subgrid .field{width:100%!important;max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+@media(max-width:800px){
+  .bill-edit-subgrid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:8px!important;width:100%!important}
+  .bill-edit-subgrid>div{min-width:0!important;width:100%!important}
+  .bill-edit-subgrid .field{width:100%!important;max-width:100%!important;box-sizing:border-box!important}
+}
+</style>
