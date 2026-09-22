@@ -1906,9 +1906,12 @@ function focusBillsStatus(type){
 }
 function toggleBillAccordion(id){
   const key=String(id);
-  billsState.accordion[key]=!billsState.accordion[key];
-  const el=document.querySelector(`[data-bill-accordion="${CSS.escape(key)}"]`);
-  if(el)el.classList.toggle('open',!!billsState.accordion[key]);
+  const next=!billsState.accordion[key];
+  billsState.accordion[key]=next;
+  // Bills is rendered into both desktop and mobile containers.
+  // Toggle every matching copy so the visible accordion always opens.
+  const selector=`[data-bill-accordion="${CSS.escape(key)}"]`;
+  document.querySelectorAll(selector).forEach(el=>el.classList.toggle('open',next));
 }
 function toggleMasterAccordion(key){
   const k=String(key);
