@@ -1982,7 +1982,7 @@ async function saveAsImage(){
    BILLS / DOCUMENTS MODULE
    Additive only. Existing dashboard/management functions remain intact.
    ========================== */
-const billsState={rows:[],suppliers:[],itemMasters:[],filtered:[],page:1,pageSize:30,editingId:null,editingRow:null,items:[],itemUploads:{},masterType:null,accordion:{},masterAccordion:{},activeTab:'bills',refreshing:false};
+const billsState={rows:[],suppliers:[],itemMasters:[],filtered:[],page:1,pageSize:30,editingId:null,editingRow:null,items:[],itemUploads:{},masterType:null,masterEditId:null,accordion:{},masterAccordion:{},activeTab:'bills',refreshing:false};
 const BILLS_SHEET_NAME='รายการ';
 
 function billEsc(v){return esc(v==null?'':String(v))}
@@ -2067,28 +2067,57 @@ function openBillsPanel(type){
   }
 }
 function openBillMaster(type){
-  billsState.masterType=type;
+  billsState.masterType=type;billsState.masterEditId=null;
   const isSupplier=type==='supplier';
   document.getElementById('billMasterKicker').textContent=isSupplier?'Bills / Supplier List':'Bills / Items';
   document.getElementById('billMasterTitle').textContent=isSupplier?'เพิ่ม Supplier':'เพิ่มรายการ';
   document.getElementById('billMasterBody').innerHTML=isSupplier?`
     <div class="bill-editor-section"><div class="bill-editor-section-title">Supplier ใหม่</div>
-      <label class="form-item"><span class="form-label">ชื่อ Supplier</span><input id="bill_master_name" class="field" placeholder="เช่น Makro"></label>
+      <label class="form-item"><span class="form-label">ชื่อ Supplier</span><input id="bill_master_name" class="field" placeholder="เช่น Makro" oninput="checkBillMasterDuplicate()"><div id="bill_master_duplicate_warning" class="bill-master-duplicate-warning" style="display:none"></div></label>
       <label class="form-item" style="margin-top:9px"><span class="form-label">ที่อยู่</span><textarea id="bill_master_address" class="field" rows="3" placeholder="ที่อยู่ Supplier"></textarea></label>
     </div>
-    <div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillMaster()">ยกเลิก</button><button class="bills-btn primary" onclick="saveBillMaster()">${ICONS.plus}<span>เพิ่ม Supplier</span></button></div>`:`
+    <div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillMaster()">ยกเลิก</button><button id="billMasterSaveBtn" class="bills-btn primary" onclick="saveBillMaster()">${ICONS.plus}<span>เพิ่ม Supplier</span></button></div>`:`
     <div class="bill-editor-section"><div class="bill-editor-section-title">รายการใหม่</div>
-      <label class="form-item"><span class="form-label">ชื่อรายการ</span><input id="bill_master_name" class="field" placeholder="เช่น น้ำสัปปะรด"></label>
+      <label class="form-item"><span class="form-label">ชื่อรายการ</span><input id="bill_master_name" class="field" placeholder="เช่น น้ำสัปปะรด" oninput="checkBillMasterDuplicate()"><div id="bill_master_duplicate_warning" class="bill-master-duplicate-warning" style="display:none"></div></label>
     </div>
-    <div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillMaster()">ยกเลิก</button><button class="bills-btn primary" onclick="saveBillMaster()">${ICONS.plus}<span>เพิ่มรายการ</span></button></div>`;
+    <div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillMaster()">ยกเลิก</button><button id="billMasterSaveBtn" class="bills-btn primary" onclick="saveBillMaster()">${ICONS.plus}<span>เพิ่มรายการ</span></button></div>`;
   document.getElementById('billMasterOverlay').classList.add('open');
   setTimeout(()=>document.getElementById('bill_master_name')?.focus(),80);
 }
-function closeBillMaster(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('billMasterOverlay')?.classList.remove('open');billsState.masterType=null}
+function closeBillMaster(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('billMasterOverlay')?.classList.remove('open');billsState.masterType=null;billsState.masterEditId=null}
+function checkBillMasterDuplicate(){
+  const type=billsState.masterType;
+  const input=document.getElementById('bill_master_name');
+  const warn=document.getElementById('bill_master_duplicate_warning');
+  const btn=document.getElementById('billMasterSaveBtn');
+  if(!input||!warn)return false;
+  const name=String(input.value||'').trim();
+  const key=name.toLowerCase();
+  let duplicate=null;
+  if(name){
+    if(type==='supplier'){
+      duplicate=(billsState.suppliers||[]).find(x=>String(x?.name||'').trim().toLowerCase()===key && String(x?.id||'')!==String(billsState.masterEditId||''));
+    }else{
+      duplicate=(billsState.itemMasters||[]).find(x=>String(x?.name||'').trim().toLowerCase()===key && String(x?.id||'')!==String(billsState.masterEditId||''));
+    }
+  }
+  if(duplicate){
+    warn.textContent=type==='supplier'?'⚠️ Supplier นี้มีอยู่แล้วในระบบ':'⚠️ รายการนี้มีอยู่แล้วในระบบ';
+    warn.style.display='block';
+    input.classList.add('bill-master-duplicate');
+    if(btn)btn.disabled=true;
+    return true;
+  }
+  warn.textContent='';warn.style.display='none';input.classList.remove('bill-master-duplicate');
+  if(btn)btn.disabled=false;
+  return false;
+}
+
 async function saveBillMaster(){
   if(!db||!currentUser){showLogin();return}
   const type=billsState.masterType,name=document.getElementById('bill_master_name')?.value.trim();
   if(!type||!name)return toast('กรุณากรอกชื่อให้ครบ');
+  if(checkBillMasterDuplicate())return;
   setLoading(true,type==='supplier'?'กำลังเพิ่ม Supplier...':'กำลังเพิ่มรายการ...');
   try{
     if(type==='supplier'){
@@ -2120,14 +2149,16 @@ async function editBillMaster(type,id){
   if(!id){toast('ข้อมูลนี้เป็นรายการอัตโนมัติจากเอกสารเดิม');return}
   const row=type==='supplier'?billsState.suppliers.find(x=>String(x.id)===String(id)):billsState.itemMasters.find(x=>String(x.id)===String(id));
   if(!row)return;
-  billsState.masterType=type;
+  billsState.masterType=type;billsState.masterEditId=id;
   document.getElementById('billMasterKicker').textContent=type==='supplier'?'Bills / Supplier List':'Bills / Items';
   document.getElementById('billMasterTitle').textContent=type==='supplier'?'แก้ไข Supplier':'แก้ไขรายการ';
-  document.getElementById('billMasterBody').innerHTML=type==='supplier'?`<div class="bill-editor-section"><div class="bill-editor-section-title">แก้ไข Supplier</div><label class="form-item"><span class="form-label">ชื่อ Supplier</span><input id="bill_master_name" class="field" value="${billEsc(row.name||'')}" placeholder="ชื่อ Supplier"></label><label class="form-item" style="margin-top:9px"><span class="form-label">ที่อยู่</span><textarea id="bill_master_address" class="field" rows="3" placeholder="ที่อยู่ Supplier">${billEsc(row.address||'')}</textarea></label></div><div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillMaster()">ยกเลิก</button><button class="bills-btn primary" onclick="updateBillMaster('${String(id).replace(/'/g,"\\'")}')">${ICONS.edit}<span>บันทึก</span></button></div>`:`<div class="bill-editor-section"><div class="bill-editor-section-title">แก้ไขรายการ</div><label class="form-item"><span class="form-label">ชื่อรายการ</span><input id="bill_master_name" class="field" value="${billEsc(row.name||'')}" placeholder="ชื่อรายการ"></label></div><div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillMaster()">ยกเลิก</button><button class="bills-btn primary" onclick="updateBillMaster('${String(id).replace(/'/g,"\\'")}')">${ICONS.edit}<span>บันทึก</span></button></div>`;
+  document.getElementById('billMasterBody').innerHTML=type==='supplier'?`<div class="bill-editor-section"><div class="bill-editor-section-title">แก้ไข Supplier</div><label class="form-item"><span class="form-label">ชื่อ Supplier</span><input id="bill_master_name" class="field" value="${billEsc(row.name||'')}" placeholder="ชื่อ Supplier" oninput="checkBillMasterDuplicate()"><div id="bill_master_duplicate_warning" class="bill-master-duplicate-warning" style="display:none"></div></label><label class="form-item" style="margin-top:9px"><span class="form-label">ที่อยู่</span><textarea id="bill_master_address" class="field" rows="3" placeholder="ที่อยู่ Supplier">${billEsc(row.address||'')}</textarea></label></div><div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillMaster()">ยกเลิก</button><button class="bills-btn primary" onclick="updateBillMaster('${String(id).replace(/'/g,"\\'")}')">${ICONS.edit}<span>บันทึก</span></button></div>`:`<div class="bill-editor-section"><div class="bill-editor-section-title">แก้ไขรายการ</div><label class="form-item"><span class="form-label">ชื่อรายการ</span><input id="bill_master_name" class="field" value="${billEsc(row.name||'')}" placeholder="ชื่อรายการ" oninput="checkBillMasterDuplicate()"><div id="bill_master_duplicate_warning" class="bill-master-duplicate-warning" style="display:none"></div></label></div><div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillMaster()">ยกเลิก</button><button class="bills-btn primary" onclick="updateBillMaster('${String(id).replace(/'/g,"\\'")}')">${ICONS.edit}<span>บันทึก</span></button></div>`;
   document.getElementById('billMasterOverlay').classList.add('open');
+  setTimeout(checkBillMasterDuplicate,50);
 }
 async function updateBillMaster(id){
   const type=billsState.masterType,name=document.getElementById('bill_master_name')?.value.trim();if(!name)return toast('กรุณากรอกชื่อ');
+  if(checkBillMasterDuplicate())return;
   const oldRow=type==='supplier'?billsState.suppliers.find(x=>String(x.id)===String(id)):billsState.itemMasters.find(x=>String(x.id)===String(id));
   const oldName=String(oldRow?.name||'').trim();
   try{
@@ -2229,10 +2260,20 @@ async function loadBills(){
     });
     billsState.suppliers=supRes.data||[];
     billsState.itemMasters=itemRes.error?[]:(itemRes.data||[]);
-    if(!billsState.itemMasters.length){
-      const seen=new Set();
-      billsState.rows.forEach(r=>(r.purchase_document_items||[]).forEach(x=>{const n=String(x.item_name||'').trim();if(n&&!seen.has(n)){seen.add(n);billsState.itemMasters.push({id:null,name:n,active:true})}}));
-    }
+    // Always merge item names already used in historical purchase documents.
+    // The master list should never shrink to only newly-created items.
+    const itemNames=new Map();
+    billsState.itemMasters.forEach(m=>{
+      const n=String(m?.name||'').trim();
+      if(n)itemNames.set(n.toLowerCase(),m);
+    });
+    billsState.rows.forEach(r=>(r.purchase_document_items||[]).forEach(x=>{
+      const n=String(x?.item_name||'').trim();
+      if(n&&!itemNames.has(n.toLowerCase())){
+        itemNames.set(n.toLowerCase(),{id:null,name:n,active:true,legacy:true});
+      }
+    }));
+    billsState.itemMasters=Array.from(itemNames.values()).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'th'));
     const dates=billsState.rows.map(x=>localDateOnly(x.document_date)).filter(Boolean).sort();
     const from=document.getElementById('billsFrom'),to=document.getElementById('billsTo');
     if(!from.value)from.value=dates[0]||'';
@@ -2831,4 +2872,6 @@ async function deleteBillFromGoogleSheet(documentNo){
   .bill-edit-subgrid>div{min-width:0!important;width:100%!important}
   .bill-edit-subgrid .field{width:100%!important;max-width:100%!important;box-sizing:border-box!important}
 }
+
+.bill-master-duplicate-warning{margin-top:7px;padding:9px 11px;border:1px solid rgba(158,53,31,.55);border-radius:10px;background:rgba(158,53,31,.10);color:#e58a72;font-size:13px;font-weight:600}.bill-master-duplicate{border-color:#c95a43!important;box-shadow:0 0 0 1px rgba(201,90,67,.22)}#billMasterSaveBtn:disabled{opacity:.45;cursor:not-allowed}
 </style>
