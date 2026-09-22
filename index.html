@@ -150,6 +150,24 @@
 .bill-image-viewer-title{position:absolute;left:16px;bottom:14px;right:70px;font-size:10px;color:rgba(255,255,255,.62);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
 @media(max-width:600px){.bill-image-viewer{padding:10px}.bill-image-viewer-card{width:94vw;height:82vh;border-radius:18px;padding:10px}.bill-image-viewer-close{width:38px;height:38px}.bill-image-viewer-title{bottom:10px;left:12px}}
 </style>
+<style id="refresh-button-fix">
+  .fab.is-refreshing {
+    pointer-events: none;
+    opacity: .72;
+  }
+  .fab.is-refreshing svg {
+    animation: balenristaRefreshSpin .75s linear infinite;
+  }
+  .bills-btn.is-refreshing svg {
+    animation: balenristaRefreshSpin .75s linear infinite;
+  }
+  .bills-btn.is-refreshing { opacity:.72; pointer-events:none; }
+  @keyframes balenristaRefreshSpin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+</style>
+
 
 <style id="bills-module-style">
 /* ==========================
@@ -507,7 +525,7 @@
       <div class="bills-desc">จัดการใบสำคัญจ่าย บิลซื้อวัตถุดิบ ค่าใช้จ่าย และเอกสารทั้งหมด</div>
     </div>
     <div class="bills-head-actions">
-      <button class="bills-btn" onclick="loadBills()"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/></svg><span>Refresh</span></button>
+      <button class="bills-btn" id="billsRefreshBtn" onclick="refreshBills()"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/></svg><span>Refresh</span></button>
       <button class="bills-btn primary" onclick="openBillEditor()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>เพิ่มเอกสารใหม่</span></button>
     </div>
   </div>
@@ -805,6 +823,31 @@ function filterRows(rows,start,end){
   return (rows||[]).filter(x=>x.transaction_date>=start&&x.transaction_date<=end);
 }
 
+async function refreshDashboard(){
+  if(!sbReady)return;
+  const btn=document.getElementById('actionFour');
+  if(btn?.classList.contains('is-refreshing'))return;
+  const oldHtml=btn?.innerHTML||'';
+  try{
+    if(btn){
+      btn.classList.add('is-refreshing');
+      btn.setAttribute('aria-label','กำลังรีเฟรช');
+      btn.title='กำลังรีเฟรช...';
+    }
+    const [start]=range();
+    const selectedYear=Number(String(start).slice(0,4));
+    delete dashboardYearCache[String(selectedYear)];
+    await loadDashboard();
+  }finally{
+    if(btn){
+      btn.classList.remove('is-refreshing');
+      btn.innerHTML=oldHtml||ICONS.refresh;
+      btn.removeAttribute('aria-label');
+      btn.title='Refresh';
+    }
+  }
+}
+
 async function loadDashboard(){
   if(!sbReady)return;
   try{
@@ -932,6 +975,20 @@ async function fetchAllManagementRows(table,selectClause,orderColumn='transactio
   }
   return all;
 }
+async function refreshManagement(){
+  if(!db){renderManagementDemo();return}
+  const btn=document.getElementById('actionFour');
+  if(btn?.classList.contains('is-refreshing'))return;
+  const oldHtml=btn?.innerHTML||ICONS.refresh;
+  try{
+    if(btn){btn.classList.add('is-refreshing');btn.title='กำลังรีเฟรช...';btn.setAttribute('aria-label','กำลังรีเฟรช');}
+    if(managementType) delete cache[managementType];
+    await loadManagement();
+  }finally{
+    if(btn){btn.classList.remove('is-refreshing');btn.innerHTML=oldHtml||ICONS.refresh;btn.title='Refresh';btn.removeAttribute('aria-label');}
+  }
+}
+
 async function loadManagement(){
   if(!db){renderManagementDemo();return}
   try{
@@ -1138,12 +1195,12 @@ function setBottom(type){
     a[0].innerHTML=ICONS.plus;a[0].title='Add Expense';a[0].onclick=()=>openCrud('expenses');
     a[1].innerHTML=ICONS.scan;a[1].classList.add('scan-fab');a[1].title='Scan Loyverse Sale';a[1].onclick=()=>openScanModal();
     a[2].innerHTML=ICONS.plus;a[2].title='Buy Materials';a[2].onclick=()=>openCrud('materials');
-    a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadDashboard();
+    a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>refreshDashboard();
   }else{
     a[0].innerHTML=ICONS.plus;a[0].title='Add';a[0].onclick=()=>openCrud(managementType);
     a[1].innerHTML=ICONS.search;a[1].title='Search';a[1].onclick=()=>document.getElementById('searchInput').focus();
     a[2].innerHTML=ICONS.plus;a[2].title='Add';a[2].onclick=()=>openCrud(managementType);
-    a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>loadManagement();
+    a[3].innerHTML=ICONS.refresh;a[3].title='Refresh';a[3].onclick=()=>refreshManagement();
   }
 }
 
@@ -1925,7 +1982,7 @@ async function saveAsImage(){
    BILLS / DOCUMENTS MODULE
    Additive only. Existing dashboard/management functions remain intact.
    ========================== */
-const billsState={rows:[],suppliers:[],itemMasters:[],filtered:[],page:1,pageSize:30,editingId:null,editingRow:null,items:[],itemUploads:{},masterType:null,accordion:{},masterAccordion:{}};
+const billsState={rows:[],suppliers:[],itemMasters:[],filtered:[],page:1,pageSize:30,editingId:null,editingRow:null,items:[],itemUploads:{},masterType:null,accordion:{},masterAccordion:{},activeTab:'bills',refreshing:false};
 const BILLS_SHEET_NAME='รายการ';
 
 function billEsc(v){return esc(v==null?'':String(v))}
@@ -1965,6 +2022,7 @@ function closeBills(){
   document.getElementById('billsPanelInline')?.style.setProperty('display','none');
 }
 function switchBillsTab(type,scroll=true){
+  billsState.activeTab=type;
   const main=document.getElementById('billsMainView'),panel=document.getElementById('billsPanelInline');
   document.querySelectorAll('.bills-tab').forEach(b=>b.classList.toggle('active',b.dataset.billsTab===type));
   if(type==='bills'){
@@ -2067,6 +2125,22 @@ async function deleteBillMaster(type,id){
   try{setLoading(true,'กำลังลบ...');let q;if(type==='supplier'){const used=billsState.rows.some(r=>String(r.supplier_id||'')===String(id));if(used)throw new Error('Supplier นี้ถูกใช้งานในเอกสารแล้ว ไม่ควรลบ');q=await db.from('suppliers').delete().eq('id',id)}else{q=await db.from('bill_item_master').update({active:false}).eq('id',id)}if(q.error)throw q.error;await loadBills();switchBillsTab(type==='supplier'?'suppliers':'items',false);toast('ลบแล้ว')}catch(err){toast('ลบไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
 }
 function closeBillsPanel(){switchBillsTab('bills',false)}
+
+async function refreshBills(){
+  if(billsState.refreshing)return;
+  const btn=document.getElementById('billsRefreshBtn');
+  billsState.refreshing=true;
+  const oldHtml=btn?.innerHTML||'';
+  try{
+    if(btn){btn.classList.add('is-refreshing');btn.title='กำลังรีเฟรช...';btn.setAttribute('aria-label','กำลังรีเฟรช');}
+    await loadBills();
+    const tab=billsState.activeTab||'bills';
+    if(tab!=='bills') openBillsPanel(tab);
+  }finally{
+    billsState.refreshing=false;
+    if(btn){btn.classList.remove('is-refreshing');btn.innerHTML=oldHtml||btn.innerHTML;btn.title='Refresh';btn.removeAttribute('aria-label');}
+  }
+}
 
 async function loadBills(){
   if(!db){toast('กรุณาตั้งค่า Supabase ก่อนใช้งาน Bills');return}
