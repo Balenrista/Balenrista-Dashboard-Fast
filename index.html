@@ -606,7 +606,7 @@ const db = sbReady ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : nu
 const GOOGLE_SHEET_BRIDGE = 'https://script.google.com/macros/s/AKfycbxjmF8iL8G3BGd4DbrY9MAXg2qCSfSgs2lixc4yJkY7pZhT9it8cuic4W-kxGBkOzP69A/exec';
 
 // Bills-only Apps Script bridge. Set this after deploying the separate Bills Code.gs.
-const BILLS_GOOGLE_BRIDGE = '';
+const BILLS_GOOGLE_BRIDGE = 'https://script.google.com/macros/s/AKfycbw27jAMvlmqHTnI3PBDnYsK-JPHN46_Kr8q5QpVjEllJWR2dObIclcp28Hun80pmuBt/exec';
 
 // Supabase Edge Function for AI Loyverse Scan
 const LOYVERSE_SCAN_FUNCTION = 'https://iftsmcgvperrhjjfnhqa.supabase.co/functions/v1/loyverse-scan';
@@ -2528,6 +2528,137 @@ async function markBillPrinted(id,pdfUrl=''){
   if(String(pdfUrl||'').trim()) payload.document_url=String(pdfUrl).trim();
   const {error}=await db.from('document_prints').upsert(payload,{onConflict:'document_id'});
   if(error)throw error;
+}
+
+// Reconcile historical PDF print status from the Bills Google Sheet into Supabase.
+// This is intentionally separate from the normal one-click print flow.
+async function syncExistingBillPrints(){
+  if(!db) throw new Error('Supabase ยังไม่พร้อม');
+  if(!BILLS_GOOGLE_BRIDGE) throw new Error('ยังไม่ได้ตั้งค่า Bills Code.gs Web App URL');
+
+  toast('กำลังอ่านสถานะ PDF จาก Google Sheet…');
+  const data=await billsGooglePost('getBillPrintControls');
+  if(!data?.success) throw new Error(data?.error||'อ่านสถานะ PDF จาก Google Sheet ไม่สำเร็จ');
+
+  const sheetRows=Array.isArray(data.rows)?data.rows:[];
+  if(!sheetRows.length){
+    toast('ไม่พบรายการ PDF ที่พิมพ์แล้วใน Google Sheet');
+    return {synced:0,skipped:0,failed:0};
+  }
+
+  // Make sure the current Supabase document list is loaded before matching numbers.
+  if(!Array.isArray(billsState.rows)||!billsState.rows.length) await loadBills();
+
+  const byNo=new Map(
+    (billsState.rows||[]).map(row=>[String(row.document_no||'').trim(),row])
+  );
+
+  const payload=[];
+  let skipped=0;
+  const seen=new Set();
+
+  for(const item of sheetRows){
+    const documentNo=String(item?.documentNo||'').trim();
+    if(!documentNo||seen.has(documentNo)) continue;
+    seen.add(documentNo);
+
+    const row=byNo.get(documentNo);
+    if(!row?.id){
+      skipped++;
+      continue;
+    }
+
+    const pdfUrl=String(item?.pdfUrl||'').trim();
+    if(!pdfUrl){
+      skipped++;
+      continue;
+    }
+
+    const now=new Date().toISOString();
+    payload.push({
+      document_id:row.id,
+      need_print:false,
+      printed:true,
+      printed_at:now,
+      updated_at:now,
+      document_url:pdfUrl
+    });
+  }
+
+  if(!payload.length){
+    throw new Error('ไม่พบเลขที่เอกสารที่ตรงกับ Supabase และมี URL PDF');
+  }
+
+  const CHUNK_SIZE=25;
+  let synced=0;
+  let failed=0;
+  const failedItems=[];
+
+  for(let i=0;i<payload.length;i+=CHUNK_SIZE){
+    const chunk=payload.slice(i,i+CHUNK_SIZE);
+    toast(`กำลังซิงก์สถานะ PDF ${Math.min(i+chunk.length,payload.length)}/${payload.length}…`);
+
+    const q=await db.from('document_prints')
+      .upsert(chunk,{onConflict:'document_id'})
+      .select('document_id,printed,document_url');
+
+    if(q.error){
+      // If a batch ever fails, retry the same records one-by-one so one bad row
+      // cannot prevent the other historical bills from being reconciled.
+      for(const item of chunk){
+        const one=await db.from('document_prints')
+          .upsert(item,{onConflict:'document_id'})
+          .select('document_id,printed,document_url');
+        if(one.error){
+          failed++;
+          failedItems.push({document_id:item.document_id,error:one.error.message});
+        }else{
+          synced++;
+        }
+      }
+      continue;
+    }
+
+    const returned=Array.isArray(q.data)?q.data:[];
+    const returnedIds=new Set(returned.map(x=>String(x.document_id)));
+
+    // Verify every row returned by the batch. If Supabase ever omits one,
+    // retry that exact row individually instead of falsely counting it synced.
+    for(const item of chunk){
+      if(returnedIds.has(String(item.document_id))){
+        const got=returned.find(x=>String(x.document_id)===String(item.document_id));
+        if(got?.printed===true && String(got?.document_url||'').trim()===item.document_url){
+          synced++;
+          continue;
+        }
+      }
+
+      const one=await db.from('document_prints')
+        .upsert(item,{onConflict:'document_id'})
+        .select('document_id,printed,document_url');
+      const ok=Array.isArray(one.data)&&one.data.some(x=>
+        String(x.document_id)===String(item.document_id) &&
+        x.printed===true &&
+        String(x.document_url||'').trim()===item.document_url
+      );
+      if(one.error||!ok){
+        failed++;
+        failedItems.push({document_id:item.document_id,error:one.error?.message||'ตรวจสอบผลการซิงก์ไม่ผ่าน'});
+      }else{
+        synced++;
+      }
+    }
+  }
+
+  await loadBills();
+
+  if(failed){
+    toast(`ซิงก์แล้ว ${synced} รายการ แต่มี ${failed} รายการที่ไม่สำเร็จ`);
+  }else{
+    toast(`ซิงก์สถานะ PDF สำเร็จ ${synced} รายการ`);
+  }
+
+  return {synced,skipped,failed,failedItems};
 }
 
 function billPrintHtml(row){
