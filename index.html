@@ -611,7 +611,7 @@ const BILLS_GOOGLE_BRIDGE = 'https://script.google.com/macros/s/AKfycbw27jAMvlmq
 // Supabase Edge Function for AI Loyverse Scan
 const LOYVERSE_SCAN_FUNCTION = 'https://iftsmcgvperrhjjfnhqa.supabase.co/functions/v1/loyverse-scan';
 
-const ICONS={home:'<svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg>',edit:'<svg viewBox="0 0 24 24"><path d="m4 16.5-.8 3.3 3.3-.8L18.8 6.7a2.1 2.1 0 0 0-3-3L3.5 16.5Z"/><path d="m14.5 5.5 4 4"/></svg>',trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>',plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',search:'<svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m16 16 5 5"/></svg>',refresh:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/></svg>',settings:'<svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19 13 .1-1-.1-1 2-1.4-2-3.4-2.3 1a8 8 0 0 0-1.7-1L14.7 3h-4l-.3 3.2a8 8 0 0 0-1.7 1l-2.3-1-2 3.4 2 1.4-.1 1 .1 1-2 1.4 2 3.4 2.3-1a8 8 0 0 0 1.7 1l.3 3.2h4l.3-3.2a8 8 0 0 0 1.7-1l2.3 1 2-3.4-2-1.4Z"/></svg>',camera:'<svg viewBox="0 0 24 24"><path d="M5 7h3l1.5-2h5L16 7h3v12H5V7Z"/><circle cx="12" cy="13" r="3.5"/></svg>',scan:'<svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/></svg>',print:'<svg viewBox="0 0 24 24"><path d="M6 9V4h12v5"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>'};
+const ICONS={home:'<svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg>',edit:'<svg viewBox="0 0 24 24"><path d="m4 16.5-.8 3.3 3.3-.8L18.8 6.7a2.1 2.1 0 0 0-3-3L3.5 16.5Z"/><path d="m14.5 5.5 4 4"/></svg>',trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>',plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',search:'<svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m16 16 5 5"/></svg>',refresh:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/></svg>',settings:'<svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19 13 .1-1-.1-1 2-1.4-2-3.4-2.3 1a8 8 0 0 0-1.7-1L14.7 3h-4l-.3 3.2a8 8 0 0 0-1.7 1l-2.3-1-2 3.4 2 1.4-.1 1 .1 1-2 1.4 2 3.4 2.3-1a8 8 0 0 0 1.7 1l.3 3.2h4l.3-3.2a8 8 0 0 0 1.7-1l2.3 1 2-3.4-2-1.4Z"/></svg>',camera:'<svg viewBox="0 0 24 24"><path d="M5 7h3l1.5-2h5L16 7h3v12H5V7Z"/><circle cx="12" cy="13" r="3.5"/></svg>',scan:'<svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/></svg>',print:'<svg viewBox="0 0 24 24"><path d="M6 9V4h12v5"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>',file:'<svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h6"/></svg>'};
 const fmt=n=>Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmt0=n=>Number(n||0).toLocaleString('th-TH',{maximumFractionDigits:0});
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -2095,9 +2095,21 @@ async function saveBillMaster(){
       const address=document.getElementById('bill_master_address')?.value.trim()||'';
       const q=await db.from('suppliers').insert({name,address}).select('*').single();
       if(q.error)throw q.error;
+      try{
+        await billsGooglePost('saveSupplier',{name,address});
+      }catch(sheetError){
+        console.error('Supplier Google Sheet sync error:',sheetError);
+        toast(`บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: ${sheetError.message}`);
+      }
     }else{
       const q=await db.from('bill_item_master').insert({name,active:true}).select('*').single();
       if(q.error)throw q.error;
+      try{
+        await billsGooglePost('saveBillItem',{name});
+      }catch(sheetError){
+        console.error('Item Google Sheet sync error:',sheetError);
+        toast(`บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: ${sheetError.message}`);
+      }
     }
     closeBillMaster();toast(type==='supplier'?'เพิ่ม Supplier แล้ว':'เพิ่มรายการแล้ว');await loadBills();
     if(type==='supplier')switchBillsTab('suppliers',false);else switchBillsTab('items',false);
@@ -2116,13 +2128,56 @@ async function editBillMaster(type,id){
 }
 async function updateBillMaster(id){
   const type=billsState.masterType,name=document.getElementById('bill_master_name')?.value.trim();if(!name)return toast('กรุณากรอกชื่อ');
-  try{setLoading(true,'กำลังบันทึก...');const payload=type==='supplier'?{name,address:document.getElementById('bill_master_address')?.value.trim()||''}:{name};const q=await db.from(type==='supplier'?'suppliers':'bill_item_master').update(payload).eq('id',id);if(q.error)throw q.error;closeBillMaster();await loadBills();switchBillsTab(type==='supplier'?'suppliers':'items',false);toast('บันทึกแล้ว')}catch(err){toast('บันทึกไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
+  const oldRow=type==='supplier'?billsState.suppliers.find(x=>String(x.id)===String(id)):billsState.itemMasters.find(x=>String(x.id)===String(id));
+  const oldName=String(oldRow?.name||'').trim();
+  try{
+    setLoading(true,'กำลังบันทึก...');
+    const payload=type==='supplier'?{name,address:document.getElementById('bill_master_address')?.value.trim()||''}:{name};
+    const q=await db.from(type==='supplier'?'suppliers':'bill_item_master').update(payload).eq('id',id);
+    if(q.error)throw q.error;
+
+    try{
+      if(type==='supplier'){
+        if(oldName && oldName!==name) await billsGooglePost('deleteSupplier',{name:oldName});
+        await billsGooglePost('saveSupplier',{name,address:payload.address||''});
+      }else{
+        if(oldName && oldName!==name) await billsGooglePost('deleteBillItem',{name:oldName});
+        await billsGooglePost('saveBillItem',{name});
+      }
+    }catch(sheetError){
+      console.error('Master Google Sheet sync error:',sheetError);
+      toast(`บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: ${sheetError.message}`);
+    }
+
+    closeBillMaster();await loadBills();switchBillsTab(type==='supplier'?'suppliers':'items',false);toast('บันทึกแล้ว');
+  }catch(err){toast('บันทึกไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
 }
 async function deleteBillMaster(type,id){
   if(!id)return;
   const row=type==='supplier'?billsState.suppliers.find(x=>String(x.id)===String(id)):billsState.itemMasters.find(x=>String(x.id)===String(id));
   if(!row)return;if(!confirm(`ลบ ${type==='supplier'?'Supplier':'รายการ'} “${row.name||''}” ใช่ไหม?`))return;
-  try{setLoading(true,'กำลังลบ...');let q;if(type==='supplier'){const used=billsState.rows.some(r=>String(r.supplier_id||'')===String(id));if(used)throw new Error('Supplier นี้ถูกใช้งานในเอกสารแล้ว ไม่ควรลบ');q=await db.from('suppliers').delete().eq('id',id)}else{q=await db.from('bill_item_master').update({active:false}).eq('id',id)}if(q.error)throw q.error;await loadBills();switchBillsTab(type==='supplier'?'suppliers':'items',false);toast('ลบแล้ว')}catch(err){toast('ลบไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
+  try{
+    setLoading(true,'กำลังลบ...');
+    let q;
+    if(type==='supplier'){
+      const used=billsState.rows.some(r=>String(r.supplier_id||'')===String(id));
+      if(used)throw new Error('Supplier นี้ถูกใช้งานในเอกสารแล้ว ไม่ควรลบ');
+      q=await db.from('suppliers').delete().eq('id',id);
+    }else{
+      q=await db.from('bill_item_master').update({active:false}).eq('id',id);
+    }
+    if(q.error)throw q.error;
+
+    try{
+      if(type==='supplier') await billsGooglePost('deleteSupplier',{name:row.name});
+      else await billsGooglePost('deleteBillItem',{name:row.name});
+    }catch(sheetError){
+      console.error('Master Google Sheet delete sync error:',sheetError);
+      toast(`ลบจาก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: ${sheetError.message}`);
+    }
+
+    await loadBills();switchBillsTab(type==='supplier'?'suppliers':'items',false);toast('ลบแล้ว');
+  }catch(err){toast('ลบไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
 }
 function closeBillsPanel(){switchBillsTab('bills',false)}
 
@@ -2238,13 +2293,13 @@ function renderBills(){
     return `<div class="bill-accordion ${open?'open':''}" data-bill-accordion="${billEsc(id)}">
       <div class="bill-accordion-head" onclick="toggleBillAccordion('${safeId}')">
         <div class="bill-accordion-main"><div class="bill-accordion-no">${billEsc(r.document_no)}</div><div class="bill-accordion-meta">${billDate(r.document_date)} · ${billEsc(r.supplier_name||'—')} · ${items.length} รายการ</div><div class="bill-accordion-supplier">${billEsc(r.supplier_name||'ทั่วไป')}</div></div>
-        <div class="bill-accordion-summary"><div><div class="bill-accordion-total">${billMoney(r.total_amount)} THB</div><div style="margin-top:4px;text-align:right">${status}</div></div><div class="bill-accordion-head-actions"><button type="button" class="bill-icon-btn bill-head-print" title="พิมพ์ PDF" aria-label="พิมพ์ PDF" onclick="event.stopPropagation();printBill('${safeId}')">${ICONS.print}</button>${pdfUrl?`<a class="bill-icon-btn" title="ดู PDF" aria-label="ดู PDF" href="${billEsc(pdfUrl)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">📄</a>`:''}<span class="bill-accordion-chevron">${billChevron()}</span></div></div>
+        <div class="bill-accordion-summary"><div><div class="bill-accordion-total">${billMoney(r.total_amount)} THB</div><div style="margin-top:4px;text-align:right">${status}</div></div><div class="bill-accordion-head-actions"><button type="button" class="bill-icon-btn bill-head-print" title="พิมพ์ PDF" aria-label="พิมพ์ PDF" onclick="event.stopPropagation();printBill('${safeId}')">${ICONS.print}</button>${pdfUrl?`<a class="bill-icon-btn" title="ดู PDF" aria-label="ดู PDF" href="${billEsc(pdfUrl)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${ICONS.file}</a>`:''}<span class="bill-accordion-chevron">${billChevron()}</span></div></div>
       </div>
       <div class="bill-accordion-body">
         <div class="bill-accordion-actions">
           <button class="bills-btn" onclick="event.stopPropagation();openBillEditor('${safeId}')">${ICONS.edit}<span>แก้ไขเอกสาร</span></button>
           <button class="bills-btn" onclick="event.stopPropagation();printBill('${safeId}')">${ICONS.print}<span>พิมพ์ PDF</span></button>
-          ${pdfUrl?`<a class="bills-btn" href="${billEsc(pdfUrl)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">📄<span>ดู PDF</span></a>`:''}
+          ${pdfUrl?`<a class="bills-btn" href="${billEsc(pdfUrl)}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${ICONS.file}<span>ดู PDF</span></a>`:''}
           <button class="bill-icon-btn danger" title="ลบเอกสาร" onclick="event.stopPropagation();deleteBill('${safeId}')">${ICONS.trash}</button>
         </div>
         <div class="bill-accordion-items">
@@ -2280,7 +2335,7 @@ async function openBillDetail(id){
   const previewUrl=/\.(png|jpe?g|gif|webp)(\?.*)?$/i.test(receiptUrl)?receiptUrl:(/\.pdf(\?.*)?$/i.test(receiptUrl)?receiptUrl:'');
   const receiptPreview=previewUrl?( /\.pdf(\?.*)?$/i.test(previewUrl) ? `<div class="bill-receipt-preview"><iframe src="${billEsc(previewUrl)}" title="Receipt preview"></iframe></div>` : `<div class="bill-receipt-preview"><img src="${billEsc(previewUrl)}" alt="Receipt / slip preview" onerror="this.parentElement.remove()"></div>` ) : '';
   document.getElementById('billsDetailContent').innerHTML=`
-    <div class="bills-detail-head"><div><div class="bills-kicker">Payment Voucher</div><div class="bills-detail-title">${billEsc(row.document_no)}</div><div class="bills-detail-meta">${billDate(row.document_date)} · ${billEsc(row.supplier_name)}</div></div><div class="bills-detail-actions"><button class="bills-btn" onclick="openBillEditor('${String(id).replace(/'/g,"\'")}')">${ICONS.edit}<span>แก้ไข</span></button><button class="bills-btn" onclick="printBill('${String(id).replace(/'/g,"\'")}')">${ICONS.print}<span>พิมพ์ PDF</span></button>${receiptUrl&&/\.pdf(\?.*)?$/i.test(receiptUrl)?`<a class="bills-btn" href="${billEsc(receiptUrl)}" target="_blank" rel="noopener noreferrer">📄<span>ดู PDF</span></a>`:''}<button class="bills-btn danger" onclick="deleteBill('${String(id).replace(/'/g,"\'")}')">${ICONS.trash}<span>ลบ</span></button><button class="bill-icon-btn" onclick="closeBillsDetail()"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div></div>
+    <div class="bills-detail-head"><div><div class="bills-kicker">Payment Voucher</div><div class="bills-detail-title">${billEsc(row.document_no)}</div><div class="bills-detail-meta">${billDate(row.document_date)} · ${billEsc(row.supplier_name)}</div></div><div class="bills-detail-actions"><button class="bills-btn" onclick="openBillEditor('${String(id).replace(/'/g,"\'")}')">${ICONS.edit}<span>แก้ไข</span></button><button class="bills-btn" onclick="printBill('${String(id).replace(/'/g,"\'")}')">${ICONS.print}<span>พิมพ์ PDF</span></button>${receiptUrl&&/\.pdf(\?.*)?$/i.test(receiptUrl)?`<a class="bills-btn" href="${billEsc(receiptUrl)}" target="_blank" rel="noopener noreferrer">${ICONS.file}<span>ดู PDF</span></a>`:''}<button class="bills-btn danger" onclick="deleteBill('${String(id).replace(/'/g,"\'")}')">${ICONS.trash}<span>ลบ</span></button><button class="bill-icon-btn" onclick="closeBillsDetail()"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div></div>
     <div class="bills-detail-body"><div class="bill-detail-grid"><div class="bill-info-card"><div class="bill-info-label">Supplier</div><div class="bill-info-value">${billEsc(row.supplier_name)}<br><span style="font-weight:500;color:var(--muted)">${billEsc(row.supplier_address||'—')}</span></div></div><div class="bill-info-card"><div class="bill-info-label">Payment</div><div class="bill-info-value">${billEsc(billPaymentLabel(payment))}</div></div></div>
     <div class="bill-items-wrap">
       <div class="bill-item-list">
@@ -2376,10 +2431,18 @@ function closeBillsDetail(e){if(e&&e.target!==e.currentTarget)return;document.ge
 async function nextBillNumber(){
   const year=new Date().getFullYear();
   const prefix=`BA${year}`;
-  const {data,error}=await db.from('purchase_documents').select('document_no').ilike('document_no',`${prefix}%`).order('document_no',{ascending:false}).limit(1);
+  const {data,error}=await db.from('purchase_documents').select('document_no').ilike('document_no',`${prefix}%`);
   if(error)throw error;
-  let n=0;const m=String(data?.[0]?.document_no||'').match(new RegExp(`^${prefix}(\\d+)$`));if(m)n=Number(m[1]||0);
-  return `${prefix}${String(n+1).padStart(4,'0')}`;
+  let maxNo=0;
+  const re=new RegExp(`^${prefix}(\\d+)$`);
+  for(const row of (data||[])){
+    const m=String(row?.document_no||'').trim().match(re);
+    if(m){
+      const n=Number(m[1]);
+      if(Number.isFinite(n)&&n>maxNo)maxNo=n;
+    }
+  }
+  return `${prefix}${String(maxNo+1).padStart(5,'0')}`;
 }
 async function openBillEditor(id=null){
   if(!currentUser){showLogin();return}
@@ -2395,6 +2458,8 @@ async function openBillEditor(id=null){
     document.getElementById('billEditorTitle').textContent=id?`แก้ไข ${docNo}`:`เพิ่มเอกสาร ${docNo}`;
     const suppliers=billsState.suppliers.length?billsState.suppliers:(await db.from('suppliers').select('*').order('name')).data||[];
     billsState.suppliers=suppliers;
+    const latestItems=await db.from('bill_item_master').select('*').eq('active',true).order('name');
+    if(!latestItems.error) billsState.itemMasters=latestItems.data||[];
     renderBillEditor(row||{document_no:docNo,document_date:iso(today),supplier_id:'',supplier_name:'',supplier_address:'',note:'',cash_amount:0,transfer_amount:0,total_amount:0,receipt_url:''});
   }catch(err){document.getElementById('billEditorBody').innerHTML=`<div class="empty">เปิดฟอร์มไม่สำเร็จ: ${billEsc(err.message)}</div>`}
 }
@@ -2412,7 +2477,7 @@ function renderBillEditor(row){
       <label class="form-item full"><span class="form-label">Supplier</span><select id="bill_f_supplier" class="field" onchange="billSupplierChanged()"><option value="">เลือก Supplier</option>${billsState.suppliers.map(s=>`<option value="${billEsc(s.id)}" ${s.id===row.supplier_id?'selected':''}>${billEsc(s.name)}</option>`).join('')}</select></label>
       <label class="form-item full"><span class="form-label">ที่อยู่ Supplier</span><input id="bill_f_address" class="field bill-address-auto" value="${billEsc(row.supplier_address||'')}" readonly></label>
     </div></div>
-    <div class="bill-editor-section"><div class="bill-editor-section-title">รายการ</div><div class="bill-items-editor"><datalist id="billItemMasterList">${billsState.itemMasters.map(x=>`<option value="${billEsc(x.name)}"></option>`).join('')}</datalist><div id="billEditorItems"></div><button class="bills-btn bill-add-row" onclick="addBillItem()">${ICONS.plus}<span>เพิ่มรายการ</span></button></div></div>
+    <div class="bill-editor-section"><div class="bill-editor-section-title">รายการ</div><div class="bill-items-editor"><div id="billEditorItems"></div><button class="bills-btn bill-add-row" onclick="addBillItem()">${ICONS.plus}<span>เพิ่มรายการ</span></button></div></div>
     <div class="bill-editor-payment-summary bill-editor-payment-summary-compact" aria-label="สรุปการชำระเงิน"><div><span>เงินสด</span><strong id="billEditorCash">0.00 THB</strong></div><div><span>โอน</span><strong id="billEditorTransfer">0.00 THB</strong></div></div>
     <div class="bill-total-box" style="margin-top:4px"><div class="bill-total-box-inner"><span>รวมทั้งสิ้น</span><strong id="billEditorTotal">0.00 THB</strong></div></div>
     <div class="bill-editor-actions bill-editor-actions-sticky">
@@ -2429,7 +2494,15 @@ function renderBillEditorItems(){
     return `<div class="bill-edit-row bill-edit-row-rich">
       <div class="bill-row-num">${i+1}</div>
       <div class="bill-edit-main">
-        <input class="field" id="bill_item_name_${i}" list="billItemMasterList" value="${billEsc(x.item_name)}" placeholder="รายการ" oninput="billReadItems()">
+        <select class="field bill-item-name-select" id="bill_item_name_${i}" onchange="billReadItems()">
+          <option value="">เลือกรายการ</option>
+          ${(()=>{
+            const current=String(x.item_name||'').trim();
+            const names=(billsState.itemMasters||[]).map(m=>String(m.name||'').trim()).filter(Boolean);
+            if(current && !names.includes(current)) names.unshift(current);
+            return names.map(name=>`<option value="${billEsc(name)}" ${name===current?'selected':''}>${billEsc(name)}</option>`).join('');
+          })()}
+        </select>
         <div class="bill-edit-subgrid">
           <div>
             <input class="field bill-item-amount-field" id="bill_item_amount_${i}" type="number" min="0" step="0.01" value="${Number(x.amount||0).toFixed(2)}" placeholder="0.00" oninput="billReadItems();billRecalc()">
