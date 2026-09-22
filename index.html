@@ -2145,14 +2145,33 @@ async function refreshBills(){
 async function loadBills(){
   if(!db){toast('กรุณาตั้งค่า Supabase ก่อนใช้งาน Bills');return}
   try{
-    const [docsRes,supRes,itemRes]=await Promise.all([
-      db.from('purchase_documents').select('*,purchase_document_items(*),document_prints(*)').order('document_date',{ascending:false}).order('document_no',{ascending:false}),
+    // Load print-control records separately from the document relation.
+    // This avoids relying on PostgREST's nested relation shape for document_prints
+    // and guarantees the UI gets the current Supabase print state.
+    const [docsRes,supRes,itemRes,printRes]=await Promise.all([
+      db.from('purchase_documents').select('*,purchase_document_items(*)').order('document_date',{ascending:false}).order('document_no',{ascending:false}),
       db.from('suppliers').select('*').order('name'),
-      db.from('bill_item_master').select('*').eq('active',true).order('name')
+      db.from('bill_item_master').select('*').eq('active',true).order('name'),
+      db.from('document_prints').select('*')
     ]);
     if(docsRes.error)throw docsRes.error;
     if(supRes.error)throw supRes.error;
-    billsState.rows=(docsRes.data||[]).map(d=>({...d,purchase_document_items:(d.purchase_document_items||[]).sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0))}));
+    if(printRes.error)throw printRes.error;
+
+    const printByDocumentId=new Map();
+    (printRes.data||[]).forEach(p=>{
+      const key=String(p?.document_id||'').trim();
+      if(key) printByDocumentId.set(key,p);
+    });
+
+    billsState.rows=(docsRes.data||[]).map(d=>{
+      const print=printByDocumentId.get(String(d.id||'').trim());
+      return {
+        ...d,
+        purchase_document_items:(d.purchase_document_items||[]).sort((a,b)=>Number(a.sort_order||0)-Number(b.sort_order||0)),
+        document_prints:print?[print]:[]
+      };
+    });
     billsState.suppliers=supRes.data||[];
     billsState.itemMasters=itemRes.error?[]:(itemRes.data||[]);
     if(!billsState.itemMasters.length){
@@ -2169,8 +2188,13 @@ async function loadBills(){
 }
 function getBillFilterState(){return {from:document.getElementById('billsFrom').value,to:document.getElementById('billsTo').value,payment:document.getElementById('billsPayment').value,q:document.getElementById('billsSearch').value.trim().toLowerCase()}}
 function getBillPrintRecords(row){
-  const arr=Array.isArray(row?.document_prints)?row.document_prints.filter(Boolean):[];
-  if(arr.length)return arr;
+  const raw=row?.document_prints;
+  if(Array.isArray(raw)){
+    const arr=raw.filter(Boolean);
+    if(arr.length)return arr;
+  }else if(raw && typeof raw==='object'){
+    return [raw];
+  }
   if(row?.print_record)return [row.print_record];
   return [];
 }
