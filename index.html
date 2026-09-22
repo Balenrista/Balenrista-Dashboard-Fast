@@ -606,7 +606,7 @@ const db = sbReady ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : nu
 const GOOGLE_SHEET_BRIDGE = 'https://script.google.com/macros/s/AKfycbxjmF8iL8G3BGd4DbrY9MAXg2qCSfSgs2lixc4yJkY7pZhT9it8cuic4W-kxGBkOzP69A/exec';
 
 // Bills-only Apps Script bridge. Set this after deploying the separate Bills Code.gs.
-const BILLS_GOOGLE_BRIDGE = 'https://script.google.com/macros/s/AKfycbw27jAMvlmqHTnI3PBDnYsK-JPHN46_Kr8q5QpVjEllJWR2dObIclcp28Hun80pmuBt/exec ';
+const BILLS_GOOGLE_BRIDGE = '';
 
 // Supabase Edge Function for AI Loyverse Scan
 const LOYVERSE_SCAN_FUNCTION = 'https://iftsmcgvperrhjjfnhqa.supabase.co/functions/v1/loyverse-scan';
@@ -2529,69 +2529,7 @@ async function markBillPrinted(id,pdfUrl=''){
   const {error}=await db.from('document_prints').upsert(payload,{onConflict:'document_id'});
   if(error)throw error;
 }
-async function syncExistingBillPrints(){
-  if(!BILLS_GOOGLE_BRIDGE) throw new Error('ยังไม่ได้ตั้งค่า Bills Code.gs Web App URL');
 
-  toast('กำลังอ่านสถานะ PDF จาก Google Sheet…');
-
-  const data = await billsGooglePost('getBillPrintControls');
-
-  if(!data?.success) {
-    throw new Error(data?.error || 'อ่านสถานะ PDF จาก Google Sheet ไม่สำเร็จ');
-  }
-
-  const rows = Array.isArray(data.rows) ? data.rows : [];
-
-  if(!rows.length){
-    toast('ไม่พบรายการ PDF ที่พิมพ์แล้วใน Google Sheet');
-    return { synced: 0, skipped: 0 };
-  }
-
-  const byNo = new Map(
-    billsState.rows.map(row => [String(row.document_no || '').trim(), row])
-  );
-
-  const payload = [];
-  let skipped = 0;
-
-  rows.forEach(item => {
-    const documentNo = String(item.documentNo || '').trim();
-    const row = byNo.get(documentNo);
-
-    if(!row?.id){
-      skipped++;
-      return;
-    }
-
-    payload.push({
-      document_id: row.id,
-      need_print: false,
-      printed: true,
-      printed_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-      document_url: String(item.pdfUrl || '').trim()
-    });
-  });
-
-  if(!payload.length){
-    throw new Error('ไม่พบเลขที่เอกสารที่ตรงกับ Supabase');
-  }
-
-  toast(`กำลังอัปเดต Supabase ${payload.length} รายการ…`);
-
-  const { error } = await db
-    .from('document_prints')
-    .upsert(payload, { onConflict: 'document_id' });
-
-  if(error) throw error;
-
-  await loadBills();
-
-  return {
-    synced: payload.length,
-    skipped
-  };
-}
 function billPrintHtml(row){
   const items=row.purchase_document_items||[];const p=billDocPayment(row);const printedDate=new Date().toLocaleDateString('th-TH');
   const check=(key)=>`<span class="bill-check-box ${p===key?'on':''}">${p===key?'✓':''}</span>`;
