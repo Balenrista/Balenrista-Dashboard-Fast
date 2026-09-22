@@ -2544,7 +2544,7 @@ async function syncBillPrintControl(row,pdfUrl){
 async function createBillPrintPdf(row){
   if(!BILLS_GOOGLE_BRIDGE) throw new Error('ยังไม่ได้ตั้งค่า Bills Code.gs Web App URL');
   const data=await billsGooglePost('createBillPdf',{documentNo:String(row.document_no),html:billPrintHtml(row)});
-  return data.url||null;
+  return data.pdfUrl || data.url || null;
 }
 async function printBill(id){
   const row=billsState.rows.find(x=>x.id===id); if(!row)return;
