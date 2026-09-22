@@ -398,6 +398,57 @@
   .bill-editor-payment-summary>div{min-width:82px!important;padding:4px 7px!important}
 }
 </style>
+
+<style id="bills-modal-glass-polish">
+/* Centered glass modals for Bills forms */
+.bills-detail-overlay{
+  align-items:center!important;
+  justify-content:center!important;
+  padding:18px!important;
+  background:rgba(5,4,4,.48)!important;
+  backdrop-filter:blur(18px) saturate(115%)!important;
+  -webkit-backdrop-filter:blur(18px) saturate(115%)!important;
+}
+.bill-editor-overlay .bill-editor,
+.bill-master-modal{
+  width:min(760px,calc(100vw - 36px))!important;
+  max-width:760px!important;
+  max-height:min(88dvh,820px)!important;
+  min-height:0!important;
+  border-radius:24px!important;
+  background:linear-gradient(145deg,rgba(34,29,27,.76),rgba(18,15,14,.68))!important;
+  border:1px solid rgba(243,237,231,.14)!important;
+  box-shadow:0 30px 100px rgba(0,0,0,.52),inset 0 1px 0 rgba(255,255,255,.045)!important;
+  backdrop-filter:blur(30px) saturate(125%)!important;
+  -webkit-backdrop-filter:blur(30px) saturate(125%)!important;
+}
+.bill-editor-overlay .bill-editor{height:auto!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
+.bill-editor-body{overflow:auto!important}
+.bill-editor-head{background:rgba(25,21,19,.58)!important;backdrop-filter:blur(18px)!important;-webkit-backdrop-filter:blur(18px)!important}
+.bill-master-modal{overflow:hidden!important}
+.bill-master-modal .bill-editor-body{max-height:calc(88dvh - 74px);overflow:auto!important}
+.bill-pay-toggle{
+  gap:6px!important;
+  color:var(--muted)!important;
+}
+.bill-pay-icon{width:14px;height:14px;display:inline-grid;place-items:center;flex:none}
+.bill-pay-icon svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.bill-pay-toggle.active .bill-pay-icon{color:var(--paper)}
+@media(max-width:600px){
+  .bills-detail-overlay{padding:12px!important;align-items:center!important}
+  .bill-editor-overlay .bill-editor, .bill-master-modal{
+    width:calc(100vw - 24px)!important;
+    max-width:none!important;
+    max-height:88dvh!important;
+    min-height:0!important;
+    height:auto!important;
+    border-radius:22px!important;
+  }
+  .bill-editor-overlay .bill-editor{height:88dvh!important}
+  .bill-editor-body{padding:10px!important}
+  .bill-master-modal .bill-editor-body{max-height:calc(88dvh - 70px)!important}
+}
+</style>
 </head>
 <body>
 <div id="authOverlay" class="auth-overlay hidden">
@@ -2230,8 +2281,8 @@ function renderBillEditorItems(){
           <div>
             <input class="field bill-item-amount-field" id="bill_item_amount_${i}" type="number" min="0" step="0.01" value="${Number(x.amount||0).toFixed(2)}" placeholder="0.00" oninput="billReadItems();billRecalc()">
             <div class="bill-item-payment" aria-label="การชำระเงินของรายการ">
-              <button type="button" class="bill-pay-toggle ${flags.cash?'active':''}" onclick="toggleBillItemPayment(${i},'cash')">☑ เงินสด</button>
-              <button type="button" class="bill-pay-toggle ${flags.transfer?'active':''}" onclick="toggleBillItemPayment(${i},'transfer')">☑ โอน</button>
+              <button type="button" class="bill-pay-toggle ${flags.cash?'active':''}" onclick="toggleBillItemPayment(${i},'cash')"><span class="bill-pay-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M7 10h.01M17 15h.01M8 15h5"/></svg></span><span>เงินสด</span></button>
+              <button type="button" class="bill-pay-toggle ${flags.transfer?'active':''}" onclick="toggleBillItemPayment(${i},'transfer')"><span class="bill-pay-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 7h13"/><path d="m14 4 3 3-3 3"/><path d="M20 17H7"/><path d="m10 14-3 3 3 3"/></svg></span><span>โอน</span></button>
             </div>
           </div>
           <div>
