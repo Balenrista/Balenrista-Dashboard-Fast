@@ -161,6 +161,16 @@
 .bills-quick-nav{display:none!important;position:fixed;z-index:150;left:50%;bottom:82px;transform:translateX(-50%);width:min(560px,calc(100vw - 28px));display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px;border:1px solid rgba(243,237,231,.10);background:rgba(21,18,16,.88);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-radius:17px;box-shadow:0 18px 55px rgba(0,0,0,.42)}
 .bills-quick-btn{height:39px;border:1px solid transparent;background:transparent;color:var(--muted);border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px;font:inherit;font-size:9px;font-weight:800;cursor:pointer}.bills-quick-btn:hover,.bills-quick-btn:active{background:rgba(255,255,255,.06);color:var(--paper)}.bills-quick-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .bills-mobile-list{display:none}
+.bills-accordion-list{display:flex;flex-direction:column;gap:7px}
+.bill-accordion{border:1px solid var(--line);border-radius:15px;background:rgba(255,255,255,.018);overflow:hidden}
+.bill-accordion-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 13px;cursor:pointer;user-select:none}
+.bill-accordion-head:hover{background:rgba(255,255,255,.025)}
+.bill-accordion-main{min-width:0;flex:1}.bill-accordion-no{font-size:12px;font-weight:900;color:var(--paper);letter-spacing:.2px}.bill-accordion-meta{font-size:8px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bill-accordion-supplier{font-size:9px;font-weight:800;margin-top:4px}.bill-accordion-summary{display:flex;align-items:center;gap:12px;flex:none}.bill-accordion-total{font-size:12px;font-weight:900;color:var(--paper);white-space:nowrap}.bill-accordion-chevron{width:29px;height:29px;border:1px solid var(--line);border-radius:9px;display:grid;place-items:center;color:var(--muted);transition:transform .18s ease,background .18s ease}.bill-accordion.open .bill-accordion-chevron{transform:rotate(180deg);background:rgba(181,151,133,.08);color:var(--paper)}
+.bill-accordion-body{display:none;border-top:1px solid var(--line);padding:10px 12px 12px}.bill-accordion.open .bill-accordion-body{display:block}
+.bill-accordion-actions{display:flex;justify-content:flex-end;gap:5px;margin-bottom:9px}.bill-accordion-actions .bill-icon-btn{width:32px;height:32px}.bill-accordion-actions .bills-btn{height:32px;padding:0 10px;font-size:9px}
+.bill-accordion-items{border:1px solid var(--line);border-radius:12px;overflow:hidden}.bill-accordion-item{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:8px;padding:10px;border-top:1px solid var(--line);align-items:center}.bill-accordion-item:first-child{border-top:0}.bill-accordion-item-no{font-size:8px;color:var(--muted);text-align:center}.bill-accordion-item-main{min-width:0}.bill-accordion-item-name{font-size:10px;font-weight:850;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bill-accordion-item-note{font-size:8px;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bill-accordion-item-right{display:flex;align-items:center;gap:8px}.bill-accordion-item-amount{font-size:10px;font-weight:900;color:#d35b4d;white-space:nowrap}.bill-accordion-item-actions{display:flex;gap:4px}.bill-accordion-item-actions .bill-icon-btn{width:29px;height:29px}.bill-accordion-footer{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:9px;padding:9px 10px;border:1px solid var(--line);border-radius:11px}.bill-accordion-footer-label{font-size:9px;color:var(--muted)}.bill-accordion-footer-value{font-size:13px;font-weight:900;color:#d35b4d;white-space:nowrap}
+.bills-master-accordion-list{display:flex;flex-direction:column;gap:7px}.bills-master-accordion{border:1px solid var(--line);border-radius:14px;background:rgba(255,255,255,.018);overflow:hidden}.bills-master-accordion-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;cursor:pointer}.bills-master-accordion-name{font-size:10px;font-weight:850}.bills-master-accordion-meta{font-size:8px;color:var(--muted);margin-top:3px}.bills-master-accordion-body{display:none;border-top:1px solid var(--line);padding:10px 12px}.bills-master-accordion.open .bills-master-accordion-body{display:block}.bills-master-accordion-actions{display:flex;justify-content:flex-end;gap:5px;margin-top:8px}.bills-master-accordion-actions .bill-icon-btn{width:30px;height:30px}.bills-master-chevron{width:27px;height:27px;border:1px solid var(--line);border-radius:8px;display:grid;place-items:center;color:var(--muted);transition:transform .18s ease}.bills-master-accordion.open .bills-master-chevron{transform:rotate(180deg);color:var(--paper)}
+@media(max-width:600px){.bill-accordion-head{padding:10px 11px}.bill-accordion-no{font-size:11px}.bill-accordion-total{font-size:11px}.bill-accordion-body{padding:8px 9px 10px}.bill-accordion-item{grid-template-columns:24px minmax(0,1fr);gap:7px;padding:9px}.bill-accordion-item-right{grid-column:2;justify-content:space-between;width:100%;margin-top:2px}.bill-accordion-item-actions .bill-icon-btn{width:28px;height:28px}.bill-accordion-item-amount{font-size:10px}.bill-accordion-actions{margin-bottom:7px}.bills-master-accordion-head{padding:10px 11px}.bills-master-accordion-body{padding:9px 10px}}
 .bills-mobile-card{border:1px solid var(--line);border-radius:14px;padding:10px 11px;background:rgba(255,255,255,.018);margin-bottom:7px;cursor:pointer}.bills-mobile-top{display:flex;justify-content:space-between;gap:8px;align-items:start}.bills-mobile-no{font-size:11px;font-weight:900}.bills-mobile-amount{font-size:12px;font-weight:900;white-space:nowrap}.bills-mobile-supplier{font-size:10px;font-weight:700;margin-top:5px}.bills-mobile-meta{font-size:8px;color:var(--muted);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.bills-mobile-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:8px}.bills-mobile-actions{display:flex;gap:5px}.bills-mobile-actions .bill-icon-btn{width:28px;height:28px}
 .bills-list{border:1px solid var(--line);border-radius:18px;overflow:hidden;background:rgba(255,255,255,.018)}.bills-table{width:100%;border-collapse:collapse}.bills-table th{padding:11px 12px;text-align:left;background:rgba(0,0,0,.22);font-size:8px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;white-space:nowrap}.bills-table td{padding:11px 12px;border-top:1px solid var(--line);font-size:10px;vertical-align:middle}.bills-table tbody tr{cursor:pointer}.bills-table tbody tr:hover{background:rgba(255,255,255,.025)}.bill-no{font-weight:900;color:var(--paper);letter-spacing:.2px}.bill-sub{font-size:8px;color:var(--muted);margin-top:3px}.bill-amount{font-weight:900;text-align:right;white-space:nowrap}.bill-method{display:inline-flex;padding:4px 7px;border-radius:7px;background:rgba(181,151,133,.09);border:1px solid rgba(181,151,133,.12);font-size:8px;color:var(--paper)}.bill-status{display:inline-flex;align-items:center;gap:5px;padding:4px 7px;border-radius:7px;font-size:8px;font-weight:800}.bill-status.paid{background:rgba(100,170,120,.09);color:#b9d8c1}.bill-status.unprinted{background:rgba(190,150,80,.10);color:#dec69d}.bill-status.printed{background:rgba(181,151,133,.09);color:#cfc1b9}.bill-row-actions{display:flex;justify-content:flex-end;gap:5px}.bill-icon-btn{width:31px;height:31px;border-radius:9px;border:1px solid var(--line);background:rgba(255,255,255,.025);color:var(--muted);display:grid;place-items:center;cursor:pointer}.bill-icon-btn:hover{color:var(--paper);background:rgba(255,255,255,.07)}.bills-empty{padding:38px 18px;text-align:center;color:var(--muted);font-size:11px}.bills-pagination{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 2px;color:var(--muted);font-size:9px}.bills-detail-overlay{position:fixed;inset:0;z-index:470;background:rgba(5,4,4,.82);backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;padding:18px}.bills-detail-overlay.open{display:flex}.bill-editor-overlay{align-items:flex-start;overflow:auto;padding:10px}.bill-editor-overlay .bill-editor{margin:0 auto}.bills-detail{width:min(1050px,100%);max-height:calc(100vh - 36px);overflow:auto;background:#151210;border:1px solid rgba(243,237,231,.12);border-radius:22px;box-shadow:0 30px 100px rgba(0,0,0,.45)}.bills-detail-head{position:sticky;top:0;z-index:3;display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:17px 18px;background:rgba(21,18,16,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}.bills-detail-title{font-size:18px;font-weight:900}.bills-detail-meta{font-size:9px;color:var(--muted);margin-top:4px}.bills-detail-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.bills-detail-body{padding:18px}.bill-detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}.bill-info-card{border:1px solid var(--line);border-radius:14px;padding:12px;background:rgba(255,255,255,.022)}.bill-info-label{font-size:8px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}.bill-info-value{font-size:11px;font-weight:800;margin-top:5px;word-break:break-word}.bill-items-wrap{border:1px solid var(--line);border-radius:14px;overflow:hidden}.bill-items-table{width:100%;border-collapse:collapse;table-layout:fixed}.bill-items-table th{padding:9px 10px;background:rgba(0,0,0,.25);font-size:8px;color:var(--muted);text-align:left}.bill-items-table td{padding:9px 10px;border-top:1px solid var(--line);font-size:10px;vertical-align:middle;overflow:hidden}.bill-items-table th:nth-child(1),.bill-items-table td:nth-child(1){width:42px;text-align:center}.bill-items-table th:nth-child(2),.bill-items-table td:nth-child(2){width:auto}.bill-items-table th:nth-child(3),.bill-items-table td:nth-child(3){width:125px;text-align:right;white-space:nowrap}.bill-items-table th:nth-child(4),.bill-items-table td:nth-child(4){width:126px;text-align:right;white-space:nowrap}.bill-item-actions{display:flex;justify-content:flex-end;gap:5px}.bill-item-actions .bill-icon-btn{width:30px;height:30px}
 .bill-item-list{width:100%}
@@ -505,7 +515,7 @@ const GOOGLE_SHEET_BRIDGE = 'https://script.google.com/macros/s/AKfycbxjmF8iL8G3
 // Supabase Edge Function for AI Loyverse Scan
 const LOYVERSE_SCAN_FUNCTION = 'https://iftsmcgvperrhjjfnhqa.supabase.co/functions/v1/loyverse-scan';
 
-const ICONS={home:'<svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg>',edit:'<svg viewBox="0 0 24 24"><path d="m4 16.5-.8 3.3 3.3-.8L18.8 6.7a2.1 2.1 0 0 0-3-3L3.5 16.5Z"/><path d="m14.5 5.5 4 4"/></svg>',trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>',plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',search:'<svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m16 16 5 5"/></svg>',refresh:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/></svg>',settings:'<svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19 13 .1-1-.1-1 2-1.4-2-3.4-2.3 1a8 8 0 0 0-1.7-1L14.7 3h-4l-.3 3.2a8 8 0 0 0-1.7 1l-2.3-1-2 3.4 2 1.4-.1 1 .1 1-2 1.4 2 3.4 2.3-1a8 8 0 0 0 1.7 1l.3 3.2h4l.3-3.2a8 8 0 0 0 1.7-1l2.3 1 2-3.4-2-1.4Z"/></svg>',camera:'<svg viewBox="0 0 24 24"><path d="M5 7h3l1.5-2h5L16 7h3v12H5V7Z"/><circle cx="12" cy="13" r="3.5"/></svg>',scan:'<svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/></svg>'};
+const ICONS={home:'<svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg>',edit:'<svg viewBox="0 0 24 24"><path d="m4 16.5-.8 3.3 3.3-.8L18.8 6.7a2.1 2.1 0 0 0-3-3L3.5 16.5Z"/><path d="m14.5 5.5 4 4"/></svg>',trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>',plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',search:'<svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m16 16 5 5"/></svg>',refresh:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/></svg>',settings:'<svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19 13 .1-1-.1-1 2-1.4-2-3.4-2.3 1a8 8 0 0 0-1.7-1L14.7 3h-4l-.3 3.2a8 8 0 0 0-1.7 1l-2.3-1-2 3.4 2 1.4-.1 1 .1 1-2 1.4 2 3.4 2.3-1a8 8 0 0 0 1.7 1l.3 3.2h4l.3-3.2a8 8 0 0 0 1.7-1l2.3 1 2-3.4-2-1.4Z"/></svg>',camera:'<svg viewBox="0 0 24 24"><path d="M5 7h3l1.5-2h5L16 7h3v12H5V7Z"/><circle cx="12" cy="13" r="3.5"/></svg>',scan:'<svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/></svg>',print:'<svg viewBox="0 0 24 24"><path d="M6 9V4h12v5"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><path d="M6 14h12v7H6z"/></svg>'};
 const fmt=n=>Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmt0=n=>Number(n||0).toLocaleString('th-TH',{maximumFractionDigits:0});
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1827,7 +1837,7 @@ async function saveAsImage(){
    BILLS / DOCUMENTS MODULE
    Additive only. Existing dashboard/management functions remain intact.
    ========================== */
-const billsState={rows:[],suppliers:[],itemMasters:[],filtered:[],page:1,pageSize:30,editingId:null,editingRow:null,items:[],itemUploads:{},masterType:null};
+const billsState={rows:[],suppliers:[],itemMasters:[],filtered:[],page:1,pageSize:30,editingId:null,editingRow:null,items:[],itemUploads:{},masterType:null,accordion:{},masterAccordion:{}};
 const BILLS_SHEET_NAME='รายการ';
 
 function billEsc(v){return esc(v==null?'':String(v))}
@@ -1877,20 +1887,34 @@ function switchBillsTab(type,scroll=true){
   if(scroll)document.getElementById('billsSection')?.scrollIntoView({block:'start'});
 }
 function focusBillsStatus(type){
-  if(type==='unprinted'){document.getElementById('billsPayment').value='';document.getElementById('billsSearch').value='';billsState.filtered=billsState.rows.filter(r=>!(r.document_prints?.[0]?.printed||r.print_record?.printed));billsState.page=1;renderBills();toast(`แสดง ${billsState.filtered.length.toLocaleString('th-TH')} รายการที่รอพิมพ์`);return}
+  if(type==='unprinted'){document.getElementById('billsPayment').value='';document.getElementById('billsSearch').value='';billsState.filtered=billsState.rows.filter(r=>!isBillPrinted(r));billsState.page=1;renderBills();toast(`แสดง ${billsState.filtered.length.toLocaleString('th-TH')} รายการที่รอพิมพ์`);return}
   if(type==='total'){toast(`ยอดรวมตามตัวกรอง ${billMoney(billsState.filtered.reduce((a,r)=>a+Number(r.total_amount||0),0))} THB`);return}
   toast(`เอกสารทั้งหมด ${billsState.filtered.length.toLocaleString('th-TH')} รายการ`);
 }
+function toggleBillAccordion(id){
+  const key=String(id);
+  billsState.accordion[key]=!billsState.accordion[key];
+  const el=document.querySelector(`[data-bill-accordion="${CSS.escape(key)}"]`);
+  if(el)el.classList.toggle('open',!!billsState.accordion[key]);
+}
+function toggleMasterAccordion(key){
+  const k=String(key);
+  billsState.masterAccordion[k]=!billsState.masterAccordion[k];
+  const el=document.querySelector(`[data-master-accordion="${CSS.escape(k)}"]`);
+  if(el)el.classList.toggle('open',!!billsState.masterAccordion[k]);
+}
+function billChevron(){return '<svg viewBox="0 0 24 24"><path d="m6 9 6 6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'}
 function openBillsPanel(type){
   const body=document.getElementById('billsPanelContent');if(!body)return;
   if(type==='suppliers'){
     const rows=billsState.suppliers||[];
-    body.innerHTML=`<div class="bills-subhead"><div><div class="bills-kicker">Bills / Master Data</div><div class="bills-master-title-row"><div><div class="bills-title bills-subtitle">Supplier List</div><div class="bills-desc">${rows.length} suppliers · ใช้ร่วมกับฟอร์มสร้างเอกสาร</div></div><button class="bill-master-add" type="button" onclick="openBillMaster('supplier')">${ICONS.plus}<span>เพิ่ม Supplier</span></button></div></div></div><div class="bills-panel-grid">${rows.length?rows.map((x,i)=>`<div class="bill-info-card bills-master-card"><div class="bill-info-label">${String(i+1).padStart(2,'0')}</div><div class="bill-info-value">${billEsc(x.name||x.supplier_name||'—')}<br><span class="bills-master-muted">${billEsc(x.address||'—')}</span></div></div>`).join(''):'<div class="bills-empty">ยังโหลด Supplier ไม่สำเร็จ</div>'}</div>`;
+    body.innerHTML=`<div class="bills-subhead"><div><div class="bills-kicker">Bills / Master Data</div><div class="bills-master-title-row"><div><div class="bills-title bills-subtitle">Supplier List</div><div class="bills-desc">${rows.length} suppliers · ใช้ร่วมกับฟอร์มสร้างเอกสาร</div></div><button class="bill-master-add" type="button" onclick="openBillMaster('supplier')">${ICONS.plus}<span>เพิ่ม Supplier</span></button></div></div></div><div class="bills-master-accordion-list">${rows.length?rows.map((x,i)=>{const k='supplier-'+(x.id||i);return `<div class="bills-master-accordion" data-master-accordion="${billEsc(k)}"><div class="bills-master-accordion-head" onclick="toggleMasterAccordion('${String(k).replace(/'/g,"\\'")}')"><div><div class="bills-master-accordion-name">${billEsc(x.name||x.supplier_name||'—')}</div><div class="bills-master-accordion-meta">Supplier #${String(i+1).padStart(2,'0')} · กดเพื่อดูรายละเอียด</div></div><span class="bills-master-chevron">${billChevron()}</span></div><div class="bills-master-accordion-body"><div class="bill-info-label">ที่อยู่ Supplier</div><div class="bill-info-value">${billEsc(x.address||'—')}</div><div class="bills-master-accordion-actions"><button class="bill-icon-btn" title="แก้ไข" onclick="event.stopPropagation();editBillMaster('supplier','${String(x.id||'').replace(/'/g,"\\'")}')">${ICONS.edit}</button><button class="bill-icon-btn danger" title="ลบ" onclick="event.stopPropagation();deleteBillMaster('supplier','${String(x.id||'').replace(/'/g,"\\'")}')">${ICONS.trash}</button></div></div></div>`}).join(''):'<div class="bills-empty">ยังไม่มี Supplier</div>'}</div>`;
   }else if(type==='items'){
-    const map=new Map();billsState.rows.forEach(r=>(r.purchase_document_items||[]).forEach(x=>{const n=String(x.item_name||'').trim();if(n)map.set(n,(map.get(n)||0)+1)}));const rows=[...map.entries()].sort((a,b)=>b[1]-a[1]);
-    body.innerHTML=`<div class="bills-subhead"><div><div class="bills-kicker">Bills / Items</div><div class="bills-master-title-row"><div><div class="bills-title bills-subtitle">รายการ</div><div class="bills-desc">รายการสินค้าที่พบในเอกสาร · ใช้เป็นรายการเลือกตอนสร้างเอกสาร</div></div><button class="bill-master-add" type="button" onclick="openBillMaster('item')">${ICONS.plus}<span>เพิ่มรายการ</span></button></div></div></div><div class="bills-panel-grid">${rows.length?rows.map((x,i)=>`<div class="bill-info-card bills-master-card"><div class="bill-info-label">${String(i+1).padStart(2,'0')}</div><div class="bill-info-value">${billEsc(x[0])}<br><span class="bills-master-muted">พบใน ${x[1].toLocaleString('th-TH')} เอกสาร</span></div></div>`).join(''):'<div class="bills-empty">ยังไม่มีรายการ</div>'}</div>`;
+    const rows=billsState.itemMasters||[];
+    body.innerHTML=`<div class="bills-subhead"><div><div class="bills-kicker">Bills / Items</div><div class="bills-master-title-row"><div><div class="bills-title bills-subtitle">รายการ</div><div class="bills-desc">รายการสินค้าที่ใช้เลือกตอนสร้างเอกสาร</div></div><button class="bill-master-add" type="button" onclick="openBillMaster('item')">${ICONS.plus}<span>เพิ่มรายการ</span></button></div></div></div><div class="bills-master-accordion-list">${rows.length?rows.map((x,i)=>{const k='item-'+(x.id||i);const used=billsState.rows.reduce((n,r)=>n+(r.purchase_document_items||[]).filter(it=>String(it.item_name||'').trim()===String(x.name||'').trim()).length,0);return `<div class="bills-master-accordion" data-master-accordion="${billEsc(k)}"><div class="bills-master-accordion-head" onclick="toggleMasterAccordion('${String(k).replace(/'/g,"\\'")}')"><div><div class="bills-master-accordion-name">${billEsc(x.name||'—')}</div><div class="bills-master-accordion-meta">พบใน ${used.toLocaleString('th-TH')} รายการ · กดเพื่อดูรายละเอียด</div></div><span class="bills-master-chevron">${billChevron()}</span></div><div class="bills-master-accordion-body"><div class="bill-info-label">ชื่อรายการ</div><div class="bill-info-value">${billEsc(x.name||'—')}</div><div class="bills-master-accordion-actions"><button class="bill-icon-btn" title="แก้ไข" onclick="event.stopPropagation();editBillMaster('item','${String(x.id||'').replace(/'/g,"\\'")}')">${ICONS.edit}</button>${x.id?`<button class="bill-icon-btn danger" title="ลบ" onclick="event.stopPropagation();deleteBillMaster('item','${String(x.id).replace(/'/g,"\\'")}')">${ICONS.trash}</button>`:''}</div></div></div>`}).join(''):'<div class="bills-empty">ยังไม่มีรายการ</div>'}</div>`;
   }else{
-    body.innerHTML=`<div class="bills-subhead"><div><div class="bills-kicker">Bills / Configuration</div><div class="bills-title bills-subtitle">Config</div><div class="bills-desc">ข้อมูลบริษัทและค่าที่ใช้กับเอกสาร</div></div></div><div class="bills-panel-grid"><div class="bill-info-card bills-master-card"><div class="bill-info-label">Company</div><div class="bill-info-value">Balenrista</div></div><div class="bill-info-card bills-master-card"><div class="bill-info-label">Address</div><div class="bill-info-value">สวนสาธารณะ เคหะ แขวงทุ่งสองห้อง เขตหลักสี่<br>กรุงเทพมหานคร 10210<br>062 373 9960</div></div><div class="bill-info-card bills-master-card"><div class="bill-info-label">Google Sheet</div><div class="bill-info-value">รายการ · A:J</div></div><div class="bill-info-card bills-master-card"><div class="bill-info-label">Document format</div><div class="bill-info-value">A4 Payment Voucher · Dynamic items</div></div></div>`;
+    const cards=[['company','Company','Balenrista'],['address','Address','สวนสาธารณะ เคหะ แขวงทุ่งสองห้อง เขตหลักสี่<br>กรุงเทพมหานคร 10210<br>062 373 9960'],['sheet','Google Sheet','รายการ · A:J'],['format','Document format','A4 Payment Voucher · Dynamic items']];
+    body.innerHTML=`<div class="bills-subhead"><div><div class="bills-kicker">Bills / Configuration</div><div class="bills-title bills-subtitle">Config</div><div class="bills-desc">ข้อมูลบริษัทและค่าที่ใช้กับเอกสาร</div></div></div><div class="bills-master-accordion-list">${cards.map(([k,label,value])=>`<div class="bills-master-accordion" data-master-accordion="config-${k}"><div class="bills-master-accordion-head" onclick="toggleMasterAccordion('config-${k}')"><div><div class="bills-master-accordion-name">${label}</div><div class="bills-master-accordion-meta">กดเพื่อดูรายละเอียด</div></div><span class="bills-master-chevron">${billChevron()}</span></div><div class="bills-master-accordion-body"><div class="bill-info-value">${value}</div></div></div>`).join('')}</div>`;
   }
 }
 function openBillMaster(type){
@@ -1930,6 +1954,27 @@ async function saveBillMaster(){
     if(type==='supplier')switchBillsTab('suppliers',false);else switchBillsTab('items',false);
   }catch(err){toast((type==='supplier'?'เพิ่ม Supplier':'เพิ่มรายการ')+' ไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
 }
+async function editBillMaster(type,id){
+  const table=type==='supplier'?'suppliers':'bill_item_master';
+  if(!id){toast('ข้อมูลนี้เป็นรายการอัตโนมัติจากเอกสารเดิม');return}
+  const row=type==='supplier'?billsState.suppliers.find(x=>String(x.id)===String(id)):billsState.itemMasters.find(x=>String(x.id)===String(id));
+  if(!row)return;
+  billsState.masterType=type;
+  document.getElementById('billMasterKicker').textContent=type==='supplier'?'Bills / Supplier List':'Bills / Items';
+  document.getElementById('billMasterTitle').textContent=type==='supplier'?'แก้ไข Supplier':'แก้ไขรายการ';
+  document.getElementById('billMasterBody').innerHTML=type==='supplier'?`<div class="bill-editor-section"><div class="bill-editor-section-title">แก้ไข Supplier</div><label class="form-item"><span class="form-label">ชื่อ Supplier</span><input id="bill_master_name" class="field" value="${billEsc(row.name||'')}" placeholder="ชื่อ Supplier"></label><label class="form-item" style="margin-top:9px"><span class="form-label">ที่อยู่</span><textarea id="bill_master_address" class="field" rows="3" placeholder="ที่อยู่ Supplier">${billEsc(row.address||'')}</textarea></label></div><div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillMaster()">ยกเลิก</button><button class="bills-btn primary" onclick="updateBillMaster('${String(id).replace(/'/g,"\\'")}')">${ICONS.edit}<span>บันทึก</span></button></div>`:`<div class="bill-editor-section"><div class="bill-editor-section-title">แก้ไขรายการ</div><label class="form-item"><span class="form-label">ชื่อรายการ</span><input id="bill_master_name" class="field" value="${billEsc(row.name||'')}" placeholder="ชื่อรายการ"></label></div><div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillMaster()">ยกเลิก</button><button class="bills-btn primary" onclick="updateBillMaster('${String(id).replace(/'/g,"\\'")}')">${ICONS.edit}<span>บันทึก</span></button></div>`;
+  document.getElementById('billMasterOverlay').classList.add('open');
+}
+async function updateBillMaster(id){
+  const type=billsState.masterType,name=document.getElementById('bill_master_name')?.value.trim();if(!name)return toast('กรุณากรอกชื่อ');
+  try{setLoading(true,'กำลังบันทึก...');const payload=type==='supplier'?{name,address:document.getElementById('bill_master_address')?.value.trim()||''}:{name};const q=await db.from(type==='supplier'?'suppliers':'bill_item_master').update(payload).eq('id',id);if(q.error)throw q.error;closeBillMaster();await loadBills();switchBillsTab(type==='supplier'?'suppliers':'items',false);toast('บันทึกแล้ว')}catch(err){toast('บันทึกไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
+}
+async function deleteBillMaster(type,id){
+  if(!id)return;
+  const row=type==='supplier'?billsState.suppliers.find(x=>String(x.id)===String(id)):billsState.itemMasters.find(x=>String(x.id)===String(id));
+  if(!row)return;if(!confirm(`ลบ ${type==='supplier'?'Supplier':'รายการ'} “${row.name||''}” ใช่ไหม?`))return;
+  try{setLoading(true,'กำลังลบ...');let q;if(type==='supplier'){const used=billsState.rows.some(r=>String(r.supplier_id||'')===String(id));if(used)throw new Error('Supplier นี้ถูกใช้งานในเอกสารแล้ว ไม่ควรลบ');q=await db.from('suppliers').delete().eq('id',id)}else{q=await db.from('bill_item_master').update({active:false}).eq('id',id)}if(q.error)throw q.error;await loadBills();switchBillsTab(type==='supplier'?'suppliers':'items',false);toast('ลบแล้ว')}catch(err){toast('ลบไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
+}
 function closeBillsPanel(){switchBillsTab('bills',false)}
 
 async function loadBills(){
@@ -1958,6 +2003,22 @@ async function loadBills(){
   }catch(err){console.error(err);const msg=String(err?.message||err);if(/permission denied|row-level security|RLS/i.test(msg)){toast('Bills ถูกบล็อกโดย Supabase RLS — ต้องเปิดสิทธิ์ purchase_documents / suppliers / purchase_document_items / document_prints');}else{toast('โหลด Bills ไม่สำเร็จ: '+msg)}}
 }
 function getBillFilterState(){return {from:document.getElementById('billsFrom').value,to:document.getElementById('billsTo').value,payment:document.getElementById('billsPayment').value,q:document.getElementById('billsSearch').value.trim().toLowerCase()}}
+function getBillPrintRecords(row){
+  const arr=Array.isArray(row?.document_prints)?row.document_prints.filter(Boolean):[];
+  if(arr.length)return arr;
+  if(row?.print_record)return [row.print_record];
+  return [];
+}
+function getBillPrintRecord(row){
+  const arr=getBillPrintRecords(row);
+  if(!arr.length)return null;
+  return [...arr].sort((a,b)=>new Date(b?.updated_at||b?.printed_at||0)-new Date(a?.updated_at||a?.printed_at||0))[0];
+}
+function isBillPrinted(row){
+  return getBillPrintRecords(row).some(p=>p?.printed===true || p?.printed==='true' || p?.printed===1 || p?.printed==='1');
+}
+function billPrintStatus(row){return isBillPrinted(row)?'printed':'unprinted'}
+
 function renderBills(){
   const f=getBillFilterState();
   billsState.filtered=billsState.rows.filter(r=>{
@@ -1968,32 +2029,46 @@ function renderBills(){
     return true;
   });
   const total=billsState.filtered.reduce((a,r)=>a+Number(r.total_amount||0),0);
-  const unprinted=billsState.filtered.filter(r=>{const p=r.document_prints?.[0]||r.print_record;return !(p?.printed)}).length;
+  const unprinted=billsState.filtered.filter(r=>!isBillPrinted(r)).length;
   document.getElementById('billsCount').innerHTML=`${billsState.filtered.length.toLocaleString('th-TH')} <small>รายการ</small>`;
   document.getElementById('billsTotal').innerHTML=`${billMoney(total)} <small>THB</small>`;
   document.getElementById('billsUnprinted').innerHTML=`${unprinted.toLocaleString('th-TH')} <small>รายการ</small>`;
   const start=(billsState.page-1)*billsState.pageSize,end=Math.min(start+billsState.pageSize,billsState.filtered.length);
   const pageRows=billsState.filtered.slice(start,end);
-  const list=document.getElementById('billsList');
-  if(!pageRows.length){list.innerHTML='<div class="bills-empty">ไม่พบเอกสารตามเงื่อนไขที่เลือก</div>'}
-  else{
-    list.innerHTML=`<table class="bills-table"><thead><tr><th>เลขที่เอกสาร</th><th>วันที่</th><th>Supplier</th><th>รายการ</th><th style="text-align:right">ยอดรวม</th><th>ชำระ</th><th>สถานะ</th><th></th></tr></thead><tbody>${pageRows.map(r=>{
-      const p=r.document_prints?.[0]||r.print_record;const printed=Boolean(p?.printed);const items=r.purchase_document_items||[];
-      return `<tr onclick="openBillDetail('${String(r.id).replace(/'/g,"\\'")}')"><td><div class="bill-no">${billEsc(r.document_no)}</div><div class="bill-sub">${items.length} รายการ</div></td><td>${billDate(r.document_date)}</td><td><strong>${billEsc(r.supplier_name)}</strong><div class="bill-sub">${billEsc(r.supplier_address||'')}</div></td><td>${billEsc(items.slice(0,2).map(x=>x.item_name).join(' · '))}${items.length>2?` <span class="bill-sub">+${items.length-2} รายการ</span>`:''}</td><td class="bill-amount">${billMoney(r.total_amount)}</td><td><span class="bill-method">${billEsc(billPaymentLabel(billDocPayment(r)))}</span></td><td><span class="bill-status ${printed?'printed':'unprinted'}">${printed?'● พิมพ์แล้ว':'● รอพิมพ์'}</span></td><td><div class="bill-row-actions"><button class="bill-icon-btn" title="ดู" onclick="event.stopPropagation();openBillDetail('${String(r.id).replace(/'/g,"\\'")}')">${ICONS.search}</button><button class="bill-icon-btn" title="แก้ไข" onclick="event.stopPropagation();openBillEditor('${String(r.id).replace(/'/g,"\\'")}')">${ICONS.edit}</button><button class="bill-icon-btn" title="พิมพ์ PDF" aria-label="พิมพ์ PDF" onclick="event.stopPropagation();printBill('${String(r.id).replace(/'/g,"\\'")}')">${ICONS.print}</button></div></td></tr>`;
-    }).join('')}</tbody></table>`;
-  }
-  const mobileList=document.getElementById('billsMobileList');
-  if(mobileList){
-    mobileList.innerHTML=pageRows.map(r=>{
-      const p=r.document_prints?.[0]||r.print_record;const printed=Boolean(p?.printed);const items=r.purchase_document_items||[];
-      return `<div class="bills-mobile-card" onclick="openBillDetail('${String(r.id).replace(/'/g,"\'")}')">
-        <div class="bills-mobile-top"><div><div class="bills-mobile-no">${billEsc(r.document_no)}</div><div class="bills-mobile-meta">${billDate(r.document_date)} · ${billEsc(r.supplier_name||'')}</div></div><div class="bills-mobile-amount">${billMoney(r.total_amount)} ฿</div></div>
-        <div class="bills-mobile-supplier">${billEsc(r.supplier_name)}</div>
-        <div class="bills-mobile-meta">${items.length} รายการ · ${billEsc(items.slice(0,2).map(x=>x.item_name).join(' · '))}${items.length>2?` +${items.length-2}`:''}</div>
-        <div class="bills-mobile-bottom"><span class="bill-status ${printed?'printed':'unprinted'}">${printed?'● พิมพ์แล้ว':'● รอพิมพ์'}</span><div class="bills-mobile-actions"><button class="bill-icon-btn" onclick="event.stopPropagation();openBillEditor('${String(r.id).replace(/'/g,"\'")}')">${ICONS.edit}</button><button class="bill-icon-btn" title="พิมพ์ PDF" aria-label="พิมพ์ PDF" onclick="event.stopPropagation();printBill('${String(r.id).replace(/'/g,"\'")}')">${ICONS.print}</button></div></div>
-      </div>`;
-    }).join('');
-  }
+  const renderAccordion=(r)=>{
+    const id=String(r.id), safeId=id.replace(/'/g,"\\'");
+    const open=!!billsState.accordion[id];
+    const printed=isBillPrinted(r),items=r.purchase_document_items||[];
+    const status=`<span class="bill-status ${printed?'printed':'unprinted'}">${printed?'● พิมพ์แล้ว':'● รอพิมพ์'}</span>`;
+    return `<div class="bill-accordion ${open?'open':''}" data-bill-accordion="${billEsc(id)}">
+      <div class="bill-accordion-head" onclick="toggleBillAccordion('${safeId}')">
+        <div class="bill-accordion-main"><div class="bill-accordion-no">${billEsc(r.document_no)}</div><div class="bill-accordion-meta">${billDate(r.document_date)} · ${billEsc(r.supplier_name||'—')} · ${items.length} รายการ</div><div class="bill-accordion-supplier">${billEsc(r.supplier_name||'ทั่วไป')}</div></div>
+        <div class="bill-accordion-summary"><div><div class="bill-accordion-total">${billMoney(r.total_amount)} THB</div><div style="margin-top:4px;text-align:right">${status}</div></div><span class="bill-accordion-chevron">${billChevron()}</span></div>
+      </div>
+      <div class="bill-accordion-body">
+        <div class="bill-accordion-actions">
+          <button class="bills-btn" onclick="event.stopPropagation();openBillEditor('${safeId}')">${ICONS.edit}<span>แก้ไขเอกสาร</span></button>
+          <button class="bills-btn" onclick="event.stopPropagation();printBill('${safeId}')">${ICONS.print}<span>พิมพ์ PDF</span></button>
+          <button class="bill-icon-btn danger" title="ลบเอกสาร" onclick="event.stopPropagation();deleteBill('${safeId}')">${ICONS.trash}</button>
+        </div>
+        <div class="bill-accordion-items">
+          ${items.length?items.map((x,i)=>{const itemId=String(x.id||''),safeItem=itemId.replace(/'/g,"\\'");return `<div class="bill-accordion-item">
+            <div class="bill-accordion-item-no">${i+1}</div>
+            <div class="bill-accordion-item-main"><div class="bill-accordion-item-name">${billEsc(x.item_name||'—')}</div><div class="bill-accordion-item-note">${billEsc(x.note||'—')} · ${billEsc(billPaymentLabel(x.payment_method||'unspecified'))}</div></div>
+            <div class="bill-accordion-item-right"><div class="bill-accordion-item-amount">${billMoney(x.amount)} THB</div><div class="bill-accordion-item-actions">
+              <button class="bill-icon-btn" title="ดูรูป" aria-label="ดูรูป" onclick="event.stopPropagation();openBillItemImage('${safeId}',${i})">${ICONS.search}</button>
+              <button class="bill-icon-btn" title="แก้ไขรายการ" aria-label="แก้ไขรายการ" onclick="event.stopPropagation();editBillItem('${safeId}',${i})">${ICONS.edit}</button>
+              <button class="bill-icon-btn danger" title="ลบรายการ" aria-label="ลบรายการ" onclick="event.stopPropagation();deleteBillItem('${safeId}','${safeItem}',${i})">${ICONS.trash}</button>
+            </div></div>
+          </div>`}).join(''):'<div class="bills-empty">ไม่มีรายการ</div>'}
+        </div>
+        <div class="bill-accordion-footer"><span class="bill-accordion-footer-label">รวมทั้งสิ้น · ${items.length} รายการ</span><span class="bill-accordion-footer-value">${billMoney(r.total_amount)} THB</span></div>
+      </div>
+    </div>`;
+  };
+  const html=pageRows.length?pageRows.map(renderAccordion).join(''):'<div class="bills-empty">ไม่พบเอกสารตามเงื่อนไขที่เลือก</div>';
+  const list=document.getElementById('billsList');if(list)list.innerHTML=`<div class="bills-accordion-list">${html}</div>`;
+  const mobileList=document.getElementById('billsMobileList');if(mobileList)mobileList.innerHTML=html;
   document.getElementById('billsResultMeta').textContent=`แสดง ${billsState.filtered.length?start+1:0}–${end} จาก ${billsState.filtered.length} รายการ`;
   document.getElementById('billsPrev').disabled=billsState.page<=1;document.getElementById('billsNext').disabled=end>=billsState.filtered.length;
 }
@@ -2001,11 +2076,11 @@ function moveBillsPage(delta){const pages=Math.max(1,Math.ceil(billsState.filter
 
 async function openBillDetail(id){
   const row=billsState.rows.find(x=>x.id===id);if(!row)return;
-  let printRecord=row.document_prints?.[0]||null;
+  let printRecord=getBillPrintRecord(row);
   if(!printRecord){const q=await db.from('document_prints').select('*').eq('document_id',id).maybeSingle();if(!q.error)printRecord=q.data;}
   const items=row.purchase_document_items||[];
   const payment=billDocPayment(row);
-  const receiptUrl=String(row.receipt_url||printRecord?.document_url||'').trim();
+  const receiptUrl=String(row.receipt_url||getBillPrintRecord(row)?.document_url||'').trim();
   const previewUrl=/\.(png|jpe?g|gif|webp)(\?.*)?$/i.test(receiptUrl)?receiptUrl:(/\.pdf(\?.*)?$/i.test(receiptUrl)?receiptUrl:'');
   const receiptPreview=previewUrl?( /\.pdf(\?.*)?$/i.test(previewUrl) ? `<div class="bill-receipt-preview"><iframe src="${billEsc(previewUrl)}" title="Receipt preview"></iframe></div>` : `<div class="bill-receipt-preview"><img src="${billEsc(previewUrl)}" alt="Receipt / slip preview" onerror="this.parentElement.remove()"></div>` ) : '';
   document.getElementById('billsDetailContent').innerHTML=`
@@ -2038,7 +2113,7 @@ async function openBillDetail(id){
   document.getElementById('billsDetailOverlay').classList.add('open');
 }
 function billItemImageUrl(row,item){
-  return String(item?.receipt_url||item?.image_url||item?.slip_url||row?.receipt_url||row?.document_prints?.[0]?.document_url||'').trim();
+  return String(item?.receipt_url||item?.image_url||item?.slip_url||row?.receipt_url||getBillPrintRecord(row)?.document_url||'').trim();
 }
 function openBillItemImage(docId,index){
   const row=billsState.rows.find(x=>x.id===docId);const item=(row?.purchase_document_items||[])[Number(index)];
@@ -2088,7 +2163,7 @@ async function openBillEditor(id=null){
     billsState.editingRow=row;billsState.items=(row?.purchase_document_items||[]).map(x=>({id:x.id,item_name:x.item_name||'',amount:Number(x.amount||0),note:x.note||'',image_url:x.image_url||null,payment_cash:Number(x.payment_cash||0),payment_transfer:Number(x.payment_transfer||0),payment_method:x.payment_method||'unspecified'}));
     if(!billsState.items.length)billsState.items=[{id:null,item_name:'',amount:0,note:'',image_url:null,payment_cash:0,payment_transfer:0,payment_method:'unspecified'}];
     const docNo=row?.document_no||await nextBillNumber();
-    const legacyPrintUrl=row?.document_prints?.[0]?.document_url||'';
+    const legacyPrintUrl=getBillPrintRecord(row)?.document_url||'';
     if(row&&!row.receipt_url&&legacyPrintUrl)row={...row,receipt_url:legacyPrintUrl};
     document.getElementById('billEditorTitle').textContent=id?`แก้ไข ${docNo}`:`เพิ่มเอกสาร ${docNo}`;
     const suppliers=billsState.suppliers.length?billsState.suppliers:(await db.from('suppliers').select('*').order('name')).data||[];
@@ -2191,7 +2266,7 @@ function billReceiptSelected(e){
   const url=URL.createObjectURL(file);box.innerHTML=`<img src="${url}" alt="Receipt preview"><button type="button" class="bill-upload-remove" onclick="billClearReceipt()">×</button>`;
 }
 function billClearReceipt(){billsState.uploadFile=null;const input=document.getElementById('bill_f_receipt');if(input)input.value='';const box=document.getElementById('billReceiptPreview');if(box)box.innerHTML='';}
-function openBillReceiptUrl(){const row=billsState.rows.find(x=>x.id===billsState.editingId);const url=String(row?.receipt_url||row?.document_prints?.[0]?.document_url||'').trim();if(url)window.open(url,'_blank','noopener,noreferrer')}
+function openBillReceiptUrl(){const row=billsState.rows.find(x=>x.id===billsState.editingId);const url=String(row?.receipt_url||getBillPrintRecord(row)?.document_url||'').trim();if(url)window.open(url,'_blank','noopener,noreferrer')}
 async function uploadBillReceipt(file,documentNo){
   if(!file)return null;
   const ext=(file.name.split('.').pop()||'jpg').toLowerCase().replace(/[^a-z0-9]/g,'')||'jpg';
@@ -2229,7 +2304,7 @@ async function saveBill(){
       itemRows.push({document_id:docId,sort_order:x.sort_order,item_name:x.item_name,amount:Number(x.amount.toFixed(2)),payment_cash:Number(x.payment_cash||0)>0?Number(x.amount.toFixed(2)):0,payment_transfer:Number(x.payment_transfer||0)>0?Number(x.amount.toFixed(2)):0,payment_method:x.payment_method||'unspecified',note:x.note||null,image_url:imageUrl});
     }
     const insItems=await db.from('purchase_document_items').insert(itemRows);if(insItems.error)throw insItems.error;
-    const pr=await db.from('document_prints').upsert({document_id:docId,need_print:false,printed:id?(billsState.rows.find(x=>x.id===id)?.document_prints?.[0]?.printed||false):false,document_url:null,updated_at:new Date().toISOString()},{onConflict:'document_id'});if(pr.error)throw pr.error;
+    const pr=await db.from('document_prints').upsert({document_id:docId,need_print:false,printed:id?isBillPrinted(billsState.rows.find(x=>x.id===id)):false,document_url:null,updated_at:new Date().toISOString()},{onConflict:'document_id'});if(pr.error)throw pr.error;
     try{if(GOOGLE_SHEET_BRIDGE){if(id)await deleteBillFromGoogleSheet(no);const sheetRows=itemRows.map(x=>[no,date,supplier.name,supplier.address||'',x.item_name,x.amount,Number(x.payment_cash||0)>0,Number(x.payment_transfer||0)>0,x.note||'',x.image_url||'']);await saveToGoogleSheet(BILLS_SHEET_NAME,sheetRows)}}catch(sheetError){console.error('Bills Google Sheet sync error:',sheetError);toast(`บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: ${sheetError.message}`)}
     billsState.uploadFile=null;billsState.itemUploads={};closeBillEditor();toast(id?'แก้ไขเอกสารแล้ว':'สร้างเอกสารแล้ว');await loadBills();
   }catch(err){toast('บันทึก Bill ไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
@@ -2314,11 +2389,18 @@ async function printBill(id){
     if(pdfUrl)await syncBillPrintControl(row,pdfUrl);
 
     const local=billsState.rows.find(x=>x.id===id);
-    const p=local?.document_prints?.[0];
-    if(p){
+    if(local){
+      const arr=getBillPrintRecords(local);
+      let p=getBillPrintRecord(local);
+      if(!p){
+        p={document_id:id};
+        if(!Array.isArray(local.document_prints))local.document_prints=[];
+        local.document_prints.push(p);
+      }
       p.printed=true;
       p.need_print=false;
       p.printed_at=new Date().toISOString();
+      p.updated_at=new Date().toISOString();
       if(pdfUrl)p.document_url=pdfUrl;
     }
     toast(pdfUrl?`พิมพ์ ${row.document_no} แล้ว · บันทึก PDF แล้ว`:`ส่ง ${row.document_no} ไปพิมพ์แล้ว`);
