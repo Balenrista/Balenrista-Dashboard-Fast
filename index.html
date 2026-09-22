@@ -406,6 +406,10 @@
   .bill-item-upload{gap:3px!important}
   .bill-editor-payment-summary{justify-content:flex-start!important}
   .bill-editor-payment-summary>div{min-width:82px!important;padding:4px 7px!important}
+  /* Keep item note input cleanly separated from the payment/upload row */
+  .bill-item-note-field{display:block!important;width:100%!important;min-width:0!important;box-sizing:border-box!important;height:38px!important;margin:0!important;position:relative!important;z-index:1!important}
+  .bill-item-note-field + .bill-item-upload{margin-top:5px!important;min-height:25px!important;position:relative!important;z-index:2!important}
+  .bill-item-payment{margin-top:5px!important;min-height:25px!important;position:relative!important;z-index:2!important}
 }
 </style>
 
