@@ -139,6 +139,16 @@
 
 .bill-receipt-icon{width:44px;height:44px;min-width:44px;padding:0;display:inline-flex;align-items:center;justify-content:center}.bill-receipt-icon svg{width:20px;height:20px}.bill-receipt-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
 @media(max-width:600px){.bill-receipt-box{align-items:center}.bill-receipt-copy{min-width:0}.bill-receipt-copy span{display:block;max-width:48vw;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.bill-receipt-actions .bills-btn{padding:9px 11px;font-size:12px}}
+
+/* Bills image viewer */
+.bill-image-viewer{position:fixed;inset:0;z-index:1200;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(8,7,6,.62);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.bill-image-viewer.open{display:flex}
+.bill-image-viewer-card{position:relative;width:min(92vw,760px);height:min(88vh,900px);display:flex;align-items:center;justify-content:center;padding:14px;border:1px solid rgba(255,255,255,.14);border-radius:22px;background:rgba(28,24,22,.82);box-shadow:0 24px 80px rgba(0,0,0,.45)}
+.bill-image-viewer-card img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;border-radius:12px}
+.bill-image-viewer-close{position:absolute;top:10px;right:10px;width:40px;height:40px;border:1px solid rgba(255,255,255,.16);border-radius:12px;background:rgba(20,18,17,.82);color:#e9ded7;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:2}
+.bill-image-viewer-close svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.bill-image-viewer-title{position:absolute;left:16px;bottom:14px;right:70px;font-size:10px;color:rgba(255,255,255,.62);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:left}
+@media(max-width:600px){.bill-image-viewer{padding:10px}.bill-image-viewer-card{width:94vw;height:82vh;border-radius:18px;padding:10px}.bill-image-viewer-close{width:38px;height:38px}.bill-image-viewer-title{bottom:10px;left:12px}}
 </style>
 
 <style id="bills-module-style">
@@ -519,6 +529,16 @@
   <div class="bills-pagination"><span id="billsResultMeta">0 รายการ</span><div style="display:flex;gap:6px"><button class="bills-btn" id="billsPrev" onclick="moveBillsPage(-1)">ก่อนหน้า</button><button class="bills-btn" id="billsNext" onclick="moveBillsPage(1)">ถัดไป</button></div></div>
   </div>
   <div id="billsPanelInline" class="bills-tab-view bills-panel-inline" style="display:none"><div id="billsPanelContent"></div></div>
+</div>
+
+<div id="billImageViewer" class="bill-image-viewer" aria-hidden="true" onclick="closeBillImageViewer(event)">
+  <div class="bill-image-viewer-card" onclick="event.stopPropagation()">
+    <button type="button" class="bill-image-viewer-close" aria-label="ปิด" title="ปิด" onclick="closeBillImageViewer()">
+      <svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg>
+    </button>
+    <img id="billImageViewerImg" src="" alt="Bill / receipt image">
+    <div id="billImageViewerTitle" class="bill-image-viewer-title"></div>
+  </div>
 </div>
 <div id="billsDetailOverlay" class="bills-detail-overlay" onclick="closeBillsDetail(event)"><div class="bills-detail" onclick="event.stopPropagation()"><div id="billsDetailContent"></div></div></div>
 <div id="billEditorOverlay" class="bills-detail-overlay" onclick="closeBillEditor(event)"><div class="bill-editor" onclick="event.stopPropagation()"><div class="bill-editor-head"><div><div class="bills-kicker">Payment Voucher</div><div class="bills-detail-title" id="billEditorTitle">เพิ่มเอกสารใหม่</div></div><button class="bill-icon-btn" onclick="closeBillEditor()"><svg viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18"/></svg></button></div><div id="billEditorBody" class="bill-editor-body"></div></div></div>
@@ -2193,7 +2213,25 @@ function openBillItemImage(docId,index){
   const row=billsState.rows.find(x=>x.id===docId);const item=(row?.purchase_document_items||[])[Number(index)];
   const url=billItemImageUrl(row,item);
   if(!url){toast('รายการนี้ยังไม่มีรูปสลิป/บิลใน Supabase');return}
-  openBillReceipt(url);
+  const isImage=/\.(png|jpe?g|gif|webp|bmp|heic|heif)(\?.*)?$/i.test(url);
+  if(!isImage){window.open(url,'_blank','noopener,noreferrer');return}
+  const viewer=document.getElementById('billImageViewer');
+  const img=document.getElementById('billImageViewerImg');
+  const title=document.getElementById('billImageViewerTitle');
+  if(!viewer||!img)return;
+  img.src=url;
+  img.alt=item?.item_name?`รูปบิล ${item.item_name}`:'Bill / receipt image';
+  if(title)title.textContent=item?.item_name||row?.document_no||'';
+  viewer.classList.add('open');viewer.setAttribute('aria-hidden','false');
+  document.body.classList.add('bill-image-viewer-open');
+}
+function closeBillImageViewer(e){
+  if(e&&e.target!==e.currentTarget)return;
+  const viewer=document.getElementById('billImageViewer');
+  const img=document.getElementById('billImageViewerImg');
+  if(viewer){viewer.classList.remove('open');viewer.setAttribute('aria-hidden','true')}
+  if(img)img.removeAttribute('src');
+  document.body.classList.remove('bill-image-viewer-open');
 }
 function editBillItem(docId,index){openBillEditor(docId);setTimeout(()=>document.getElementById(`bill_item_name_${Number(index)}`)?.focus(),120)}
 async function deleteBillItem(docId,itemId,index){
@@ -2215,8 +2253,21 @@ async function deleteBillItem(docId,itemId,index){
 function openBillReceipt(url){
   const u=String(url||'').trim();
   if(!u){toast('ไม่มีลิงก์สลิป/เอกสาร');return}
+  const isImage=/\.(png|jpe?g|gif|webp|bmp|heic|heif)(\?.*)?$/i.test(u);
+  if(isImage){
+    const viewer=document.getElementById('billImageViewer');
+    const img=document.getElementById('billImageViewerImg');
+    const title=document.getElementById('billImageViewerTitle');
+    if(!viewer||!img)return;
+    img.src=u;
+    img.alt='Bill / receipt image';
+    if(title)title.textContent='สลิป / เอกสารต้นฉบับ';
+    viewer.classList.add('open');viewer.setAttribute('aria-hidden','false');
+    document.body.classList.add('bill-image-viewer-open');
+    return;
+  }
   const w=window.open(u,'_blank','noopener,noreferrer');
-  if(!w) toast('เบราว์เซอร์บล็อกการเปิดสลิป กรุณาอนุญาต Pop-up');
+  if(!w) toast('เบราว์เซอร์บล็อกการเปิดเอกสาร กรุณาอนุญาต Pop-up');
 }
 function closeBillsDetail(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('billsDetailOverlay').classList.remove('open')}
 
