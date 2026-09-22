@@ -223,7 +223,85 @@
 .bill-master-add{height:30px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:rgba(181,151,133,.08);color:var(--paper);display:inline-flex;align-items:center;gap:5px;font-size:8px;font-weight:900;white-space:nowrap}
 .bill-master-add svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8}
 @media(max-width:600px){.bills-section{transform:none;margin-top:-185px!important;padding-top:0!important}.bill-master-modal{width:100%;border-radius:18px 18px 0 0}.bills-master-title-row{align-items:center}.bill-master-add{height:28px;padding:0 8px;font-size:8px}}
-</style></head>
+</style><style id="bills-final-fix">
+/* ===== Bills final mobile/form fixes ===== */
+.bills-section.active{margin-top:0!important;padding-top:0!important;transform:none!important}
+.bill-editor-overlay{align-items:center!important;padding:12px!important}
+.bill-editor-overlay .bill-editor{width:min(760px,100%);max-height:calc(100dvh - 24px);min-height:0!important;border-radius:22px;overflow:hidden;display:flex;flex-direction:column}
+.bill-editor-head{flex:0 0 auto;min-height:58px}
+.bill-editor-body{overflow:auto;min-height:0;overscroll-behavior:contain}
+.bill-editor-section{padding:11px;margin-bottom:8px}
+.bill-editor-section-title{margin-bottom:8px}
+.bill-editor-grid{gap:8px}
+.bill-editor .field{height:38px}
+.bill-editor textarea.field{min-height:68px}
+.bill-editor-actions{flex:0 0 auto;margin-top:0;padding:12px 16px 14px;border-top:1px solid var(--line);background:#151210}
+.bill-editor-actions .bills-btn{height:40px}
+.bill-address-auto{opacity:.78;cursor:not-allowed}
+.bill-item-payment{display:flex;gap:5px;flex-wrap:wrap;align-items:center;margin-top:1px}
+.bill-pay-toggle{height:28px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.025);color:var(--muted);font-size:8px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:4px;cursor:pointer}
+.bill-pay-toggle.active{background:rgba(181,151,133,.16);border-color:rgba(181,151,133,.38);color:var(--paper)}
+.bill-pay-toggle input{display:none}
+.bill-item-upload{display:flex;align-items:center;gap:5px;margin-top:1px}
+.bill-item-upload input[type=file]{display:none}
+.bill-item-photo-btn{height:28px;padding:0 8px;border:1px solid var(--line);border-radius:9px;background:rgba(255,255,255,.025);color:var(--muted);font-size:8px;font-weight:800;display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.bill-item-photo-btn.has-image{color:var(--paper);border-color:rgba(181,151,133,.35);background:rgba(181,151,133,.08)}
+.bill-item-photo-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8}
+.bill-item-thumb{width:28px;height:28px;border-radius:8px;object-fit:cover;border:1px solid var(--line);background:#0d0b0a;cursor:pointer}
+.bill-edit-main{gap:6px}
+.bill-edit-subgrid{grid-template-columns:120px minmax(0,1fr);gap:6px}
+.bill-edit-actions{align-self:stretch}
+.bill-item-mini-action,.bill-remove{width:32px;height:32px}
+.bill-editor-payment-summary{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+.bill-editor-payment-summary>div{border:1px solid var(--line);border-radius:11px;padding:9px;background:rgba(255,255,255,.025)}
+.bill-editor-payment-summary span{display:block;font-size:8px;color:var(--muted)}
+.bill-editor-payment-summary strong{display:block;font-size:13px;margin-top:2px;color:var(--paper)}
+/* Detail view: never force desktop columns onto a phone */
+.bill-item-list-head,.bill-item-list-row{grid-template-columns:32px minmax(0,1fr) 110px minmax(90px,1fr) 110px}
+@media(max-width:800px){
+  .bill-editor-overlay{padding:0!important;align-items:flex-start!important}
+  .bill-editor-overlay .bill-editor{width:100%;max-width:none;max-height:100dvh;min-height:100dvh;border-radius:0;display:flex}
+  .bill-editor-head{position:sticky;top:0;z-index:30;padding:12px 14px}
+  .bill-editor-body{padding:9px 10px 0}
+  .bill-editor-section{padding:10px;border-radius:13px}
+  .bill-editor-grid{grid-template-columns:1fr;gap:7px}
+  .bill-editor-grid .full{grid-column:auto}
+  .bill-editor .field{height:40px;border-radius:11px}
+  .bill-editor textarea.field{min-height:70px}
+  .bill-editor-actions{padding:10px 10px calc(10px + env(safe-area-inset-bottom));}
+  .bill-items-editor-head{display:none}
+  .bill-edit-row.bill-edit-row-rich{grid-template-columns:24px minmax(0,1fr) 88px!important;gap:5px;padding:8px 7px}
+  .bill-edit-main{min-width:0}
+  .bill-edit-subgrid{grid-template-columns:1fr 1fr;gap:5px}
+  .bill-edit-subgrid .field{min-width:0}
+  .bill-edit-actions{grid-column:3;grid-row:1;align-items:flex-start;display:flex;gap:4px}
+  .bill-item-mini-action,.bill-remove{width:27px;height:27px}
+  .bill-item-upload{min-width:0;overflow:hidden}
+  .bill-item-photo-btn{max-width:100%;height:27px;padding:0 7px}
+  .bill-item-photo-btn span{max-width:45px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bill-pay-toggle{height:27px;padding:0 7px;font-size:8px}
+  .bill-editor-payment-summary{grid-template-columns:1fr 1fr}
+  /* Detail rows become clean cards: number | content | actions */
+  .bill-item-list-head{display:none!important}
+  .bill-item-list-row{display:grid!important;grid-template-columns:28px minmax(0,1fr) auto!important;gap:7px!important;padding:10px!important;align-items:center!important}
+  .bill-item-list-row .bill-item-no{grid-column:1;grid-row:1 / span 3}
+  .bill-item-list-row .bill-item-name{grid-column:2;grid-row:1;font-size:10.5px;line-height:1.35;white-space:normal}
+  .bill-item-list-row .bill-item-amount{grid-column:2;grid-row:2;font-size:10.5px;margin-top:2px}
+  .bill-item-list-row .bill-item-note{grid-column:2;grid-row:3;font-size:8.5px;white-space:normal;overflow:hidden;text-overflow:ellipsis;line-height:1.35}
+  .bill-item-list-row .bill-item-actions{grid-column:3;grid-row:1 / span 3;display:flex;flex-direction:column;gap:4px}
+  .bill-item-list-row .bill-item-actions .bill-icon-btn{width:29px;height:29px}
+  .bills-detail-overlay{padding:0!important;align-items:flex-start!important}
+  .bills-detail{width:100%;max-height:100dvh;height:100dvh;border-radius:0;overflow:auto}
+  .bills-detail-head{position:sticky;top:0;z-index:20}
+  .bill-detail-grid{grid-template-columns:1fr 1fr;gap:7px}
+}
+@media(max-width:430px){
+  .bill-detail-grid{grid-template-columns:1fr}
+  .bill-editor-payment-summary{grid-template-columns:1fr 1fr}
+  .bill-editor .bills-detail-title{font-size:16px}
+}
+</style>
+</head>
 <body>
 <div id="authOverlay" class="auth-overlay hidden">
   <div class="auth-card">
@@ -340,7 +418,7 @@ const GOOGLE_SHEET_BRIDGE = 'https://script.google.com/macros/s/AKfycbxjmF8iL8G3
 // Supabase Edge Function for AI Loyverse Scan
 const LOYVERSE_SCAN_FUNCTION = 'https://iftsmcgvperrhjjfnhqa.supabase.co/functions/v1/loyverse-scan';
 
-const ICONS={home:'<svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg>',edit:'<svg viewBox="0 0 24 24"><path d="m4 16.5-.8 3.3 3.3-.8L18.8 6.7a2.1 2.1 0 0 0-3-3L3.5 16.5Z"/><path d="m14.5 5.5 4 4"/></svg>',trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>',plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',search:'<svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m16 16 5 5"/></svg>',refresh:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/></svg>',settings:'<svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19 13 .1-1-.1-1 2-1.4-2-3.4-2.3 1a8 8 0 0 0-1.7-1L14.7 3h-4l-.3 3.2a8 8 0 0 0-1.7 1l-2.3-1-2 3.4 2 1.4-.1 1 .1 1-2 1.4 2 3.4 2.3-1a8 8 0 0 0 1.7 1l.3 3.2h4l.3-3.2a8 8 0 0 0 1.7-1l2.3 1 2-3.4-2-1.4Z"/></svg>',scan:'<svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/></svg>'};
+const ICONS={home:'<svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1V10Z"/></svg>',edit:'<svg viewBox="0 0 24 24"><path d="m4 16.5-.8 3.3 3.3-.8L18.8 6.7a2.1 2.1 0 0 0-3-3L3.5 16.5Z"/><path d="m14.5 5.5 4 4"/></svg>',trash:'<svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/></svg>',plus:'<svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>',search:'<svg viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.3"/><path d="m16 16 5 5"/></svg>',refresh:'<svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/></svg>',settings:'<svg viewBox="0 0 24 24"><path d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"/><path d="m19 13 .1-1-.1-1 2-1.4-2-3.4-2.3 1a8 8 0 0 0-1.7-1L14.7 3h-4l-.3 3.2a8 8 0 0 0-1.7 1l-2.3-1-2 3.4 2 1.4-.1 1 .1 1-2 1.4 2 3.4 2.3-1a8 8 0 0 0 1.7 1l.3 3.2h4l.3-3.2a8 8 0 0 0 1.7-1l2.3 1 2-3.4-2-1.4Z"/></svg>',camera:'<svg viewBox="0 0 24 24"><path d="M5 7h3l1.5-2h5L16 7h3v12H5V7Z"/><circle cx="12" cy="13" r="3.5"/></svg>',scan:'<svg viewBox="0 0 24 24"><path d="M4 7V5a1 1 0 0 1 1-1h2M17 4h2a1 1 0 0 1 1 1v2M20 17v2a1 1 0 0 1-1 1h-2M7 20H5a1 1 0 0 1-1-1v-2"/><path d="M8 12h8"/></svg>'};
 const fmt=n=>Number(n||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
 const fmt0=n=>Number(n||0).toLocaleString('th-TH',{maximumFractionDigits:0});
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -1662,7 +1740,7 @@ async function saveAsImage(){
    BILLS / DOCUMENTS MODULE
    Additive only. Existing dashboard/management functions remain intact.
    ========================== */
-const billsState={rows:[],suppliers:[],itemMasters:[],filtered:[],page:1,pageSize:30,editingId:null,editingRow:null,items:[],masterType:null};
+const billsState={rows:[],suppliers:[],itemMasters:[],filtered:[],page:1,pageSize:30,editingId:null,editingRow:null,items:[],itemUploads:{},masterType:null};
 const BILLS_SHEET_NAME='รายการ';
 
 function billEsc(v){return esc(v==null?'':String(v))}
@@ -1917,12 +1995,12 @@ async function nextBillNumber(){
 }
 async function openBillEditor(id=null){
   if(!currentUser){showLogin();return}
-  billsState.editingId=id;billsState.editingRow=null;billsState.uploadFile=null;document.getElementById('billEditorOverlay').classList.add('open');document.getElementById('billEditorBody').innerHTML='<div class="empty">กำลังเตรียมฟอร์ม…</div>';
+  billsState.editingId=id;billsState.editingRow=null;billsState.uploadFile=null;billsState.itemUploads={};document.getElementById('billEditorOverlay').classList.add('open');document.getElementById('billEditorBody').innerHTML='<div class="empty">กำลังเตรียมฟอร์ม…</div>';
   try{
     let row=id?billsState.rows.find(x=>x.id===id):null;
     if(id&&!row)throw new Error('ไม่พบเอกสาร');
-    billsState.editingRow=row;billsState.items=(row?.purchase_document_items||[]).map(x=>({id:x.id,item_name:x.item_name||'',amount:Number(x.amount||0),note:x.note||'',image_url:x.image_url||null}));
-    if(!billsState.items.length)billsState.items=[{id:null,item_name:'',amount:0,note:'',image_url:null}];
+    billsState.editingRow=row;billsState.items=(row?.purchase_document_items||[]).map(x=>({id:x.id,item_name:x.item_name||'',amount:Number(x.amount||0),note:x.note||'',image_url:x.image_url||null,payment_cash:Number(x.payment_cash||0),payment_transfer:Number(x.payment_transfer||0),payment_method:x.payment_method||'unspecified'}));
+    if(!billsState.items.length)billsState.items=[{id:null,item_name:'',amount:0,note:'',image_url:null,payment_cash:0,payment_transfer:0,payment_method:'unspecified'}];
     const docNo=row?.document_no||await nextBillNumber();
     const legacyPrintUrl=row?.document_prints?.[0]?.document_url||'';
     if(row&&!row.receipt_url&&legacyPrintUrl)row={...row,receipt_url:legacyPrintUrl};
@@ -1932,57 +2010,89 @@ async function openBillEditor(id=null){
     renderBillEditor(row||{document_no:docNo,document_date:iso(today),supplier_id:'',supplier_name:'',supplier_address:'',note:'',cash_amount:0,transfer_amount:0,total_amount:0,receipt_url:''});
   }catch(err){document.getElementById('billEditorBody').innerHTML=`<div class="empty">เปิดฟอร์มไม่สำเร็จ: ${billEsc(err.message)}</div>`}
 }
+function billItemPaymentFlags(x){
+  const cash=Number(x?.payment_cash||0)>0 || x?.payment_method==='cash' || x?.payment_method==='cash+transfer';
+  const transfer=Number(x?.payment_transfer||0)>0 || x?.payment_method==='transfer' || x?.payment_method==='cash+transfer';
+  return {cash,transfer};
+}
+function billItemPaymentMethod(x){const f=billItemPaymentFlags(x);return f.cash&&f.transfer?'cash+transfer':f.cash?'cash':f.transfer?'transfer':'unspecified'}
 function renderBillEditor(row){
-  const pay=billDocPayment(row);const both=pay==='both';
   document.getElementById('billEditorBody').innerHTML=`
     <div class="bill-editor-section"><div class="bill-editor-section-title">ข้อมูลเอกสาร</div><div class="bill-editor-grid">
       <label class="form-item"><span class="form-label">เลขที่เอกสาร</span><input id="bill_f_no" class="field" value="${billEsc(row.document_no)}" readonly></label>
       <label class="form-item"><span class="form-label">วันที่</span><input id="bill_f_date" class="field" type="date" value="${billEsc(localDateOnly(row.document_date)||iso(today))}"></label>
       <label class="form-item"><span class="form-label">Supplier</span><select id="bill_f_supplier" class="field" onchange="billSupplierChanged()"><option value="">เลือก Supplier</option>${billsState.suppliers.map(s=>`<option value="${billEsc(s.id)}" ${s.id===row.supplier_id?'selected':''}>${billEsc(s.name)}</option>`).join('')}</select></label>
-      <label class="form-item full"><span class="form-label">ที่อยู่ Supplier</span><input id="bill_f_address" class="field" value="${billEsc(row.supplier_address||'')}"></label>
-      <div class="form-item full"><span class="form-label">สลิป / รูปเอกสาร</span><div class="bill-upload-box"><input type="hidden" id="bill_f_url" value="${billEsc(row.receipt_url||'')}"><input id="bill_f_receipt" type="file" accept="image/*" capture="environment" onchange="billReceiptSelected(event)"><label for="bill_f_receipt" class="bill-upload-btn">${ICONS.camera}<span>เลือกรูปจากโทรศัพท์</span></label><div id="billReceiptPreview" class="bill-upload-preview"></div><div class="bill-upload-existing" id="billReceiptExisting">${row.receipt_url?`มีเอกสารเดิมแล้ว · <button type="button" onclick="openBillReceiptUrl()">เปิดเอกสารเดิม</button>`:'ยังไม่มีสลิป'}</div></div></div>
+      <label class="form-item"><span class="form-label">ที่อยู่ Supplier</span><input id="bill_f_address" class="field bill-address-auto" value="${billEsc(row.supplier_address||'')}" readonly></label>
     </div></div>
-    <div class="bill-editor-section"><div class="bill-editor-section-title">รายการ</div><div class="bill-items-editor"><datalist id="billItemMasterList">${billsState.itemMasters.map(x=>`<option value="${billEsc(x.name)}"></option>`).join('')}</datalist><div class="bill-items-editor-head"><span>#</span><span>รายการ</span><span>จำนวนเงิน (THB)</span><span></span></div><div id="billEditorItems"></div><button class="bills-btn bill-add-row" onclick="addBillItem()">${ICONS.plus}<span>เพิ่มรายการ</span></button></div></div>
-    <div class="bill-editor-section"><div class="bill-editor-section-title">การชำระเงิน</div><div class="bill-payment-box"><div class="form-label" style="margin-bottom:8px">วิธีชำระเงิน</div><div class="bill-payment-grid"><label class="form-item"><select id="bill_f_payment" class="field" onchange="billPaymentChanged()"><option value="unspecified" ${pay==='unspecified'?'selected':''}>ไม่ระบุ</option><option value="cash" ${pay==='cash'?'selected':''}>เงินสด</option><option value="transfer" ${pay==='transfer'?'selected':''}>โอน</option><option value="both" ${both?'selected':''}>เงินสด + โอน</option></select></label><label class="form-item"><span class="form-label">เงินสด</span><input id="bill_f_cash" class="field" type="number" min="0" step="0.01" value="${Number(row.cash_amount||0).toFixed(2)}" ${both?'':'readonly'} oninput="billRecalc()"></label><label class="form-item"><span class="form-label">โอน</span><input id="bill_f_transfer" class="field" type="number" min="0" step="0.01" value="${Number(row.transfer_amount||0).toFixed(2)}" ${both?'':'readonly'} oninput="billRecalc()"></label></div></div></div>
-    <div class="bill-editor-section"><div class="bill-editor-section-title">หมายเหตุ</div><label class="form-item"><span class="form-label">หมายเหตุ</span><textarea id="bill_f_note" class="field" rows="3" style="resize:vertical">${billEsc(row.note||'')}</textarea></label></div>
-    <div class="bill-total-box" style="margin-top:12px"><div class="bill-total-box-inner"><span>รวมทั้งสิ้น</span><strong id="billEditorTotal">0.00 THB</strong></div></div>
-    <div class="bill-editor-actions"><button class="bills-btn" onclick="closeBillEditor()">ยกเลิก</button><button class="bills-btn primary" onclick="saveBill()">บันทึกเอกสาร</button></div>`;
-  renderBillEditorItems();billPaymentChanged();billRecalc();
+    <div class="bill-editor-section"><div class="bill-editor-section-title">รายการ</div><div class="bill-items-editor"><datalist id="billItemMasterList">${billsState.itemMasters.map(x=>`<option value="${billEsc(x.name)}"></option>`).join('')}</datalist><div id="billEditorItems"></div><button class="bills-btn bill-add-row" onclick="addBillItem()">${ICONS.plus}<span>เพิ่มรายการ</span></button></div></div>
+    <div class="bill-editor-section"><div class="bill-editor-section-title">สรุปการชำระเงิน</div><div class="bill-editor-payment-summary"><div><span>เงินสด</span><strong id="billEditorCash">0.00 THB</strong></div><div><span>โอน</span><strong id="billEditorTransfer">0.00 THB</strong></div></div></div>
+    <div class="bill-editor-section"><div class="bill-editor-section-title">หมายเหตุเอกสาร</div><label class="form-item"><span class="form-label">หมายเหตุเพิ่มเติม</span><textarea id="bill_f_note" class="field" rows="3" style="resize:vertical">${billEsc(row.note||'')}</textarea></label></div>
+    <div class="bill-total-box" style="margin-top:4px"><div class="bill-total-box-inner"><span>รวมทั้งสิ้น</span><strong id="billEditorTotal">0.00 THB</strong></div></div>`;
+  renderBillEditorItems();billRecalc();
 }
 function renderBillEditorItems(){
   const box=document.getElementById('billEditorItems');if(!box)return;
-  box.innerHTML=billsState.items.map((x,i)=>`
-    <div class="bill-edit-row bill-edit-row-rich">
+  box.innerHTML=billsState.items.map((x,i)=>{
+    const flags=billItemPaymentFlags(x);
+    const hasImage=!!x.image_url||!!billsState.itemUploads[i];
+    return `<div class="bill-edit-row bill-edit-row-rich">
       <div class="bill-row-num">${i+1}</div>
       <div class="bill-edit-main">
         <input class="field" id="bill_item_name_${i}" list="billItemMasterList" value="${billEsc(x.item_name)}" placeholder="รายการ" oninput="billReadItems()">
         <div class="bill-edit-subgrid">
-          <input class="field bill-item-amount-field" id="bill_item_amount_${i}" type="number" min="0" step="0.01" value="${Number(x.amount||0).toFixed(2)}" placeholder="0.00" oninput="billReadItems();billRecalc()">
-          <input class="field bill-item-note-field" id="bill_item_note_${i}" value="${billEsc(x.note||'')}" placeholder="หมายเหตุของรายการ" oninput="billReadItems()">
+          <div>
+            <input class="field bill-item-amount-field" id="bill_item_amount_${i}" type="number" min="0" step="0.01" value="${Number(x.amount||0).toFixed(2)}" placeholder="0.00" oninput="billReadItems();billRecalc()">
+            <div class="bill-item-payment" aria-label="การชำระเงินของรายการ">
+              <button type="button" class="bill-pay-toggle ${flags.cash?'active':''}" onclick="toggleBillItemPayment(${i},'cash')">☑ เงินสด</button>
+              <button type="button" class="bill-pay-toggle ${flags.transfer?'active':''}" onclick="toggleBillItemPayment(${i},'transfer')">☑ โอน</button>
+            </div>
+          </div>
+          <div>
+            <input class="field bill-item-note-field" id="bill_item_note_${i}" value="${billEsc(x.note||'')}" placeholder="หมายเหตุของรายการ" oninput="billReadItems()">
+            <div class="bill-item-upload">
+              <input id="bill_item_file_${i}" type="file" accept="image/*" capture="environment" onchange="billItemImageSelected(${i},event)">
+              <label for="bill_item_file_${i}" class="bill-item-photo-btn ${hasImage?'has-image':''}">${ICONS.camera}<span>${hasImage?'มีรูปแล้ว':'เพิ่มรูป'}</span></label>
+              ${x.image_url?`<img class="bill-item-thumb" src="${billEsc(x.image_url)}" alt="รูปเอกสาร" onclick="openBillReceipt('${billEsc(x.image_url).replace(/'/g,"&#39;")}')">`:''}
+            </div>
+          </div>
         </div>
       </div>
       <div class="bill-edit-actions">
-        <button class="bill-item-mini-action" title="ดูรูป" aria-label="ดูรูป" onclick="openBillEditorItemImage(${i})">${ICONS.search}</button>
-        <button class="bill-item-mini-action" title="แก้ไขรายการ" aria-label="แก้ไขรายการ" onclick="document.getElementById('bill_item_name_${i}')?.focus()">${ICONS.edit}</button>
+        ${x.image_url?`<button class="bill-item-mini-action" title="ดูรูป" aria-label="ดูรูป" onclick="openBillEditorItemImage(${i})">${ICONS.search}</button>`:''}
         <button class="bill-remove" title="ลบรายการ" onclick="removeBillItem(${i})">${ICONS.trash}</button>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 }
-function openBillEditorItemImage(i){
-  billReadItems();
-  const row=billsState.editingRow;
-  const item=billsState.items[Number(i)];
-  const url=billItemImageUrl(row,item);
-  if(!url){toast('รายการนี้ยังไม่มีรูปสลิป/บิล');return}
-  openBillReceipt(url);
+function openBillEditorItemImage(i){billReadItems();const item=billsState.items[Number(i)];const url=billItemImageUrl(billsState.editingRow,item);if(!url){toast('รายการนี้ยังไม่มีรูปสลิป/บิล');return}openBillReceipt(url)}
+function billReadItems(){
+  billsState.items=billsState.items.map((x,i)=>{
+    const flags=billItemPaymentFlags(x);
+    return {...x,id:x.id||null,item_name:document.getElementById(`bill_item_name_${i}`)?.value||'',amount:Number(document.getElementById(`bill_item_amount_${i}`)?.value||0),note:document.getElementById(`bill_item_note_${i}`)?.value||'',image_url:x.image_url||null,payment_cash:flags.cash?Number(x.amount||0):0,payment_transfer:flags.transfer?Number(x.amount||0):0,payment_method:flags.cash&&flags.transfer?'cash+transfer':flags.cash?'cash':flags.transfer?'transfer':'unspecified'};
+  });
 }
-function billReadItems(){billsState.items=billsState.items.map((x,i)=>({id:x.id,item_name:document.getElementById(`bill_item_name_${i}`)?.value||'',amount:Number(document.getElementById(`bill_item_amount_${i}`)?.value||0),note:document.getElementById(`bill_item_note_${i}`)?.value||'',image_url:x.image_url||null}))}
-function addBillItem(){billReadItems();billsState.items.push({id:null,item_name:'',amount:0,note:'',image_url:null});renderBillEditorItems();document.getElementById(`bill_item_name_${billsState.items.length-1}`)?.focus();billRecalc()}
-function removeBillItem(i){billReadItems();if(billsState.items.length<=1){billsState.items[0]={id:null,item_name:'',amount:0,note:'',image_url:null}}else billsState.items.splice(i,1);renderBillEditorItems();billRecalc()}
-function billSupplierChanged(){const id=document.getElementById('bill_f_supplier')?.value;const s=billsState.suppliers.find(x=>x.id===id);if(s&&document.getElementById('bill_f_address'))document.getElementById('bill_f_address').value=s.address||''}
-function billPaymentChanged(){const p=document.getElementById('bill_f_payment')?.value,c=document.getElementById('bill_f_cash'),t=document.getElementById('bill_f_transfer');if(!c||!t)return;const total=billsState.items.reduce((a,x)=>a+Number(x.amount||0),0);if(p==='cash'){c.readOnly=true;t.readOnly=true;c.value=total.toFixed(2);t.value='0.00'}else if(p==='transfer'){c.readOnly=true;t.readOnly=true;c.value='0.00';t.value=total.toFixed(2)}else if(p==='both'){c.readOnly=false;t.readOnly=false;if(Number(c.value)+Number(t.value)===0){c.value=total.toFixed(2);t.value='0.00'}}else{c.readOnly=true;t.readOnly=true;c.value='0.00';t.value='0.00'}billRecalc()}
-function billRecalc(){billReadItems();const total=billsState.items.reduce((a,x)=>a+Number(x.amount||0),0);const el=document.getElementById('billEditorTotal');if(el)el.textContent=`${billMoney(total)} THB`;const p=document.getElementById('bill_f_payment')?.value,c=document.getElementById('bill_f_cash'),t=document.getElementById('bill_f_transfer');if(p==='cash'&&c)c.value=total.toFixed(2);if(p==='transfer'&&t)t.value=total.toFixed(2)}
-function closeBillEditor(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('billEditorOverlay').classList.remove('open');billsState.editingId=null;billsState.editingRow=null}
+function toggleBillItemPayment(i,type){
+  billReadItems();const x=billsState.items[i];if(!x)return;
+  if(type==='cash')x.payment_cash=Number(x.payment_cash||0)>0?0:Number(x.amount||0);
+  if(type==='transfer')x.payment_transfer=Number(x.payment_transfer||0)>0?0:Number(x.amount||0);
+  x.payment_method=Number(x.payment_cash||0)>0&&Number(x.payment_transfer||0)>0?'cash+transfer':Number(x.payment_cash||0)>0?'cash':Number(x.payment_transfer||0)>0?'transfer':'unspecified';
+  renderBillEditorItems();billRecalc();
+}
+function billItemImageSelected(i,e){
+  const file=e?.target?.files?.[0];if(!file)return;if(!file.type.startsWith('image/')){toast('รองรับเฉพาะรูปภาพ');return}
+  billsState.itemUploads[i]=file;billReadItems();renderBillEditorItems();toast(`เลือกรูปรายการที่ ${Number(i)+1} แล้ว`);
+}
+function addBillItem(){billReadItems();const i=billsState.items.length;billsState.items.push({id:null,item_name:'',amount:0,note:'',image_url:null,payment_cash:0,payment_transfer:0,payment_method:'unspecified'});renderBillEditorItems();document.getElementById(`bill_item_name_${i}`)?.focus();billRecalc()}
+function removeBillItem(i){billReadItems();delete billsState.itemUploads[i];if(billsState.items.length<=1){billsState.items[0]={id:null,item_name:'',amount:0,note:'',image_url:null,payment_cash:0,payment_transfer:0,payment_method:'unspecified'}}else billsState.items.splice(i,1);renderBillEditorItems();billRecalc()}
+function billSupplierChanged(){const id=document.getElementById('bill_f_supplier')?.value;const s=billsState.suppliers.find(x=>String(x.id)===String(id));if(s&&document.getElementById('bill_f_address'))document.getElementById('bill_f_address').value=s.address||''}
+function billRecalc(){
+  billReadItems();let total=0,cash=0,transfer=0;
+  billsState.items.forEach(x=>{const a=Number(x.amount||0);total+=a;if(Number(x.payment_cash||0)>0)cash+=a;if(Number(x.payment_transfer||0)>0)transfer+=a});
+  const el=document.getElementById('billEditorTotal');if(el)el.textContent=`${billMoney(total)} THB`;
+  const ce=document.getElementById('billEditorCash');if(ce)ce.textContent=`${billMoney(cash)} THB`;
+  const te=document.getElementById('billEditorTransfer');if(te)te.textContent=`${billMoney(transfer)} THB`;
+}
+function closeBillEditor(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('billEditorOverlay').classList.remove('open');billsState.editingId=null;billsState.editingRow=null;billsState.itemUploads={}}
 
 function billReceiptSelected(e){
   const file=e?.target?.files?.[0];billsState.uploadFile=file||null;
@@ -2006,26 +2116,33 @@ async function saveBill(){
   if(!db||!currentUser){showLogin();return}
   billReadItems();
   const id=billsState.editingId;
-  const no=document.getElementById('bill_f_no')?.value.trim();const date=document.getElementById('bill_f_date')?.value;const supplierId=document.getElementById('bill_f_supplier')?.value;const supplier=billsState.suppliers.find(x=>x.id===supplierId);const note=document.getElementById('bill_f_note')?.value||'';let url=document.getElementById('bill_f_url')?.value.trim()||null;const uploadFile=billsState.uploadFile||null;const payment=document.getElementById('bill_f_payment')?.value||'unspecified';
+  const no=document.getElementById('bill_f_no')?.value.trim();
+  const date=document.getElementById('bill_f_date')?.value;
+  const supplierId=document.getElementById('bill_f_supplier')?.value;
+  const supplier=billsState.suppliers.find(x=>String(x.id)===String(supplierId));
+  const note=document.getElementById('bill_f_note')?.value||'';
   const items=billsState.items.filter(x=>String(x.item_name||'').trim()||Number(x.amount||0)>0).map((x,i)=>({...x,item_name:String(x.item_name||'').trim(),amount:Number(x.amount||0),sort_order:i+1}));
-  if(!no||!date||!supplierId||!supplier) return toast('กรุณากรอกวันที่ เลือก Supplier และเพิ่มรายการให้ครบ');
+  if(!no||!date||!supplierId||!supplier)return toast('กรุณากรอกวันที่ เลือก Supplier และเพิ่มรายการให้ครบ');
   if(!items.length||items.some(x=>!x.item_name||x.amount<0))return toast('กรุณาตรวจสอบรายการและจำนวนเงิน');
-  const total=Number(items.reduce((a,x)=>a+x.amount,0).toFixed(2));
-  let cash=Number(document.getElementById('bill_f_cash')?.value||0),transfer=Number(document.getElementById('bill_f_transfer')?.value||0);
-  if(payment==='cash'){cash=total;transfer=0} else if(payment==='transfer'){cash=0;transfer=total} else if(payment==='unspecified'){cash=0;transfer=0} else {if(Math.abs(cash+transfer-total)>0.01)return toast('เงินสด + โอน ต้องเท่ากับยอดรวม')}
-  const ratioCash=total>0?cash/total:0,ratioTransfer=total>0?transfer/total:0;
-  if(uploadFile){url=await uploadBillReceipt(uploadFile,no)}
-  const header={document_no:no,document_date:date,supplier_id:supplier.id,supplier_name:supplier.name,supplier_address:document.getElementById('bill_f_address')?.value||supplier.address||'',note,total_amount:total,cash_amount:Number(cash.toFixed(2)),transfer_amount:Number(transfer.toFixed(2)),receipt_url:url,status:'paid'};
+  if(items.some(x=>Number(x.payment_cash||0)<=0&&Number(x.payment_transfer||0)<=0))return toast('กรุณาเลือกการชำระเงินให้ครบทุกรายการ');
   setLoading(true,id?'กำลังบันทึกการแก้ไขบิล...':'กำลังสร้างเอกสาร...');
   try{
+    const total=Number(items.reduce((a,x)=>a+Number(x.amount||0),0).toFixed(2));
+    let cash=0,transfer=0;items.forEach(x=>{if(Number(x.payment_cash||0)>0)cash+=Number(x.amount||0);if(Number(x.payment_transfer||0)>0)transfer+=Number(x.amount||0)});
+    cash=Number(cash.toFixed(2));transfer=Number(transfer.toFixed(2));
+    const header={document_no:no,document_date:date,supplier_id:supplier.id,supplier_name:supplier.name,supplier_address:supplier.address||'',note,total_amount:total,cash_amount:cash,transfer_amount:transfer,receipt_url:null,status:'paid'};
     let docId=id;
-    if(id){const {error}=await db.from('purchase_documents').update(header).eq('id',id);if(error)throw error;const del=await db.from('purchase_document_items').delete().eq('document_id',id);if(del.error)throw del.error}else{const ins=await db.from('purchase_documents').insert(header).select('id').single();if(ins.error)throw ins.error;docId=ins.data.id}
-    const itemRows=items.map(x=>({document_id:docId,sort_order:x.sort_order,item_name:x.item_name,amount:x.amount,payment_cash:Number((x.amount*ratioCash).toFixed(2)),payment_transfer:Number((x.amount*ratioTransfer).toFixed(2)),payment_method:payment,note:x.note||null,image_url:x.image_url||null}));
+    if(id){const q=await db.from('purchase_documents').update(header).eq('id',id);if(q.error)throw q.error;const del=await db.from('purchase_document_items').delete().eq('document_id',id);if(del.error)throw del.error}else{const q=await db.from('purchase_documents').insert(header).select('id').single();if(q.error)throw q.error;docId=q.data.id}
+    const itemRows=[];
+    for(let i=0;i<items.length;i++){
+      const x=items[i];let imageUrl=x.image_url||null;
+      const file=billsState.itemUploads[i];if(file)imageUrl=await uploadBillReceipt(file,`${no}-item${i+1}`);
+      itemRows.push({document_id:docId,sort_order:x.sort_order,item_name:x.item_name,amount:Number(x.amount.toFixed(2)),payment_cash:Number(x.payment_cash||0)>0?Number(x.amount.toFixed(2)):0,payment_transfer:Number(x.payment_transfer||0)>0?Number(x.amount.toFixed(2)):0,payment_method:x.payment_method||'unspecified',note:x.note||null,image_url:imageUrl});
+    }
     const insItems=await db.from('purchase_document_items').insert(itemRows);if(insItems.error)throw insItems.error;
-    const pr=await db.from('document_prints').upsert({document_id:docId,need_print:false,printed:id?(billsState.rows.find(x=>x.id===id)?.document_prints?.[0]?.printed||false):false,document_url:url||null,updated_at:new Date().toISOString()},{onConflict:'document_id'});if(pr.error)throw pr.error;
-    // Same Google Sheet: replace all rows for this document number, then append the current document rows.
-    try{if(GOOGLE_SHEET_BRIDGE){if(id){await deleteBillFromGoogleSheet(no)}const sheetRows=items.map(x=>[no,date,supplier.name,header.supplier_address,x.item_name,x.amount,payment==='cash'||payment==='both',payment==='transfer'||payment==='both',note,url||'']);await saveToGoogleSheet(BILLS_SHEET_NAME,sheetRows)}}catch(sheetError){console.error('Bills Google Sheet sync error:',sheetError);toast(`บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: ${sheetError.message}`)}
-    billsState.uploadFile=null;closeBillEditor();toast(id?'แก้ไขเอกสารแล้ว':'สร้างเอกสารแล้ว');await loadBills();
+    const pr=await db.from('document_prints').upsert({document_id:docId,need_print:false,printed:id?(billsState.rows.find(x=>x.id===id)?.document_prints?.[0]?.printed||false):false,document_url:null,updated_at:new Date().toISOString()},{onConflict:'document_id'});if(pr.error)throw pr.error;
+    try{if(GOOGLE_SHEET_BRIDGE){if(id)await deleteBillFromGoogleSheet(no);const sheetRows=itemRows.map(x=>[no,date,supplier.name,supplier.address||'',x.item_name,x.amount,Number(x.payment_cash||0)>0,Number(x.payment_transfer||0)>0,x.note||'',x.image_url||'']);await saveToGoogleSheet(BILLS_SHEET_NAME,sheetRows)}}catch(sheetError){console.error('Bills Google Sheet sync error:',sheetError);toast(`บันทึก Supabase แล้ว แต่ Google Sheet ยังไม่สำเร็จ: ${sheetError.message}`)}
+    billsState.uploadFile=null;billsState.itemUploads={};closeBillEditor();toast(id?'แก้ไขเอกสารแล้ว':'สร้างเอกสารแล้ว');await loadBills();
   }catch(err){toast('บันทึก Bill ไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
 }
 
