@@ -2644,6 +2644,27 @@ async function deleteBillItem(docId,itemId,index){
     const oldTotal=Number(row.total_amount||0);const oldCash=Number(row.cash_amount||0);const oldTransfer=Number(row.transfer_amount||0);
     const ratioCash=oldTotal>0?oldCash/oldTotal:0,ratioTransfer=oldTotal>0?oldTransfer/oldTotal:0;
     const q2=await db.from('purchase_documents').update({total_amount:total,cash_amount:Number((total*ratioCash).toFixed(2)),transfer_amount:Number((total*ratioTransfer).toFixed(2))}).eq('id',docId);if(q2.error)throw q2.error;
+    if(BILLS_GOOGLE_BRIDGE){
+  await deleteBillFromGoogleSheet(row.document_no);
+
+  const sheetRows=remain.map(x=>[
+    row.document_no,
+    row.document_date,
+    row.supplier_name,
+    row.supplier_address||'',
+    x.item_name,
+    x.amount,
+    Number(x.payment_cash||0)>0,
+    Number(x.payment_transfer||0)>0,
+    x.note||'',
+    x.image_url||''
+  ]);
+
+  await billsGooglePost('saveMultipleManual',{
+    sheetName:BILLS_SHEET_NAME,
+    rows:sheetRows
+  });
+}
     toast('ลบรายการแล้ว');await loadBills();await openBillDetail(docId);
   }catch(err){toast('ลบรายการไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
 }
