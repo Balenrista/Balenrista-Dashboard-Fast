@@ -2755,7 +2755,7 @@ function renderBillEditorItems(){
           <div>
             <input class="field bill-item-note-field" id="bill_item_note_${i}" value="${billEsc(x.note||'')}" placeholder="หมายเหตุของรายการ" oninput="billReadItems()">
             <div class="bill-item-upload">
-              <input id="bill_item_file_${i}" type="file" accept="image/*" capture="environment" onchange="billItemImageSelected(${i},event)">
+              <input id="bill_item_file_${i}" type="file" accept="image/*" onchange="billItemImageSelected(${i},event)">
               <label for="bill_item_file_${i}" class="bill-item-photo-btn ${hasImage?'has-image':''}">${ICONS.camera}<span>${hasImage?'มีรูปแล้ว':'เพิ่มรูป'}</span></label>
               ${x.image_url?`<img class="bill-item-thumb" src="${billEsc(x.image_url)}" alt="รูปเอกสาร" onclick="openBillReceipt('${billEsc(x.image_url).replace(/'/g,"&#39;")}')">`:''}
             </div>
