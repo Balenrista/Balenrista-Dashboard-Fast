@@ -1911,10 +1911,44 @@ function deleteScannedSaleRow(index){
 
 function updateScannedSale(index,key,value){
   if(!scannedSales[index])return;
+
   if(key==='qty'){
-    scannedSales[index].qty=Math.max(0,Number(value||0));
-    if(scannedSales[index].price!==null)scannedSales[index].total=Number((scannedSales[index].qty*scannedSales[index].price).toFixed(2));
+    const row=scannedSales[index];
+
+    row.qty=Math.max(0,Number(value||0));
+
+    if(row.price!==null){
+      row.total=Number(
+        (row.qty*row.price).toFixed(2)
+      );
+    }
+
+    const resultRow=document.querySelector(
+      `.scan-result-row[data-scan-index="${index}"]`
+    );
+
+    if(resultRow){
+      const qtyEl=resultRow.querySelector(
+        '.scan-qty-stepper b'
+      );
+
+      const totalEl=resultRow.querySelector(
+        '.scan-line-total'
+      );
+
+      if(qtyEl){
+        qtyEl.textContent=String(row.qty);
+      }
+
+      if(totalEl){
+        totalEl.textContent=
+          row.price===null
+            ? '—'
+            : `รวม ${fmt(row.total)} THB`;
+      }
+    }
   }
+
   refreshScanSummary();
 }
 
