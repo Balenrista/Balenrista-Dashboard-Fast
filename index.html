@@ -1840,9 +1840,9 @@ function renderScanResults(modelName='Gemini'){
         <div>
           <div class="scan-edit-label">จำนวน</div>
           <div class="scan-qty-stepper">
-            <button type="button" aria-label="ลดจำนวน" onclick="updateScannedSale(${i},'qty',Math.max(0,Number(x.qty||0)-1))">−</button>
+            <button class="scan-qty-btn" type="button" data-scan-qty-action="minus" data-scan-index="${i}" aria-label="ลดจำนวน">−</button>
             <b>${Number(x.qty||0)}</b>
-            <button type="button" aria-label="เพิ่มจำนวน" onclick="updateScannedSale(${i},'qty',Number(x.qty||0)+1)">+</button>
+            <button class="scan-qty-btn" type="button" data-scan-qty-action="plus" data-scan-index="${i}" aria-label="เพิ่มจำนวน">+</button>
           </div>
         </div>
         <div><div class="scan-edit-label">ราคา / แก้ว</div><input class="scan-edit" type="number" value="${x.price===null?'':Number(x.price||0)}" readonly></div>
@@ -1852,6 +1852,18 @@ function renderScanResults(modelName='Gemini'){
   }).join('');
 
   box.innerHTML=`<div class="scan-row-head"><div style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:800">AI: ${esc(modelName)} · ${scanFiles.length} รูป · ตรวจสอบและแก้ไขรายการได้</div><div class="scan-row-number">${scannedSales.length} รายการ</div></div>${rows}<button class="scan-add-row" type="button" onclick="addScannedSaleRow()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>เพิ่มรายการ</span></button><div id="scanSummary" class="scan-summary"></div><button class="primary scan-save" onclick="saveScannedSales()"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span>ยืนยันบันทึกทั้งหมด</span></button>`;
+
+  box.querySelectorAll('.scan-qty-btn').forEach(btn=>{
+    btn.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      const index=Number(this.dataset.scanIndex);
+      const row=scannedSales[index];
+      if(!row)return;
+      const delta=this.dataset.scanQtyAction==='plus'?1:-1;
+      updateScannedSale(index,'qty',Math.max(0,Number(row.qty||0)+delta));
+    });
+  });
   box.classList.remove('hidden');
   refreshScanSummary();
   loadScanMenuOptions();
