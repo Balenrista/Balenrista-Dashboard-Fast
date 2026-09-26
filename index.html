@@ -162,8 +162,8 @@
 .scan-row-icon.danger{color:#c99d94}
 .scan-row-icon svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .scan-edit-row{display:grid;grid-template-columns:minmax(0,1fr) 76px 92px auto;gap:7px;align-items:end}
-.scan-qty-stepper{height:36px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);background:rgba(0,0,0,.18);border-radius:10px;overflow:hidden}
-.scan-qty-stepper button{width:24px;height:100%;border:0;background:transparent;color:var(--white);font-size:16px;font-weight:800;display:grid;place-items:center;padding:0}
+.scan-qty-stepper{position:relative;z-index:20;touch-action:manipulation;height:36px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);background:rgba(0,0,0,.18);border-radius:10px;overflow:hidden}
+.scan-qty-stepper button{position:relative;z-index:21;pointer-events:auto;touch-action:manipulation;-webkit-tap-highlight-color:transparent;width:24px;height:100%;border:0;background:transparent;color:var(--white);font-size:16px;font-weight:800;display:grid;place-items:center;padding:0}
 .scan-qty-stepper button:active{background:rgba(181,151,133,.12)}
 .scan-qty-stepper b{min-width:24px;text-align:center;font-size:10px;font-weight:800}
 .scan-line-total{height:36px;display:flex;align-items:center;white-space:nowrap;font-size:9px;font-weight:800;color:var(--paper)}
@@ -1840,9 +1840,9 @@ function renderScanResults(modelName='Gemini'){
         <div>
           <div class="scan-edit-label">จำนวน</div>
           <div class="scan-qty-stepper">
-            <button class="scan-qty-btn" type="button" data-scan-qty-action="minus" data-scan-index="${i}" aria-label="ลดจำนวน">−</button>
+            <button type="button" aria-label="ลดจำนวน" onclick="changeScanQty(${i},-1)">−</button>
             <b>${Number(x.qty||0)}</b>
-            <button class="scan-qty-btn" type="button" data-scan-qty-action="plus" data-scan-index="${i}" aria-label="เพิ่มจำนวน">+</button>
+            <button type="button" aria-label="เพิ่มจำนวน" onclick="changeScanQty(${i},1)">+</button>
           </div>
         </div>
         <div><div class="scan-edit-label">ราคา / แก้ว</div><input class="scan-edit" type="number" value="${x.price===null?'':Number(x.price||0)}" readonly></div>
@@ -1852,18 +1852,6 @@ function renderScanResults(modelName='Gemini'){
   }).join('');
 
   box.innerHTML=`<div class="scan-row-head"><div style="font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;font-weight:800">AI: ${esc(modelName)} · ${scanFiles.length} รูป · ตรวจสอบและแก้ไขรายการได้</div><div class="scan-row-number">${scannedSales.length} รายการ</div></div>${rows}<button class="scan-add-row" type="button" onclick="addScannedSaleRow()"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg><span>เพิ่มรายการ</span></button><div id="scanSummary" class="scan-summary"></div><button class="primary scan-save" onclick="saveScannedSales()"><svg viewBox="0 0 24 24"><path d="m5 12 4 4L19 6"/></svg><span>ยืนยันบันทึกทั้งหมด</span></button>`;
-
-  box.querySelectorAll('.scan-qty-btn').forEach(btn=>{
-    btn.addEventListener('click',function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      const index=Number(this.dataset.scanIndex);
-      const row=scannedSales[index];
-      if(!row)return;
-      const delta=this.dataset.scanQtyAction==='plus'?1:-1;
-      updateScannedSale(index,'qty',Math.max(0,Number(row.qty||0)+delta));
-    });
-  });
   box.classList.remove('hidden');
   refreshScanSummary();
   loadScanMenuOptions();
@@ -1919,6 +1907,14 @@ function deleteScannedSaleRow(index){
   if(!scannedSales[index])return;
   scannedSales.splice(index,1);
   renderScanResults('Gemini');
+}
+
+function changeScanQty(index,delta){
+  const row=scannedSales[index];
+  if(!row)return;
+
+  const next=Math.max(0,Number(row.qty||0)+Number(delta||0));
+  updateScannedSale(index,'qty',next);
 }
 
 function updateScannedSale(index,key,value){
