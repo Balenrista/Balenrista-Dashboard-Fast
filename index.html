@@ -161,7 +161,12 @@
 .scan-row-icon:hover{color:var(--paper);background:rgba(255,255,255,.07)}
 .scan-row-icon.danger{color:#c99d94}
 .scan-row-icon svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.scan-edit-row{display:grid;grid-template-columns:minmax(0,1fr) 76px 92px;gap:7px;align-items:end}
+.scan-edit-row{display:grid;grid-template-columns:minmax(0,1fr) 76px 92px auto;gap:7px;align-items:end}
+.scan-qty-stepper{height:36px;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--line);background:rgba(0,0,0,.18);border-radius:10px;overflow:hidden}
+.scan-qty-stepper button{width:24px;height:100%;border:0;background:transparent;color:var(--white);font-size:16px;font-weight:800;display:grid;place-items:center;padding:0}
+.scan-qty-stepper button:active{background:rgba(181,151,133,.12)}
+.scan-qty-stepper b{min-width:24px;text-align:center;font-size:10px;font-weight:800}
+.scan-line-total{height:36px;display:flex;align-items:center;white-space:nowrap;font-size:9px;font-weight:800;color:var(--paper)}
 .scan-menu-wrap{min-width:0}
 .scan-menu-scroll{width:100%;overflow-x:auto;overflow-y:hidden;border-radius:10px;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .scan-menu-scroll::-webkit-scrollbar{display:none}
@@ -173,8 +178,12 @@
 .scan-row-hint{font-size:8px;color:#c9aaa0;margin-top:5px}
 @media(max-width:520px){
   .scan-results{max-height:62vh;padding:11px}
-  .scan-edit-row{grid-template-columns:minmax(0,1fr) 64px 82px;gap:6px}
+  .scan-edit-row{grid-template-columns:minmax(0,1fr) 64px 82px auto;gap:6px}
   .scan-edit{height:35px;font-size:10px}
+  .scan-qty-stepper{height:35px}
+  .scan-qty-stepper button{width:20px}
+  .scan-qty-stepper b{min-width:20px;font-size:9px}
+  .scan-line-total{height:35px;font-size:8px}
   .scan-edit-label{font-size:7.5px}
   .scan-row-icon{width:28px;height:28px}
   .sales-cart-item{grid-template-columns:minmax(0,1fr) auto auto}.sales-cart-item .cart-total{grid-column:2;grid-row:2}.sales-cart-item .cart-remove{grid-column:3;grid-row:1 / span 2}.sales-cart-qty{grid-column:2;grid-row:1}
@@ -1828,10 +1837,17 @@ function renderScanResults(modelName='Gemini'){
           </div>
           ${unmatched?'<div class="scan-row-hint">AI อ่านชื่อไม่ตรงกับเมนูในระบบ — เลือกเมนูที่ถูกต้อง</div>':''}
         </div>
-        <div><div class="scan-edit-label">จำนวน</div><input class="scan-edit" type="number" min="0" step="1" value="${Number(x.qty||0)}" oninput="updateScannedSale(${i},'qty',this.value)"></div>
+        <div>
+          <div class="scan-edit-label">จำนวน</div>
+          <div class="scan-qty-stepper">
+            <button type="button" aria-label="ลดจำนวน" onclick="updateScannedSale(${i},'qty',Math.max(0,Number(x.qty||0)-1))">−</button>
+            <b>${Number(x.qty||0)}</b>
+            <button type="button" aria-label="เพิ่มจำนวน" onclick="updateScannedSale(${i},'qty',Number(x.qty||0)+1)">+</button>
+          </div>
+        </div>
         <div><div class="scan-edit-label">ราคา / แก้ว</div><input class="scan-edit" type="number" value="${x.price===null?'':Number(x.price||0)}" readonly></div>
+        <div class="scan-line-total">${x.price===null?'—':'รวม '+fmt(x.total)+' THB'}</div>
       </div>
-      <div class="scan-result-meta">${x.price===null?'ยังไม่เลือกเมนู — บันทึกไม่ได้':'รวม '+fmt(x.total)+' THB · ใช้ราคาจากเมนูในระบบ'}</div>
     </div>`;
   }).join('');
 
