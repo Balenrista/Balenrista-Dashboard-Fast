@@ -638,7 +638,33 @@
 const SUPABASE_URL = 'https://iftsmcgvperrhjjfnhqa.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_AezycpnUmhgvMWJlUsg2qA_SA3JbiR0';
 const sbReady = SUPABASE_URL.startsWith('http') && SUPABASE_ANON_KEY.length > 20;
-const db = sbReady ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+/*
+ * BALENRISTA custom session bridge
+ * The database RLS uses the x-session-token request header.
+ * Keep the existing custom login/session system; only inject the
+ * current BALENRISTA session token into Supabase HTTP requests.
+ *
+ * currentUser is declared below with `let`; this fetch wrapper only
+ * reads it when a request is actually made, after script initialization.
+ */
+const db = sbReady ? supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  global: {
+    fetch: (url, options = {}) => {
+      const headers = new Headers(options.headers || {});
+      const token = currentUser?.session_token;
+      if (token) {
+        headers.set('x-session-token', token);
+      } else {
+        headers.delete('x-session-token');
+      }
+      return window.fetch(url, {
+        ...options,
+        headers
+      });
+    }
+  }
+}) : null;
 
 // Google Sheets bridge (Apps Script Web App)
 // Writes are sent through Apps Script so the browser never talks to the Sheet directly.
