@@ -1057,18 +1057,53 @@ async function refreshManagement(){
 
 async function loadManagement(){
   if(!db){renderManagementDemo();return}
+
+  const type=managementType;
+  if(!type||!managementMeta[type])return;
+
   try{
     let data=[];
-    if(managementType==='ingredients')data=await db.from('ingredients').select('*').order('name').limit(500).then(r=>{if(r.error)throw r.error;return r.data});
-    if(managementType==='menus')data=await db.from('menus').select('*').order('name').limit(500).then(r=>{if(r.error)throw r.error;return r.data});
-    if(managementType==='recipes')data=await db.from('recipes').select('*,menus(name),ingredients(name)').order('created_at',{ascending:false}).limit(500).then(r=>{if(r.error)throw r.error;return r.data});
+
+    if(type==='ingredients')
+      data=await db.from('ingredients').select('*').order('name').limit(500).then(r=>{
+        if(r.error)throw r.error;
+        return r.data;
+      });
+
+    if(type==='menus')
+      data=await db.from('menus').select('*').order('name').limit(500).then(r=>{
+        if(r.error)throw r.error;
+        return r.data;
+      });
+
+    if(type==='recipes')
+      data=await db.from('recipes').select('*,menus(name),ingredients(name)').order('created_at',{ascending:false}).limit(500).then(r=>{
+        if(r.error)throw r.error;
+        return r.data;
+      });
+
     // Sales / Expenses / Materials: load the complete history, not only the latest 500 rows.
-    if(managementType==='materials')data=await fetchAllManagementRows('materials','*,ingredients(name)','transaction_date');
-    if(managementType==='expenses')data=await fetchAllManagementRows('expenses','*','transaction_date');
-    if(managementType==='sales')data=await fetchAllManagementRows('sales','*','transaction_date');
-    cache[managementType]=data||[];
+    if(type==='materials')
+      data=await fetchAllManagementRows('materials','*,ingredients(name)','transaction_date');
+
+    if(type==='expenses')
+      data=await fetchAllManagementRows('expenses','*','transaction_date');
+
+    if(type==='sales')
+      data=await fetchAllManagementRows('sales','*','transaction_date');
+
+    // ถ้าผู้ใช้ออกจากหน้า Management ระหว่างที่กำลังโหลด
+    // ไม่ต้องเอาผลลัพธ์เก่ากลับมา render
+    if(managementType!==type)return;
+
+    cache[type]=data||[];
     renderManagement();
-  }catch(err){toast('โหลดข้อมูลไม่สำเร็จ: '+err.message)}
+
+  }catch(err){
+    if(managementType===type){
+      toast('โหลดข้อมูลไม่สำเร็จ: '+err.message);
+    }
+  }
 }
 function renderManagementDemo(){cache[managementType]=[];renderManagement()}
 function formatManagementDate(value){
