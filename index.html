@@ -91,7 +91,11 @@
 .mgmt-summary-sub{font-size:8px;color:var(--muted);margin-top:2px}
 .management-mobile-list{gap:9px}
 .mgmt-date-card{border:1px solid rgba(243,237,231,.11);border-radius:16px;background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.015));overflow:hidden}
-.mgmt-date-head{width:100%;border:0;background:transparent;color:var(--white);display:flex;align-items:center;justify-content:space-between;padding:13px 14px;text-align:left}
+.mgmt-date-head{width:100%;border:0;background:transparent;color:var(--white);display:flex;align-items:center;justify-content:space-between;padding:13px 14px;text-align:left;gap:10px}
+.mgmt-date-actions{display:flex;align-items:center;gap:7px;margin-left:auto}
+.mgmt-date-delete{width:30px;height:30px;border:1px solid rgba(243,237,231,.10);border-radius:9px;background:rgba(100,6,6,.16);color:#b9aaa1;display:grid;place-items:center;cursor:pointer;padding:0;flex:none}
+.mgmt-date-delete:hover{background:rgba(100,6,6,.55);color:var(--white)}
+.mgmt-date-delete svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .mgmt-date-main{min-width:0}
 .mgmt-date-title{font-size:14px;font-weight:800;letter-spacing:.1px}
 .mgmt-date-meta{text-align:right}
@@ -1242,7 +1246,8 @@ function renderManagementMobile(rows,t){
       if(t==='materials'){middle=`${fmt(x.quantity_purchased)} ${x.purchase_unit||x.unit||''}`.trim();amount=fmt(x.total_amount)+' THB';sub=[time,x.unit_price?`${fmt(x.unit_price)} / หน่วย`:'' ].filter(Boolean).join(' · ')||'ซื้อวัตถุดิบ'}
       return `<div class="mgmt-item">${managementItemIcon(t)}<div><div class="mgmt-item-name">${esc(name)}</div><div class="mgmt-item-sub">${esc(sub)}</div></div><div><div class="mgmt-item-qty">${esc(middle)}</div><div class="mgmt-item-amount">${esc(amount)}</div></div>${managementItemAction(t,x.id)}</div>`;
     }).join('');
-    return `<div class="mgmt-date-card ${idx===0?'open':''}"><button class="mgmt-date-head" onclick="this.parentElement.classList.toggle('open')"><div class="mgmt-date-main"><div class="mgmt-date-title">${esc(date)}</div></div><div class="mgmt-date-meta"><div class="mgmt-date-count">${fmt0(items.length)} รายการ</div><div class="mgmt-date-total">${fmt(totalDay)} THB${t==='sales'?` · ${fmt0(dayQty)} แก้ว`:''}</div></div><svg class="mgmt-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></button><div class="mgmt-date-items">${itemHtml}</div></div>`;
+    const bulkDelete=t==='sales'?`<button type="button" class="mgmt-date-delete" title="ลบทั้งวัน" aria-label="ลบยอดขายทั้งวัน" onclick="event.stopPropagation();deleteManagementDate('${date}',${items.length},${dayQty},${totalDay})">${ICONS.trash}</button>`:'';
+    return `<div class="mgmt-date-card ${idx===0?'open':''}"><div class="mgmt-date-head" role="button" tabindex="0" onclick="this.parentElement.classList.toggle('open')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.parentElement.classList.toggle('open')}"><div class="mgmt-date-main"><div class="mgmt-date-title">${esc(date)}</div></div><div class="mgmt-date-meta"><div class="mgmt-date-count">${fmt0(items.length)} รายการ</div><div class="mgmt-date-total">${fmt(totalDay)} THB${t==='sales'?` · ${fmt0(dayQty)} แก้ว`:''}</div></div><div class="mgmt-date-actions">${bulkDelete}<svg class="mgmt-chevron" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg></div></div><div class="mgmt-date-items">${itemHtml}</div></div>`;
   }).join('');
 }
 function renderManagement(){
@@ -2162,6 +2167,42 @@ async function saveSalesEdit(){
 }
 
 async function deleteManagementRow(type,id){if(!currentUser){showLogin();return}if(!db||!id)return;if(!confirm('ลบรายการนี้ใช่ไหม?'))return;try{setLoading(true,'กำลังลบข้อมูล...');const target=(cache[type]||[]).find(x=>x.id===id);if(!target)throw new Error('ไม่พบรายการที่ต้องการลบ');const {error}=await db.from(type).delete().eq('id',id);if(error)throw error;try{const gs=await deleteFromGoogleSheet(type,googleMatchForDelete(type,target));toast(gs?.deleted?'ลบ Supabase + Google Sheet แล้ว':'ลบ Supabase แล้ว');}catch(sheetError){console.error('Google Sheet delete sync error:',sheetError);toast('ลบ Supabase แล้ว แต่ Google Sheet ยังไม่ถูกลบ: '+sheetError.message)}await loadManagement();if(type==='materials'||type==='expenses'||type==='sales')await loadDashboard()}catch(err){toast('ลบไม่สำเร็จ: '+err.message)}finally{setLoading(false)}}
+async function deleteManagementDate(date,count,qty,total){
+  if(!currentUser){showLogin();return}
+  if(!db||managementType!=='sales'||!date)return;
+  const ok=confirm(`ลบยอดขายทั้งหมดของวันที่ ${date} ?\n\n${fmt0(count)} รายการ · ${fmt0(qty)} แก้ว · ${fmt(total)} THB\n\nการลบนี้ไม่สามารถย้อนกลับได้`);
+  if(!ok)return;
+  try{
+    setLoading(true,'กำลังลบยอดขายทั้งวัน...');
+    const {error}=await db.from('sales').delete().eq('transaction_date',date);
+    if(error)throw error;
+    invalidateDashboardYear(date);
+    try{
+      const gs=await deleteByDateFromGoogleSheet(date);
+      toast(gs?.deleted?`ลบยอดขาย ${fmt0(count)} รายการ + Google Sheet แล้ว`:`ลบยอดขาย ${fmt0(count)} รายการแล้ว`);
+    }catch(sheetError){
+      console.error('Google Sheet bulk delete sync error:',sheetError);
+      toast('ลบ Supabase แล้ว แต่ Google Sheet ยังไม่ถูกลบทั้งวัน: '+sheetError.message);
+    }
+    await loadManagement();
+    await loadDashboard();
+  }catch(err){
+    toast('ลบยอดขายทั้งวันไม่สำเร็จ: '+err.message);
+  }finally{
+    setLoading(false);
+  }
+}
+
+async function deleteByDateFromGoogleSheet(date){
+  if(!GOOGLE_SHEET_BRIDGE)return {success:true,skipped:true};
+  const response=await fetch(GOOGLE_SHEET_BRIDGE,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'deleteByDate',sheetName:'รายการขาย',date})});
+  const raw=await response.text();
+  let data=null;try{data=JSON.parse(raw)}catch(_){data=null}
+  if(!response.ok)throw new Error(`Google Sheet HTTP ${response.status}`);
+  if(data&&data.success===false)throw new Error(data.error||'Google Sheet ลบทั้งวันไม่สำเร็จ');
+  return data||{success:true};
+}
+
 
 function closeModal(e){if(e&&e.target!==e.currentTarget)return;document.getElementById('modalOverlay').classList.remove('open')}
 async function billsGooglePost(action,payload={}){
