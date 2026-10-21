@@ -717,17 +717,20 @@ async function saveToGoogleSheet(sheetName, rows){
 
   const raw=await response.text();
   let data=null;
-  try{data=JSON.parse(raw)}catch(_){data=null}
+  try{data=JSON.parse(raw)}catch(_){
+    const preview=String(raw||'').replace(/\s+/g,' ').slice(0,180);
+    throw new Error(`Google Apps Script ไม่ได้ส่ง JSON กลับมา (HTTP ${response.status})${preview?`: ${preview}`:''}`);
+  }
 
   if(!response.ok){
-    throw new Error(`Google Sheet HTTP ${response.status}`);
+    throw new Error(`Google Sheet HTTP ${response.status}${data?.error?`: ${data.error}`:''}`);
   }
 
-  if(data && data.success===false){
-    throw new Error(data.error || 'Google Sheet บันทึกไม่สำเร็จ');
+  if(!data || data.success!==true){
+    throw new Error(data?.error || 'Google Sheet ไม่ยืนยันว่าบันทึกสำเร็จ');
   }
 
-  return data || {success:true};
+  return data;
 }
 
 document.addEventListener('DOMContentLoaded',()=>{document.getElementById('dateDaily').value=iso(today);setupPeriods();setBottom('dashboard');if(!sbReady){document.getElementById('setup').style.display='block';document.getElementById('loading').style.display='none';renderDemo();return}initAuth()});
