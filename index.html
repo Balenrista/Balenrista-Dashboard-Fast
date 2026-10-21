@@ -1809,6 +1809,7 @@ function openScanModal(){
     if(!scannedSales.length)return;
     try{
       const menus=await getMenus(document.getElementById('scanDate').value||iso(today));
+      window.__scanMenus=menus;
       const byName=new Map(menus.map(m=>[String(m.name||'').trim().toLowerCase(),m]));
       scannedSales.forEach(x=>{const m=byName.get(String(x.menu||'').trim().toLowerCase());if(m){x.menuId=m.id;x.menuName=m.name;x.price=Number(m.sale_price||0);x.total=Number((Number(x.qty||0)*x.price).toFixed(2));}});
       renderScanResults('Gemini');
@@ -2005,7 +2006,7 @@ async function loadScanMenuOptions(){
   const selects=[...document.querySelectorAll('.scan-menu-select')];
   if(!selects.length)return;
   try{
-    const menus=await getMenus();
+    const menus=await getMenus(document.getElementById('scanDate')?.value||iso(today));
     window.__scanMenus=menus;
     selects.forEach(sel=>{
       const i=Number(sel.dataset.scanMenu);
@@ -2215,9 +2216,12 @@ async function saveSalesEdit(){
   const date=document.getElementById('edit_sale_date').value;
   const sel=document.getElementById('f_edit_sale_menu');
   const qty=Number(document.getElementById('edit_sale_qty').value||0);
-  const menu=(window.__editSaleMenus||[]).find(x=>x.id===sel.value);
-  if(!date||!menu||qty<=0){toast('กรุณากรอกวันที่ เมนู และจำนวนให้ครบ');return}
-  const sameMenu=String(menu.id)===String(target.menu_id);
+  if(!date||!sel.value||qty<=0){toast('กรุณากรอกวันที่ เมนู และจำนวนให้ครบ');return}
+  let dateMenus;
+  try{dateMenus=await getMenus(date)}catch(err){toast('โหลดราคาตามวันที่ไม่สำเร็จ: '+err.message);return}
+  const menu=dateMenus.find(x=>x.id===sel.value);
+  if(!menu){toast('ไม่พบเมนูที่เลือก');return}
+  const sameMenu=String(menu.id)===String(target.menu_id)&&String(date)===String(target.transaction_date);
   const price=sameMenu?Number(target.sale_price||0):Number(menu.sale_price||0);
   const row={transaction_date:date,menu_id:menu.id,menu_name:menu.name,quantity:qty,sale_price:price,total_amount:Number((qty*price).toFixed(2))};
   try{
