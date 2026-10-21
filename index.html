@@ -1074,11 +1074,14 @@ async function loadManagement(){
         return r.data;
       });
 
-    if(type==='menus')
+    if(type==='menus'){
       data=await db.from('menus').select('*').order('name').limit(500).then(r=>{
         if(r.error)throw r.error;
         return r.data;
       });
+      const history=await getMenuPriceHistory((data||[]).map(m=>m.id));
+      data=(data||[]).map(m=>({...m,sale_price:effectivePriceFromHistory(m,history,iso(today))}));
+    }
 
     if(type==='recipes')
       data=await db.from('recipes').select('*,menus(name),ingredients(name)').order('created_at',{ascending:false}).limit(500).then(r=>{
@@ -1264,14 +1267,14 @@ function renderManagement(){
   const qv=document.getElementById('searchInput').value.toLowerCase();
   const classicRows=(cache[t]||[]).filter(x=>JSON.stringify(x).toLowerCase().includes(qv));
   const head=managementMeta[t].cols;
-  document.getElementById('dataHead').innerHTML='<tr>'+head.map(x=>`<th>${x}</th>`).join('')+'<th style="text-align:right;width:62px">Delete</th></tr>';
+  document.getElementById('dataHead').innerHTML='<tr>'+head.map(x=>`<th>${x}</th>`).join('')+`<th style="text-align:right;width:${t==='menus'?'92':'62'}px">${t==='menus'?'Actions':'Delete'}</th></tr>`;
   let html='';
   classicRows.forEach(x=>{
     let cells=[];
     if(t==='ingredients')cells=[x.name,x.stock_unit,x.purchase_unit,fmt(x.min_stock),x.is_active?'Active':'Inactive'];
     if(t==='menus')cells=[x.name,fmt(x.sale_price)+' THB',x.group_name||'—',fmt(x.avg_ingredient_cost)+' THB',x.is_active?'Active':'Inactive'];
     if(t==='recipes')cells=[x.menus?.name||'—',x.ingredients?.name||'—',fmt(x.quantity),x.unit];
-    html+='<tr>'+cells.map((c,i)=>`<td class="${i===cells.length-1&&t==='ingredients'?'status':''}">${esc(c)}</td>`).join('')+`<td><div class="row-actions"><button class="delete-row" title="Delete" aria-label="Delete" onclick="deleteManagementRow('${t}','${String(x.id||'').replace(/'/g,"\\'")}')">${ICONS.trash}</button></div></td></tr>`;
+    html+='<tr>'+cells.map((c,i)=>`<td class="${i===cells.length-1&&t==='ingredients'?'status':''}">${esc(c)}</td>`).join('')+`<td><div class="row-actions">${t==='menus'?`<button class="edit-row" title="เปลี่ยนราคาขาย" aria-label="เปลี่ยนราคาขาย" onclick="openMenuPriceEditor('${String(x.id||'').replace(/'/g,"\\'")}')">${ICONS.edit}</button>`:''}<button class="delete-row" title="Delete" aria-label="Delete" onclick="deleteManagementRow('${t}','${String(x.id||'').replace(/'/g,"\\'")}')">${ICONS.trash}</button></div></td></tr>`;
   });
   document.getElementById('dataBody').innerHTML=html||'<tr><td colspan="10"><div class="empty">No data</div></td></tr>';
 }
@@ -1388,7 +1391,10 @@ function bindSalesCartInputs(){
     document.getElementById('cart_sale_price').value=p.toFixed(2);
     document.getElementById('cart_sale_total').value=(p*q).toFixed(2);
   };
-  sel.onchange=update;qty.oninput=update;update();
+  sel.onchange=update;qty.oninput=update;
+  const dateEl=document.getElementById('cart_sale_date');
+  if(dateEl)dateEl.onchange=async()=>{try{window.__saleMenus=await getMenus(dateEl.value||iso(today));update()}catch(err){toast('โหลดราคาตามวันที่ไม่สำเร็จ: '+err.message)}};
+  update();
 }
 function stepSalesCartQty(delta){
   const el=document.getElementById('cart_sale_qty');if(!el)return;
@@ -1427,7 +1433,7 @@ async function saveSalesCart(){
   if(window.__savingSalesCart)return;
   const date=document.getElementById('cart_sale_date').value||iso(today);
   const rows=salesCart.map(x=>({transaction_date:date,menu_id:x.menu_id,menu_name:x.menu_name,quantity:Number(x.quantity||0),sale_price:Number(x.sale_price||0),total_amount:Number((Number(x.quantity||0)*Number(x.sale_price||0)).toFixed(2))}));
-  const googleRows=rows.map(x=>[x.transaction_date,x.menu_name,x.quantity]);
+  const googleRows=rows.map(x=>[x.transaction_date,x.menu_name,x.quantity,x.sale_price,x.total_amount]);
   window.__savingSalesCart=true;
   setLoading(true,'กำลังบันทึกยอดขายทั้งหมดลง Supabase + Google Sheet...');
   try{
@@ -1555,7 +1561,68 @@ async function saveExpenseCart(){
 
 function form(fields){return '<div class="form-grid">'+fields.map(f=>`<label class="form-item"><span class="form-label">${f[1]}</span><input class="field" id="f_${f[0]}" type="${f[2]}" ${f[0]==='transaction_date'?`value="${iso(today)}"`:''}></label>`).join('')+'</div>'}
 async function getIngredients(){const r=await db.from('ingredients').select('id,name,stock_unit,purchase_unit,purchase_to_stock_ratio,min_stock,is_active').eq('is_active',true).order('name');if(r.error)throw r.error;return r.data||[]}
-async function getMenus(){const r=await db.from('menus').select('id,name,sale_price,avg_ingredient_cost,is_active').eq('is_active',true).order('name');if(r.error)throw r.error;return r.data||[]}
+async function getMenuPriceHistory(menuIds){
+  if(!db||!menuIds?.length)return [];
+  const r=await db.from('menu_price_history').select('id,menu_id,old_price,new_price,effective_date,created_at').in('menu_id',menuIds).order('effective_date',{ascending:true}).order('created_at',{ascending:true});
+  if(r.error)throw r.error;
+  return r.data||[];
+}
+function effectivePriceFromHistory(menu,history,date){
+  const rows=(history||[]).filter(h=>String(h.menu_id)===String(menu.id)).sort((a,b)=>String(a.effective_date).localeCompare(String(b.effective_date))||String(a.created_at||'').localeCompare(String(b.created_at||'')));
+  if(!rows.length)return Number(menu.sale_price||0);
+  const d=String(date||iso(today)).slice(0,10);
+  if(d<String(rows[0].effective_date||''))return Number(rows[0].old_price||0);
+  let price=Number(rows[0].old_price||0);
+  for(const h of rows){if(String(h.effective_date||'')<=d)price=Number(h.new_price||0);else break;}
+  return price;
+}
+async function getMenus(forDate=iso(today)){
+  const r=await db.from('menus').select('id,name,sale_price,avg_ingredient_cost,is_active').eq('is_active',true).order('name');
+  if(r.error)throw r.error;
+  const menus=r.data||[];
+  if(!menus.length)return menus;
+  const history=await getMenuPriceHistory(menus.map(m=>m.id));
+  return menus.map(m=>({...m,sale_price:effectivePriceFromHistory(m,history,forDate)}));
+}
+async function openMenuPriceEditor(menuId){
+  if(!currentUser){showLogin();return}
+  const menu=(cache.menus||[]).find(m=>String(m.id)===String(menuId));
+  if(!menu){toast('ไม่พบเมนูที่ต้องการเปลี่ยนราคา');return}
+  const history=await getMenuPriceHistory([menu.id]);
+  const todayPrice=effectivePriceFromHistory(menu,history,iso(today));
+  document.getElementById('modalTitle').textContent='เปลี่ยนราคาขาย';
+  document.getElementById('modalBody').innerHTML=`<div class="form-grid"><label class="form-item full"><span class="form-label">เมนู</span><input class="field" value="${esc(menu.name)}" readonly></label><label class="form-item full"><span class="form-label">ราคาปัจจุบัน (THB)</span><input class="field" value="${todayPrice.toFixed(2)}" readonly></label><label class="form-item full"><span class="form-label">ราคาใหม่ (THB)</span><input class="field" id="menu_new_price" type="number" min="0" step="0.01" value="${todayPrice.toFixed(2)}"></label><label class="form-item full"><span class="form-label">วันที่เริ่มใช้ราคาใหม่</span><input class="field" id="menu_effective_date" type="date" value="${iso(today)}" min="${iso(today)}"></label></div><div class="form-actions"><button class="secondary" onclick="closeModal()">ยกเลิก</button><button class="primary" onclick="saveMenuPriceChange('${String(menu.id).replace(/'/g,"\\'")}')">บันทึกราคาใหม่</button></div>`;
+  document.getElementById('modalOverlay').classList.add('open');
+}
+async function saveMenuPriceChange(menuId){
+  if(!db||!currentUser)return;
+  const menu=(cache.menus||[]).find(m=>String(m.id)===String(menuId));
+  const newPrice=Number(document.getElementById('menu_new_price')?.value);
+  const effectiveDate=document.getElementById('menu_effective_date')?.value;
+  if(!menu||!Number.isFinite(newPrice)||newPrice<0||!effectiveDate){toast('กรุณาตรวจสอบราคาและวันที่');return}
+  const history=await getMenuPriceHistory([menu.id]);
+  const oldPrice=effectivePriceFromHistory(menu,history,effectiveDate);
+  if(newPrice===oldPrice){toast('ราคาใหม่เท่ากับราคาเดิม');return}
+  if(history.some(h=>String(h.effective_date)===effectiveDate)){toast('เมนูนี้มีประวัติราคาวันดังกล่าวแล้ว กรุณาเลือกวันอื่น');return}
+  try{
+    setLoading(true,'กำลังบันทึกประวัติราคา...');
+    // Freeze the existing Sheet price formulas before the first price update so later menu changes cannot recalculate old sales.
+    await callGoogleSheetAction('freezeSalesPrices');
+    const {error:historyError}=await db.from('menu_price_history').insert({menu_id:menu.id,old_price:oldPrice,new_price:newPrice,effective_date:effectiveDate});
+    if(historyError)throw historyError;
+    const {error:menuError}=await db.from('menus').update({sale_price:newPrice}).eq('id',menu.id);
+    if(menuError)throw menuError;
+    try{await saveToGoogleSheet('เมนู',[[menu.name,newPrice]])}catch(sheetError){console.error('Menu price Sheet sync error:',sheetError);toast('บันทึก Supabase แล้ว แต่ Google Sheet เมนูยังไม่สำเร็จ: '+sheetError.message)}
+    closeModal();toast('บันทึกประวัติราคาแล้ว');await loadManagement();
+  }catch(err){toast('เปลี่ยนราคาไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
+}
+async function callGoogleSheetAction(action,payload={}){
+  if(!GOOGLE_SHEET_BRIDGE)throw new Error('ยังไม่ได้ตั้งค่า Google Sheet Bridge');
+  const response=await fetch(GOOGLE_SHEET_BRIDGE,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...payload})});
+  const raw=await response.text();let data=null;try{data=JSON.parse(raw)}catch(_){ }
+  if(!response.ok||data?.success===false)throw new Error(data?.error||`Google Sheet HTTP ${response.status}`);
+  return data||{success:true};
+}
 async function expenseGroups(){
   const base=['อื่นๆ','ค่าเช่าที่'];
   if(!db)return base;
@@ -1579,7 +1646,7 @@ function unitOptions(){return UNIT_OPTIONS.map(x=>({value:x,label:x}))}
 async function menuForm(){return `<div class="form-grid"><label class="form-item full"><span class="form-label">Menu Name</span><input class="field" id="f_name" type="text" placeholder="เช่น Matcha Latte"></label><label class="form-item full"><span class="form-label">Sale Price (THB)</span><input class="field" id="f_sale_price" type="number" min="0" step="0.01" placeholder="0"></label></div>`}
 async function expenseForm(){const groups=await expenseGroups();return `<div class="form-grid"><label class="form-item"><span class="form-label">Date</span><input class="field" id="f_transaction_date" type="date" value="${iso(today)}"></label>${selectField('expense_group','Group',groups.map(x=>({value:x,label:x})),'เลือกกลุ่ม')}</div><div class="form-grid"><label class="form-item full"><span class="form-label">Item</span><input class="field" id="f_item_name" type="text" placeholder="เช่น ค่าน้ำแข็ง"></label><label class="form-item full"><span class="form-label">Amount (THB)</span><input class="field" id="f_amount" type="number" min="0" step="0.01" placeholder="0"></label></div>`}
 async function saleForm(){const menus=await getMenus();window.__saleMenus=menus;return `<div class="form-grid"><label class="form-item full"><span class="form-label">Date</span><input class="field" id="f_transaction_date" type="date" value="${iso(today)}"></label>${selectField('menu_id','Menu',menus.map(x=>({value:x.id,label:x.name})),'เลือกเมนู')}</div><div class="form-grid"><label class="form-item"><span class="form-label">Sale Price / cup</span><input class="field" id="f_sale_price" type="number" readonly></label><label class="form-item"><span class="form-label">Average Ingredient Cost / cup</span><input class="field" id="f_avg_cost" type="number" readonly></label><label class="form-item"><span class="form-label">Quantity</span><input class="field" id="f_quantity" type="number" min="1" step="1" value="1"></label><label class="form-item"><span class="form-label">Total Amount</span><input class="field" id="f_total_amount" type="number" readonly></label><label class="form-item full"><span class="form-label">Estimated Gross Profit</span><input class="field" id="f_est_profit" type="text" readonly></label></div>`}
-function bindSaleForm(){const sel=document.getElementById('f_menu_id'),qty=document.getElementById('f_quantity');const update=()=>{const m=(window.__saleMenus||[]).find(x=>x.id===sel.value);const q=Number(qty.value||0),p=Number(m?.sale_price||0),c=Number(m?.avg_ingredient_cost||0);document.getElementById('f_sale_price').value=p||'';document.getElementById('f_avg_cost').value=c||'';document.getElementById('f_total_amount').value=(p*q).toFixed(2);document.getElementById('f_est_profit').value=((p-c)*q).toFixed(2)+' THB'};sel.onchange=update;qty.oninput=update;update()}
+function bindSaleForm(){const sel=document.getElementById('f_menu_id'),qty=document.getElementById('f_quantity'),dateEl=document.getElementById('f_transaction_date');const update=()=>{const m=(window.__saleMenus||[]).find(x=>x.id===sel.value);const q=Number(qty.value||0),p=Number(m?.sale_price||0),c=Number(m?.avg_ingredient_cost||0);document.getElementById('f_sale_price').value=p||'';document.getElementById('f_avg_cost').value=c||'';document.getElementById('f_total_amount').value=(p*q).toFixed(2);document.getElementById('f_est_profit').value=((p-c)*q).toFixed(2)+' THB'};sel.onchange=update;qty.oninput=update;if(dateEl)dateEl.onchange=async()=>{try{const selected=sel.value;window.__saleMenus=await getMenus(dateEl.value||iso(today));update()}catch(err){toast('โหลดราคาตามวันที่ไม่สำเร็จ: '+err.message)}};update()}
 async function materialForm(){const ings=await getIngredients();window.__materialIngredients=ings;return `<div class="form-grid material-form">
   ${selectField('ingredient_id','ซื้อวัตถุดิบ',ings.map(x=>({value:x.id,label:x.name})),'เลือกวัตถุดิบ')}
   <label class="form-item"><span class="form-label" id="materialQtyLabel">จำนวนที่ซื้อ</span><div class="quantity-stepper"><button type="button" onclick="stepMaterialQty(-1)">−</button><input class="field" id="f_quantity_purchased" type="number" min="0" step="1" value="1"><button type="button" onclick="stepMaterialQty(1)">+</button></div></label>
@@ -1658,7 +1725,7 @@ async function saveCrud(type){
     };
     googleSheet='รายการขาย';
     // A-C only. D+ are formulas in the Sheet.
-    googleRow=[row.transaction_date,row.menu_name,row.quantity];
+    googleRow=[row.transaction_date,row.menu_name,row.quantity,row.sale_price,row.total_amount];
   }
 
   if(type==='materials'){
@@ -1738,6 +1805,15 @@ let scanFiles=[],scannedSales=[];
 
 function openScanModal(){
   document.getElementById('scanDate').value=iso(today);
+  document.getElementById('scanDate').onchange=async()=>{
+    if(!scannedSales.length)return;
+    try{
+      const menus=await getMenus(document.getElementById('scanDate').value||iso(today));
+      const byName=new Map(menus.map(m=>[String(m.name||'').trim().toLowerCase(),m]));
+      scannedSales.forEach(x=>{const m=byName.get(String(x.menu||'').trim().toLowerCase());if(m){x.menuId=m.id;x.menuName=m.name;x.price=Number(m.sale_price||0);x.total=Number((Number(x.qty||0)*x.price).toFixed(2));}});
+      renderScanResults('Gemini');
+    }catch(err){toast('โหลดราคาตามวันที่ไม่สำเร็จ: '+err.message)}
+  };
   document.getElementById('scanFile').value='';
   document.getElementById('scanPreviews').innerHTML='';
   document.getElementById('scanPreviews').classList.add('hidden');
@@ -1855,9 +1931,10 @@ async function processLoyverseScan(){
 
     // IMPORTANT: pricing comes from the Balenrista Menu master, not from the screenshot.
     const menuNames=scannedSales.map(x=>x.menu);
-    const menuRes=await db.from('menus').select('id,name,sale_price').in('name',menuNames);
-    if(menuRes.error)throw menuRes.error;
-    const menuMap=new Map((menuRes.data||[]).map(m=>[String(m.name||'').trim().toLowerCase(),m]));
+    const scanDate=document.getElementById('scanDate')?.value||iso(today);
+    const allMenus=await getMenus(scanDate);
+    const wanted=new Set(menuNames.map(n=>String(n||'').trim().toLowerCase()));
+    const menuMap=new Map(allMenus.filter(m=>wanted.has(String(m.name||'').trim().toLowerCase())).map(m=>[String(m.name||'').trim().toLowerCase(),m]));
     scannedSales.forEach(x=>{
       const m=menuMap.get(x.menu.toLowerCase());
       x.menuId=m?.id||null;
@@ -2072,12 +2149,14 @@ async function saveScannedSales(){
     if(error)throw error;
     invalidateDashboardYear(date);
 
-    // Google Sheet: รายการขาย A-C only. D+ stay formula-driven.
+    // Google Sheet: save A-E snapshots so new sales do not depend on current menu lookup.
     try{
       await saveToGoogleSheet('รายการขาย',rows.map(x=>[
         x.transaction_date,
         x.menu_name,
-        x.quantity
+        x.quantity,
+        x.sale_price,
+        x.total_amount
       ]));
     }catch(sheetError){
       console.error('Google Sheet scan sync error:',sheetError);
@@ -2124,7 +2203,7 @@ async function editSalesRow(id){
     const sel=document.getElementById('f_edit_sale_menu');
     if(currentMenu)sel.value=currentMenu.id;
     const qty=document.getElementById('edit_sale_qty');
-    const update=()=>{const m=(window.__editSaleMenus||[]).find(x=>x.id===sel.value);const q=Number(qty.value||0);const p=Number(m?.sale_price||0);document.getElementById('edit_sale_price').value=p.toFixed(2);document.getElementById('edit_sale_total').value=(p*q).toFixed(2)};
+    const update=()=>{const m=(window.__editSaleMenus||[]).find(x=>x.id===sel.value);const q=Number(qty.value||0);const sameMenu=String(m?.id||'')===String(target.menu_id||'');const p=sameMenu?Number(target.sale_price||0):Number(m?.sale_price||0);document.getElementById('edit_sale_price').value=p.toFixed(2);document.getElementById('edit_sale_total').value=(p*q).toFixed(2)};
     sel.onchange=update;qty.oninput=update;update();
     document.getElementById('modalOverlay').classList.add('open');
   }catch(err){toast('เปิดแก้ไขไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
@@ -2138,7 +2217,8 @@ async function saveSalesEdit(){
   const qty=Number(document.getElementById('edit_sale_qty').value||0);
   const menu=(window.__editSaleMenus||[]).find(x=>x.id===sel.value);
   if(!date||!menu||qty<=0){toast('กรุณากรอกวันที่ เมนู และจำนวนให้ครบ');return}
-  const price=Number(menu.sale_price||0);
+  const sameMenu=String(menu.id)===String(target.menu_id);
+  const price=sameMenu?Number(target.sale_price||0):Number(menu.sale_price||0);
   const row={transaction_date:date,menu_id:menu.id,menu_name:menu.name,quantity:qty,sale_price:price,total_amount:Number((qty*price).toFixed(2))};
   try{
     setLoading(true,'กำลังบันทึกการแก้ไข...');
@@ -2150,7 +2230,7 @@ async function saveSalesEdit(){
       const oldMatch=googleMatchForDelete('sales',target);
       const del=await deleteFromGoogleSheet('sales',oldMatch);
       if(del?.deleted===false)throw new Error('ไม่พบรายการเดิมใน Google Sheet');
-      await saveToGoogleSheet('รายการขาย',[[row.transaction_date,row.menu_name,row.quantity]]);
+      await saveToGoogleSheet('รายการขาย',[[row.transaction_date,row.menu_name,row.quantity,row.sale_price,row.total_amount]]);
     }catch(sheetError){
       console.error('Google Sheet sales edit sync error:',sheetError);
       closeModal();
