@@ -1599,23 +1599,28 @@ async function saveMenuPriceChange(menuId){
   const menu=(cache.menus||[]).find(m=>String(m.id)===String(menuId));
   const newPrice=Number(document.getElementById('menu_new_price')?.value);
   const effectiveDate=document.getElementById('menu_effective_date')?.value;
+  const todayDate=iso(today);
   if(!menu||!Number.isFinite(newPrice)||newPrice<0||!effectiveDate){toast('กรุณาตรวจสอบราคาและวันที่');return}
+  if(effectiveDate<todayDate){toast('วันที่เริ่มใช้ราคาต้องเป็นวันนี้หรือวันในอนาคต');return}
   const history=await getMenuPriceHistory([menu.id]);
   const oldPrice=effectivePriceFromHistory(menu,history,effectiveDate);
   if(newPrice===oldPrice){toast('ราคาใหม่เท่ากับราคาเดิม');return}
-  // Allow multiple price changes for the same menu on the same effective date.
-  // History is ordered by effective_date and created_at, so the latest change wins.
   try{
     setLoading(true,'กำลังบันทึกประวัติราคา...');
-    // Freeze the existing Sheet price formulas before the first price update so later menu changes cannot recalculate old sales.
+    // Freeze only existing price snapshots; column E totals remain formula-driven.
     await callGoogleSheetAction('freezeSalesPrices');
-    const {error:historyError}=await db.from('menu_price_history').insert({menu_id:menu.id,old_price:oldPrice,new_price:newPrice,effective_date:effectiveDate});
+    const {data:historyRow,error:historyError}=await db.from('menu_price_history').insert({menu_id:menu.id,old_price:oldPrice,new_price:newPrice,effective_date:effectiveDate}).select('id,menu_id,old_price,new_price,effective_date,created_at').single();
     if(historyError)throw historyError;
-    const {error:menuError}=await db.from('menus').update({sale_price:newPrice}).eq('id',menu.id);
-    if(menuError)throw menuError;
-    try{await saveToGoogleSheet('เมนู',[[menu.name,newPrice]])}catch(sheetError){console.error('Menu price Sheet sync error:',sheetError);toast('บันทึก Supabase แล้ว แต่ Google Sheet เมนูยังไม่สำเร็จ: '+sheetError.message)}
-    closeModal();toast('บันทึกประวัติราคาแล้ว');await loadManagement();
-  }catch(err){toast('เปลี่ยนราคาไม่สำเร็จ: '+err.message)}finally{setLoading(false)}
+    // Only update the current menu base price for an immediate change. Future prices stay scheduled in history.
+    if(effectiveDate<=todayDate){
+      const {error:menuError}=await db.from('menus').update({sale_price:newPrice}).eq('id',menu.id);
+      if(menuError)throw menuError;
+    }
+    // Sync current/future price fields and a separate audit row to Sheets.
+    await callGoogleSheetAction('syncMenuPrice',{menuName:menu.name,newPrice,effectiveDate,immediate:effectiveDate<=todayDate,history:historyRow});
+    closeModal();toast(effectiveDate>todayDate?'ตั้งราคาล่วงหน้าเรียบร้อยแล้ว':'เปลี่ยนราคาและบันทึกประวัติแล้ว');await loadManagement();
+  }catch(err){toast('บันทึกราคาไม่สำเร็จ: '+err.message+' — ตรวจสอบ Supabase และ Google Sheets ก่อนลองซ้ำ')}
+  finally{setLoading(false)}
 }
 async function callGoogleSheetAction(action,payload={}){
   if(!GOOGLE_SHEET_BRIDGE)throw new Error('ยังไม่ได้ตั้งค่า Google Sheet Bridge');
