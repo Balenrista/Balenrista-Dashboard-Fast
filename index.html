@@ -700,35 +700,61 @@ function setLoading(show,message=''){
   }
 }
 
-async function saveToGoogleSheet(sheetName, rows){
-  if(!GOOGLE_SHEET_BRIDGE) return {success:true,skipped:true};
-  if(!Array.isArray(rows) || !rows.length) return {success:true,skipped:true};
 
-  const response=await fetch(GOOGLE_SHEET_BRIDGE,{
-    method:'POST',
-    // text/plain keeps this as a simple cross-origin POST and avoids a JSON preflight.
-    headers:{'Content-Type':'text/plain;charset=utf-8'},
-    body:JSON.stringify({
-      action:'saveMultipleManual',
+async function saveToGoogleSheet(sheetName, rows) {
+  if (!GOOGLE_SHEET_BRIDGE) {
+    throw new Error('ไม่ได้ตั้งค่า Google Sheets URL');
+  }
+
+  if (!Array.isArray(rows) || !rows.length) {
+    throw new Error('ไม่มีข้อมูลสำหรับบันทึกลง Google Sheets');
+  }
+
+  const response = await fetch(GOOGLE_SHEET_BRIDGE, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'text/plain;charset=utf-8'
+    },
+    body: JSON.stringify({
+      action: 'saveMultipleManual',
       sheetName,
       rows
     })
   });
 
-  const raw=await response.text();
-  let data=null;
-  try{data=JSON.parse(raw)}catch(_){data=null}
+  const raw = await response.text();
 
-  if(!response.ok){
-    throw new Error(`Google Sheet HTTP ${response.status}`);
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch (err) {
+    console.error('Google Sheets returned non-JSON:', raw);
+    throw new Error(
+      'Google Sheets ไม่ส่งผลยืนยันกลับมา กรุณาตรวจสอบ Apps Script Executions'
+    );
   }
 
-  if(data && data.success===false){
-    throw new Error(data.error || 'Google Sheet บันทึกไม่สำเร็จ');
+  if (!response.ok) {
+    throw new Error('Google Sheets HTTP ' + response.status);
   }
 
-  return data || {success:true};
+  if (!data || data.success !== true) {
+    throw new Error(
+      data?.error || data?.message || 'Google Sheets บันทึกไม่สำเร็จ'
+    );
+  }
+
+  if (Number(data.saved) !== rows.length) {
+    throw new Error(
+      'จำนวนรายการที่บันทึกไม่ตรงกัน: ส่ง ' +
+      rows.length + ' รายการ แต่ระบบยืนยัน ' +
+      (data.saved ?? 'ไม่ทราบจำนวน')
+    );
+  }
+
+  return data;
 }
+
 
 document.addEventListener('DOMContentLoaded',()=>{document.getElementById('dateDaily').value=iso(today);setupPeriods();setBottom('dashboard');if(!sbReady){document.getElementById('setup').style.display='block';document.getElementById('loading').style.display='none';renderDemo();return}initAuth()});
 
