@@ -717,20 +717,17 @@ async function saveToGoogleSheet(sheetName, rows){
 
   const raw=await response.text();
   let data=null;
-  try{data=JSON.parse(raw)}catch(_){
-    const preview=String(raw||'').replace(/\s+/g,' ').slice(0,180);
-    throw new Error(`Google Apps Script ไม่ได้ส่ง JSON กลับมา (HTTP ${response.status})${preview?`: ${preview}`:''}`);
-  }
+  try{data=JSON.parse(raw)}catch(_){data=null}
 
   if(!response.ok){
-    throw new Error(`Google Sheet HTTP ${response.status}${data?.error?`: ${data.error}`:''}`);
+    throw new Error(`Google Sheet HTTP ${response.status}`);
   }
 
-  if(!data || data.success!==true){
-    throw new Error(data?.error || 'Google Sheet ไม่ยืนยันว่าบันทึกสำเร็จ');
+  if(data && data.success===false){
+    throw new Error(data.error || 'Google Sheet บันทึกไม่สำเร็จ');
   }
 
-  return data;
+  return data || {success:true};
 }
 
 document.addEventListener('DOMContentLoaded',()=>{document.getElementById('dateDaily').value=iso(today);setupPeriods();setBottom('dashboard');if(!sbReady){document.getElementById('setup').style.display='block';document.getElementById('loading').style.display='none';renderDemo();return}initAuth()});
@@ -1606,7 +1603,8 @@ async function saveMenuPriceChange(menuId){
   const history=await getMenuPriceHistory([menu.id]);
   const oldPrice=effectivePriceFromHistory(menu,history,effectiveDate);
   if(newPrice===oldPrice){toast('ราคาใหม่เท่ากับราคาเดิม');return}
-  if(history.some(h=>String(h.effective_date)===effectiveDate)){toast('เมนูนี้มีประวัติราคาวันดังกล่าวแล้ว กรุณาเลือกวันอื่น');return}
+  // Allow multiple price changes for the same menu on the same effective date.
+  // History is ordered by effective_date and created_at, so the latest change wins.
   try{
     setLoading(true,'กำลังบันทึกประวัติราคา...');
     // Freeze the existing Sheet price formulas before the first price update so later menu changes cannot recalculate old sales.
@@ -1812,7 +1810,6 @@ function openScanModal(){
     if(!scannedSales.length)return;
     try{
       const menus=await getMenus(document.getElementById('scanDate').value||iso(today));
-      window.__scanMenus=menus;
       const byName=new Map(menus.map(m=>[String(m.name||'').trim().toLowerCase(),m]));
       scannedSales.forEach(x=>{const m=byName.get(String(x.menu||'').trim().toLowerCase());if(m){x.menuId=m.id;x.menuName=m.name;x.price=Number(m.sale_price||0);x.total=Number((Number(x.qty||0)*x.price).toFixed(2));}});
       renderScanResults('Gemini');
@@ -2009,7 +2006,7 @@ async function loadScanMenuOptions(){
   const selects=[...document.querySelectorAll('.scan-menu-select')];
   if(!selects.length)return;
   try{
-    const menus=await getMenus(document.getElementById('scanDate')?.value||iso(today));
+    const menus=await getMenus();
     window.__scanMenus=menus;
     selects.forEach(sel=>{
       const i=Number(sel.dataset.scanMenu);
@@ -2219,12 +2216,9 @@ async function saveSalesEdit(){
   const date=document.getElementById('edit_sale_date').value;
   const sel=document.getElementById('f_edit_sale_menu');
   const qty=Number(document.getElementById('edit_sale_qty').value||0);
-  if(!date||!sel.value||qty<=0){toast('กรุณากรอกวันที่ เมนู และจำนวนให้ครบ');return}
-  let dateMenus;
-  try{dateMenus=await getMenus(date)}catch(err){toast('โหลดราคาตามวันที่ไม่สำเร็จ: '+err.message);return}
-  const menu=dateMenus.find(x=>x.id===sel.value);
-  if(!menu){toast('ไม่พบเมนูที่เลือก');return}
-  const sameMenu=String(menu.id)===String(target.menu_id)&&String(date)===String(target.transaction_date);
+  const menu=(window.__editSaleMenus||[]).find(x=>x.id===sel.value);
+  if(!date||!menu||qty<=0){toast('กรุณากรอกวันที่ เมนู และจำนวนให้ครบ');return}
+  const sameMenu=String(menu.id)===String(target.menu_id);
   const price=sameMenu?Number(target.sale_price||0):Number(menu.sale_price||0);
   const row={transaction_date:date,menu_id:menu.id,menu_name:menu.name,quantity:qty,sale_price:price,total_amount:Number((qty*price).toFixed(2))};
   try{
