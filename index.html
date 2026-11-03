@@ -2531,6 +2531,27 @@ function billItemsText(row){return (row.purchase_document_items||[]).map(x=>x.it
 function billPaymentFlags(row){return billDocPayment(row)}
 function billsSectionActive(){return document.getElementById('billsSection')?.classList.contains('active')}
 
+
+// Admin Order Online API bridge (v1.1)
+// Requires deployed Supabase Edge Function: admin-orders.
+// Uses existing Dashboard currentUser.session_token; no new login.
+const ADMIN_ORDERS_API_URL = `${SUPABASE_URL}/functions/v1/admin-orders`;
+async function adminOnlineApi(path='', params={}){
+  if(!currentUser?.session_token) throw new Error('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');
+  const qs=new URLSearchParams(params);
+  const target=ADMIN_ORDERS_API_URL+path+(qs.toString()?'?'+qs.toString():'');
+  const res=await window.fetch(target,{
+    method:'GET',
+    headers:{
+      'x-session-token':currentUser.session_token,
+      'apikey':SUPABASE_ANON_KEY
+    }
+  });
+  const body=await res.json().catch(()=>({}));
+  if(!res.ok) throw new Error(body.error||`Backend HTTP ${res.status}`);
+  return body;
+}
+
 const adminOnlineTabMeta={
   overview:{title:'Overview',desc:'ภาพรวมยอดขายและสถานะออเดอร์'},orders:{title:'Orders',desc:'รายการออเดอร์ รายละเอียดสินค้า รูปสลิป และประวัติ'},menu:{title:'Menu',desc:'จัดการเมนู ราคา หมวดหมู่ และ Modifier'},customers:{title:'Customers',desc:'ฐานข้อมูลลูกค้าจาก Website และ LINE'},payments:{title:'Payments',desc:'ช่องทางชำระเงินและตรวจสอบสลิป'},rewards:{title:'Rewards',desc:'คะแนนสะสม Reward Links และประวัติแต้ม'},settings:{title:'Settings',desc:'ตั้งค่าร้าน เวลาเปิดปิด Pickup และ Delivery'},'ai-line':{title:'AI & LINE',desc:'ตั้งค่าการอ่านออเดอร์และระบบตอบกลับ LINE'},faq:{title:'FAQ',desc:'คำถามที่พบบ่อยและข้อมูลร้าน'},broadcast:{title:'Broadcast',desc:'จัดการข้อความ Broadcast'},logs:{title:'Logs',desc:'ประวัติการเชื่อมต่อและข้อผิดพลาด'}
 };
@@ -2562,24 +2583,50 @@ function switchAdminOnlineTab(tab,scroll=true){
 // Orders UI is intentionally empty until a trusted backend endpoint is connected.
 // Do not query backend-only tables directly from the browser using the anon key.
 let adminOnlineOrderRows=[];
-function renderAdminOrders(){
+let adminOnlineOrdersLoading=false;
+async function renderAdminOrders(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
   panel.innerHTML=`
     <div class="admin-orders-headline"><div><h3>Order Management</h3><div class="admin-online-note">จัดการออเดอร์จาก Customer Website และ LINE</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminOrders()">↻ Refresh</button></div>
     <div class="admin-orders-summary">
-      <div class="admin-orders-stat"><span>ออเดอร์ทั้งหมด</span><b>—</b></div>
-      <div class="admin-orders-stat"><span>รอยืนยัน</span><b>—</b></div>
-      <div class="admin-orders-stat"><span>รอตรวจสลิป</span><b>—</b></div>
-      <div class="admin-orders-stat"><span>ส่ง Loyverse ไม่สำเร็จ</span><b>—</b></div>
+      <div class="admin-orders-stat"><span>ออเดอร์ที่โหลด</span><b id="adminOrdersTotal">—</b></div>
+      <div class="admin-orders-stat"><span>รอยืนยัน</span><b id="adminOrdersPending">—</b></div>
+      <div class="admin-orders-stat"><span>รอตรวจสลิป</span><b id="adminOrdersPaymentPending">—</b></div>
+      <div class="admin-orders-stat"><span>ส่ง Loyverse ไม่สำเร็จ</span><b id="adminOrdersSyncFailed">—</b></div>
     </div>
     <div class="admin-orders-toolbar">
       <input id="adminOrdersSearch" class="field" type="search" placeholder="ค้นหาเลขออเดอร์ / ชื่อลูกค้า / เบอร์โทร" oninput="filterAdminOrders()">
-      <select id="adminOrdersStatus" class="field" onchange="filterAdminOrders()"><option value="">ทุกสถานะออเดอร์</option><option value="pending">รอยืนยัน</option><option value="confirmed">ยืนยันแล้ว</option><option value="preparing">กำลังจัดทำ</option><option value="ready">พร้อมรับ</option><option value="completed">สำเร็จ</option><option value="cancelled">ยกเลิก</option></select>
+      <select id="adminOrdersStatus" class="field" onchange="filterAdminOrders()"><option value="">ทุกสถานะออเดอร์</option><option value="draft">Draft</option><option value="pending">รอยืนยัน</option><option value="confirmed">ยืนยันแล้ว</option><option value="preparing">กำลังจัดทำ</option><option value="ready">พร้อมรับ</option><option value="completed">สำเร็จ</option><option value="cancelled">ยกเลิก</option><option value="rejected">ปฏิเสธ</option></select>
       <select id="adminOrdersSource" class="field" onchange="filterAdminOrders()"><option value="">ทุกช่องทาง</option><option value="website">Website</option><option value="line">LINE</option></select>
       <select id="adminOrdersPayment" class="field" onchange="filterAdminOrders()"><option value="">ทุกสถานะชำระเงิน</option><option value="unpaid">ยังไม่ชำระ</option><option value="pending">รอตรวจสอบ</option><option value="paid">ชำระแล้ว</option><option value="failed">ไม่ผ่าน</option><option value="refunded">คืนเงินแล้ว</option></select>
     </div>
-    <div class="admin-orders-table-wrap"><table class="admin-orders-table"><thead><tr><th>เลขออเดอร์</th><th>วันที่</th><th>ช่องทาง</th><th>ลูกค้า</th><th>ประเภท</th><th>ยอดรวม</th><th>ออเดอร์</th><th>ชำระเงิน</th><th>Loyverse</th></tr></thead><tbody id="adminOrdersTbody"><tr><td colspan="9"><div class="admin-orders-empty"><b>ยังไม่มีข้อมูลออเดอร์</b>เมื่อเชื่อม Backend แล้ว รายการ Website และ LINE จะแสดงที่นี่โดยอัตโนมัติ</div></td></tr></tbody></table></div>
-    <div class="admin-orders-footnote">ความปลอดภัย: ตารางออเดอร์ถูกออกแบบให้เข้าถึงผ่าน Backend ที่ตรวจสอบ Session ของผู้ใช้เท่านั้น หน้านี้จะไม่ใช้ anon key อ่านตารางส่วนตัวโดยตรง</div>`;
+    <div id="adminOrdersMessage" class="admin-online-note" style="padding:12px 2px">กำลังเชื่อมต่อ Backend…</div>
+    <div class="admin-orders-table-wrap"><table class="admin-orders-table"><thead><tr><th>เลขออเดอร์</th><th>วันที่</th><th>ช่องทาง</th><th>ลูกค้า</th><th>ประเภท</th><th>ยอดรวม</th><th>ออเดอร์</th><th>ชำระเงิน</th><th>Loyverse</th></tr></thead><tbody id="adminOrdersTbody"><tr><td colspan="9"><div class="admin-orders-empty">กำลังโหลดข้อมูล…</div></td></tr></tbody></table></div>
+    <div class="admin-orders-footnote">ข้อมูลอ่านผ่าน Backend ที่ตรวจสอบ Session เดิมของ Dashboard ไม่อ่านตารางส่วนตัวโดยตรงจาก Browser</div>`;
+  await loadAdminOnlineOrders();
+}
+async function loadAdminOnlineOrders(){
+  if(adminOnlineOrdersLoading)return;
+  adminOnlineOrdersLoading=true;
+  const msg=document.getElementById('adminOrdersMessage');
+  const body=document.getElementById('adminOrdersTbody');
+  if(msg)msg.textContent='กำลังโหลดรายการออเดอร์…';
+  try{
+    const result=await adminOnlineApi('',{limit:100,offset:0});
+    adminOnlineOrderRows=Array.isArray(result.orders)?result.orders:[];
+    const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=String(value)};
+    set('adminOrdersTotal',result.total??adminOnlineOrderRows.length);
+    set('adminOrdersPending',adminOnlineOrderRows.filter(x=>x.order_status==='pending').length);
+    set('adminOrdersPaymentPending',adminOnlineOrderRows.filter(x=>['pending','submitted'].includes(x.payment_status)).length);
+    set('adminOrdersSyncFailed',adminOnlineOrderRows.filter(x=>x.loyverse_sync_status==='failed').length);
+    if(msg)msg.textContent=`โหลดแล้ว ${adminOnlineOrderRows.length} รายการ${result.total>adminOnlineOrderRows.length?' (แสดง 100 รายการล่าสุด)':''}`;
+    filterAdminOrders();
+  }catch(err){
+    adminOnlineOrderRows=[];
+    if(msg)msg.textContent='ยังเชื่อม Backend ไม่สำเร็จ: '+err.message+' — ตรวจสอบว่า Deploy Edge Function และตั้งค่า Secrets แล้ว';
+    if(body)body.innerHTML='<tr><td colspan="9"><div class="admin-orders-empty"><b>ไม่สามารถโหลดออเดอร์ได้</b>หน้านี้ยังคงใช้งาน Dashboard ส่วนอื่นได้ตามปกติ</div></td></tr>';
+    console.error('Admin Online Orders:',err);
+  }finally{adminOnlineOrdersLoading=false}
 }
 function filterAdminOrders(){
   const q=(document.getElementById('adminOrdersSearch')?.value||'').trim().toLowerCase();
@@ -2589,7 +2636,7 @@ function filterAdminOrders(){
   const rows=adminOnlineOrderRows.filter(o=>(!status||o.order_status===status)&&(!source||o.source===source)&&(!payment||o.payment_status===payment)&&(!q||[o.order_number,o.customer_name_snapshot,o.customer_phone_snapshot].some(v=>String(v||'').toLowerCase().includes(q))));
   const body=document.getElementById('adminOrdersTbody');if(!body)return;
   if(!rows.length){body.innerHTML='<tr><td colspan="9"><div class="admin-orders-empty"><b>ไม่พบออเดอร์ที่ตรงกับเงื่อนไข</b>ลองเปลี่ยนคำค้นหาหรือตัวกรอง</div></td></tr>';return;}
-  body.innerHTML=rows.map(o=>`<tr><td>${escapeAdminOrderText(o.order_number)}</td><td>${escapeAdminOrderText(o.created_at||'')}</td><td>${escapeAdminOrderText(o.source||'')}</td><td>${escapeAdminOrderText(o.customer_name_snapshot||'')}</td><td>${escapeAdminOrderText(o.order_type||'')}</td><td>${Number(o.total_amount||0).toLocaleString('th-TH',{minimumFractionDigits:2})}</td><td>${escapeAdminOrderText(o.order_status||'')}</td><td>${escapeAdminOrderText(o.payment_status||'')}</td><td>${escapeAdminOrderText(o.loyverse_sync_status||'')}</td></tr>`).join('');
+  body.innerHTML=rows.map(o=>`<tr><td>${escapeAdminOrderText(o.order_number)}</td><td>${escapeAdminOrderText(o.created_at?new Date(o.created_at).toLocaleString('th-TH'):'—')}</td><td>${escapeAdminOrderText(o.source||'')}</td><td>${escapeAdminOrderText(o.customer_name_snapshot||'')}</td><td>${escapeAdminOrderText(o.order_type||'')}</td><td>${Number(o.total_amount||0).toLocaleString('th-TH',{minimumFractionDigits:2})}</td><td>${escapeAdminOrderText(o.order_status||'')}</td><td>${escapeAdminOrderText(o.payment_status||'')}</td><td>${escapeAdminOrderText(o.loyverse_sync_status||'')}</td></tr>`).join('');
 }
 function escapeAdminOrderText(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 
