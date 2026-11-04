@@ -2852,7 +2852,6 @@ async function adminCustomersApi(params={}){
   return body;
 }
 function adminCustomerEsc(v){return esc(v==null?'':String(v))}
-function adminCustomerMoney(v){return Number(v||0).toLocaleString('th-TH',{style:'currency',currency:'THB',minimumFractionDigits:2,maximumFractionDigits:2})}
 function adminCustomerDate(v){
   if(!v)return '—';
   const d=new Date(v);if(Number.isNaN(d.getTime()))return '—';
@@ -2863,7 +2862,7 @@ function renderAdminOnlineCustomers(){
   adminOnlineCustomerOffset=0;
   panel.innerHTML=`
     <div class="admin-orders-headline">
-      <div><h3>Customer Management</h3><div class="admin-online-note">ฐานข้อมูลลูกค้าจาก Customer Website และ LINE · อ่านผ่าน Admin Backend</div></div>
+      <div><h3>Customer Management</h3><div class="admin-online-note">ฐานข้อมูลลูกค้า · ข้อมูลติดต่อและช่องทางเท่านั้น</div></div>
       <button class="admin-orders-refresh" type="button" onclick="loadAdminOnlineCustomers(true)">↻ Refresh</button>
     </div>
     <div class="admin-customer-kpis">
@@ -2872,17 +2871,16 @@ function renderAdminOnlineCustomers(){
       <div class="admin-customer-kpi"><span>LINE</span><b id="adminCustomerLine">—</b></div>
     </div>
     <div class="admin-customer-toolbar">
-      <input id="adminCustomerSearch" class="field" type="search" placeholder="ค้นหาชื่อ / เบอร์โทร / อีเมล" oninput="debouncedAdminCustomerSearch()">
+      <input id="adminCustomerSearch" class="field" type="search" placeholder="ค้นหาชื่อ / เบอร์โทร / ที่อยู่ / LINE ID" oninput="debouncedAdminCustomerSearch()">
       <select id="adminCustomerSource" class="field" onchange="loadAdminOnlineCustomers(true)">
         <option value="">ทุกช่องทาง</option><option value="website">Website</option><option value="line">LINE</option>
       </select>
       <button class="admin-orders-refresh" type="button" onclick="loadAdminOnlineCustomers(true)">ค้นหา</button>
     </div>
     <div id="adminCustomerMessage" class="admin-customer-message">กำลังโหลดข้อมูลลูกค้า…</div>
-    <div id="adminCustomerDetailHost"></div>
     <div class="admin-customer-table-wrap">
       <table class="admin-customer-table">
-        <thead><tr><th>ลูกค้า</th><th>ช่องทาง</th><th>เบอร์โทร</th><th>จำนวนออเดอร์</th><th>ยอดซื้อสะสม</th><th>สั่งซื้อล่าสุด</th><th></th></tr></thead>
+        <thead><tr><th>ชื่อลูกค้า</th><th>ช่องทาง</th><th>เบอร์โทร</th><th>ที่อยู่</th><th>LINE Display Name</th><th>LINE User ID</th><th>วันที่เพิ่ม</th></tr></thead>
         <tbody id="adminCustomerTbody"><tr><td colspan="7" class="admin-customer-empty">กำลังโหลด…</td></tr></tbody>
       </table>
     </div>
@@ -2890,7 +2888,7 @@ function renderAdminOnlineCustomers(){
       <span id="adminCustomerPagination" class="admin-customer-message"></span>
       <button id="adminCustomerMore" class="admin-customer-detail-btn" type="button" onclick="loadMoreAdminCustomers()" style="display:none">โหลดเพิ่ม</button>
     </div>
-    <div class="admin-menu-readonly">ข้อมูลลูกค้าและประวัติออเดอร์อ่านจาก <b>online_customers</b> และ <b>online_orders</b> ผ่าน Edge Function ที่ตรวจสอบ Admin Session · หน้านี้ไม่แก้ไขหรือลบข้อมูลลูกค้า</div>`;
+    <div class="admin-menu-readonly">แสดงเฉพาะข้อมูลลูกค้าจาก <b>online_customers</b> เท่านั้น · ไม่แสดงยอดซื้อ ประวัติออเดอร์ หรือข้อมูล Drafts</div>`;
   loadAdminOnlineCustomers(true);
 }
 let adminCustomerSearchTimer=null;
@@ -2923,13 +2921,13 @@ async function loadAdminOnlineCustomers(reset=true){
     if(body){
       body.innerHTML=adminOnlineCustomerRows.length?adminOnlineCustomerRows.map(c=>`
         <tr>
-          <td><strong>${adminCustomerEsc(c.display_name||'ไม่ระบุชื่อ')}</strong><div style="font-size:10px;color:var(--muted);margin-top:3px">${adminCustomerEsc(c.email||'')}</div></td>
+          <td><strong>${adminCustomerEsc(c.display_name||'ไม่ระบุชื่อ')}</strong></td>
           <td><span class="admin-customer-source">${c.source==='line'?'LINE':'Website'}</span></td>
           <td>${adminCustomerEsc(c.phone||'—')}</td>
-          <td>${Number(c.orders_count||0).toLocaleString('th-TH')}</td>
-          <td><strong>${adminCustomerMoney(c.total_spent)}</strong></td>
-          <td>${adminCustomerDate(c.last_order_at)}</td>
-          <td><button type="button" class="admin-customer-detail-btn" onclick="openAdminCustomerDetail('${adminCustomerEsc(c.id)}')">รายละเอียด</button></td>
+          <td style="min-width:180px;white-space:normal">${adminCustomerEsc(c.address||'—')}</td>
+          <td>${adminCustomerEsc(c.line_display_name||'—')}</td>
+          <td style="font-size:11px;max-width:180px;overflow-wrap:anywhere">${adminCustomerEsc(c.line_user_id||c.external_customer_id||'—')}</td>
+          <td>${adminCustomerDate(c.created_at)}</td>
         </tr>`).join(''):'<tr><td colspan="7" class="admin-customer-empty">ไม่พบข้อมูลลูกค้า</td></tr>';
     }
     const pagination=document.getElementById('adminCustomerPagination');
@@ -2943,37 +2941,6 @@ async function loadAdminOnlineCustomers(reset=true){
   }finally{adminOnlineCustomersLoading=false;}
 }
 async function loadMoreAdminCustomers(){await loadAdminOnlineCustomers(false)}
-async function openAdminCustomerDetail(customerId){
-  const host=document.getElementById('adminCustomerDetailHost');if(!host)return;
-  const customer=adminOnlineCustomerRows.find(x=>x.id===customerId);
-  if(!customer)return;
-  host.innerHTML='<div class="admin-customer-detail">กำลังโหลดรายละเอียดลูกค้าและประวัติออเดอร์…</div>';
-  try{
-    const result=await adminCustomersApi({customer_id:customerId,detail:'1'});
-    const c=result.customer||customer;
-    const orders=Array.isArray(result.orders)?result.orders:[];
-    host.innerHTML=`
-      <section class="admin-customer-detail">
-        <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
-          <div><strong style="font-size:16px">${adminCustomerEsc(c.display_name||'ไม่ระบุชื่อ')}</strong><div style="font-size:10px;color:var(--muted);margin-top:3px">${c.source==='line'?'LINE':'Website'} · สมัคร ${adminCustomerDate(c.created_at)}</div></div>
-          <button type="button" class="admin-customer-detail-btn" onclick="document.getElementById('adminCustomerDetailHost').innerHTML=''">ปิด</button>
-        </div>
-        <div class="admin-customer-detail-grid">
-          <div class="admin-customer-detail-cell"><span>เบอร์โทร</span><b>${adminCustomerEsc(c.phone||'—')}</b></div>
-          <div class="admin-customer-detail-cell"><span>อีเมล</span><b>${adminCustomerEsc(c.email||'—')}</b></div>
-          <div class="admin-customer-detail-cell"><span>ออเดอร์ทั้งหมด</span><b>${Number(c.orders_count||0).toLocaleString('th-TH')}</b></div>
-          <div class="admin-customer-detail-cell"><span>ยอดซื้อสะสม</span><b>${adminCustomerMoney(c.total_spent)}</b></div>
-          <div class="admin-customer-detail-cell"><span>ลูกค้าตั้งแต่</span><b>${adminCustomerDate(c.created_at)}</b></div>
-          <div class="admin-customer-detail-cell"><span>สั่งซื้อล่าสุด</span><b>${adminCustomerDate(c.last_order_at)}</b></div>
-        </div>
-        <strong style="font-size:13px">ประวัติออเดอร์ล่าสุด</strong>
-        ${orders.length?`<div style="overflow:auto"><table class="admin-customer-orders"><thead><tr><th>เลขออเดอร์</th><th>วันที่</th><th>สถานะ</th><th>ชำระเงิน</th><th>ยอดรวม</th></tr></thead><tbody>${orders.map(o=>`<tr><td>${adminCustomerEsc(o.order_number)}</td><td>${adminCustomerDate(o.created_at)}</td><td>${adminCustomerEsc(o.order_status)}</td><td>${adminCustomerEsc(o.payment_status)}</td><td>${adminCustomerMoney(o.total_amount)}</td></tr>`).join('')}</tbody></table></div>`:'<div class="admin-customer-empty">ยังไม่มีประวัติออเดอร์</div>'}
-      </section>`;
-    host.scrollIntoView({behavior:'smooth',block:'nearest'});
-  }catch(e){
-    host.innerHTML=`<div class="admin-customer-detail">โหลดรายละเอียดไม่สำเร็จ: ${adminCustomerEsc(e.message||e)}</div>`;
-  }
-}
 
 // Orders UI is intentionally empty until a trusted backend endpoint is connected.
 // Do not query backend-only tables directly from the browser using the anon key.
