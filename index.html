@@ -2592,12 +2592,48 @@ function openAdminOrderOnline(){
   window.scrollTo({top:0,behavior:'auto'});
   return false;
 }
+// AI & LINE module — isolated from Bills, Dashboard and existing admin APIs.
+const ADMIN_AI_API_URL = `${SUPABASE_URL}/functions/v1/admin-ai`;
+async function adminAiRequest(method='GET', payload=null){
+  if(!currentUser?.session_token) throw new Error('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');
+  const response=await window.fetch(ADMIN_AI_API_URL,{
+    method,
+    headers:{'Content-Type':'application/json','apikey':SUPABASE_ANON_KEY,'x-session-token':currentUser.session_token},
+    ...(payload?{body:JSON.stringify(payload)}:{})
+  });
+  const result=await response.json().catch(()=>({}));
+  if(!response.ok) throw new Error(result.error||`Backend HTTP ${response.status}`);
+  return result;
+}
+function renderAdminAiLine(){
+  const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
+  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>AI &amp; LINE</h3><div class="admin-online-note">ตั้งค่าระบบ AI · FAQ · Reward Links</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminAiLine()">↻ Refresh</button></div><div id="adminAiLineStatus" class="admin-menu-status">กำลังเชื่อมต่อ admin-ai…</div><div id="adminAiLineContent"></div>`;
+  loadAdminAiLineData();
+}
+async function loadAdminAiLineData(){
+  const status=document.getElementById('adminAiLineStatus');
+  const content=document.getElementById('adminAiLineContent');
+  if(!status||!content)return;
+  try{
+    const data=await adminAiRequest('GET');
+    if(data.success!==true)throw new Error('Backend ไม่ยืนยันการอ่านข้อมูล');
+    status.textContent='เชื่อมต่อ admin-ai สำเร็จ';
+    const rows=(title,list,fields)=>`<section style="margin-top:18px"><h3>${esc(title)} (${list.length})</h3><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr>${fields.map(f=>`<th>${esc(f.label)}</th>`).join('')}</tr></thead><tbody>${list.map(row=>`<tr>${fields.map(f=>`<td>${esc(row[f.key]??'—')}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`;
+    content.innerHTML=`<div class="admin-online-kpis"><div class="admin-online-kpi"><span>Settings</span><b>${data.settings?.length||0}</b></div><div class="admin-online-kpi"><span>FAQ</span><b>${data.faq?.length||0}</b></div><div class="admin-online-kpi"><span>Reward Links</span><b>${data.reward_links?.length||0}</b></div></div>${rows('Settings',data.settings||[],[{key:'setting_key',label:'รายการ'},{key:'setting_value',label:'ค่า'}])}${rows('FAQ',data.faq||[],[{key:'question',label:'คำถาม'},{key:'answer',label:'คำตอบ'},{key:'is_active',label:'เปิดใช้งาน'}])}${rows('Reward Links',data.reward_links||[],[{key:'cups_required',label:'แต้ม/จำนวนแก้ว'},{key:'url',label:'ลิงก์'},{key:'is_active',label:'เปิดใช้งาน'}])}`;
+  }catch(error){
+    status.textContent='เชื่อมต่อไม่สำเร็จ: '+(error.message||error);
+    content.innerHTML='<div class="admin-online-placeholder">ยังโหลดข้อมูลไม่ได้ กรุณาตรวจสอบ Session และ Edge Function admin-ai</div>';
+  }
+}
+
 function switchAdminOnlineTab(tab,scroll=true){
   const meta=adminOnlineTabMeta[tab];if(!meta)return;
   document.querySelectorAll('.admin-online-tab').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
   if(tab==='orders'){
     renderAdminOrders();
+  }else if(tab==='ai-line'){
+    renderAdminAiLine();
   }else if(tab==='menu'){
     renderAdminOnlineMenu();
   }else if(tab==='customers'){
