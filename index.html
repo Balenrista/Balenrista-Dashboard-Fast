@@ -2587,6 +2587,43 @@ function switchAdminOnlineTab(tab,scroll=true){
 // Price is sourced only from public.menus.sale_price; no duplicate price writes.
 let adminOnlineMenuRows=[];
 let adminOnlineMenuLoading=false;
+const adminOnlineMenuSavingIds=new Set();
+
+/* Toggle visibility for Customer Website.
+   The existing Dashboard session bridge adds x-session-token to Supabase requests.
+   RLS must validate that token through balenrista_current_user_id(). */
+async function toggleAdminOnlineMenuStatus(menuId, nextValue){
+  const row=adminOnlineMenuRows.find(x=>x.id===menuId);
+  if(!row||adminOnlineMenuSavingIds.has(menuId))return;
+  const previous=!!row.is_active;
+  if(previous===!!nextValue)return;
+  if(!currentUser?.session_token){
+    showToast('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');
+    renderAdminOnlineMenu();
+    return;
+  }
+  adminOnlineMenuSavingIds.add(menuId);
+  filterAdminOnlineMenu();
+  const msg=document.getElementById('adminMenuMessage');
+  try{
+    const {data,error}=await db.from('menus')
+      .update({is_active:!!nextValue,updated_at:new Date().toISOString()})
+      .eq('id',menuId)
+      .select('id,is_active')
+      .single();
+    if(error)throw error;
+    if(!data||data.id!==menuId)throw new Error('Supabase ไม่ส่งผลยืนยันการบันทึกกลับมา');
+    row.is_active=!!data.is_active;
+    if(msg)msg.textContent=`บันทึกสถานะ “${row.name}” สำเร็จ`;
+  }catch(err){
+    row.is_active=previous;
+    if(msg)msg.textContent='บันทึกสถานะไม่สำเร็จ: '+(err.message||err);
+    showToast('บันทึกไม่สำเร็จ: '+(err.message||err));
+  }finally{
+    adminOnlineMenuSavingIds.delete(menuId);
+    filterAdminOnlineMenu();
+  }
+}
 function adminMenuEsc(v){return esc(v==null?'':String(v))}
 function adminMenuMoney(v){return v==null||v===''?'—':Number(v).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}
 function filterAdminOnlineMenu(){
@@ -2599,7 +2636,7 @@ function filterAdminOnlineMenu(){
     return (!q||hay.includes(q))&&(!cat||(d.category||'')===cat)&&(!status||(status==='active'?r.is_active:!r.is_active));
   });
   const tbody=document.getElementById('adminMenuTbody');if(!tbody)return;
-  tbody.innerHTML=rows.length?rows.map(r=>{const d=r.customer_menu_details||{};const on=!!r.is_active;return `<tr><td><strong>${adminMenuEsc(r.name)}</strong></td><td>${adminMenuEsc(d.category||r.group_name||'—')}</td><td class="admin-menu-price">฿${adminMenuMoney(r.sale_price)}</td><td><div class="admin-menu-toggle"><label class="admin-menu-switch" title="${on?'เปิดแสดงบนเว็บไซต์':'ปิดซ่อนจากเว็บไซต์'} · รอเปิดสิทธิ์บันทึก"><input type="checkbox" ${on?'checked':''} disabled aria-label="สถานะแสดงบนเว็บไซต์"><span class="admin-menu-switch-track"></span></label><span class="admin-menu-switch-label">${on?'เปิด':'ปิด'}</span></div></td><td>${adminMenuEsc(d.ingredients||'—')}</td></tr>`}).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:25px">ไม่พบเมนูที่ค้นหา</td></tr>';
+  tbody.innerHTML=rows.length?rows.map(r=>{const d=r.customer_menu_details||{};const on=!!r.is_active;const busy=adminOnlineMenuSavingIds.has(r.id);return `<tr><td><strong>${adminMenuEsc(r.name)}</strong></td><td>${adminMenuEsc(d.category||r.group_name||'—')}</td><td class="admin-menu-price">฿${adminMenuMoney(r.sale_price)}</td><td><div class="admin-menu-toggle"><label class="admin-menu-switch" title="${on?'เปิดแสดงบนเว็บไซต์':'ปิดซ่อนจากเว็บไซต์'}"><input type="checkbox" ${on?'checked':''} ${busy?'disabled':''} onchange="toggleAdminOnlineMenuStatus('${adminMenuEsc(r.id)}',this.checked)" aria-label="สลับสถานะแสดงบนเว็บไซต์"><span class="admin-menu-switch-track"></span></label><span class="admin-menu-switch-label">${busy?'กำลังบันทึก…':(on?'เปิด':'ปิด')}</span></div></td><td>${adminMenuEsc(d.ingredients||'—')}</td></tr>`}).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:25px">ไม่พบเมนูที่ค้นหา</td></tr>';
   const count=document.getElementById('adminMenuCount');if(count)count.textContent=`แสดง ${rows.length} / ${adminOnlineMenuRows.length} เมนู`;
 }
 async function renderAdminOnlineMenu(){
@@ -2607,7 +2644,7 @@ async function renderAdminOnlineMenu(){
   panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Menu Management</h3><div class="admin-online-note">รายการเมนูสำหรับ Customer Website · ราคาอ้างอิงจาก Dashboard</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminOnlineMenu()">↻ Refresh</button></div>
   <div class="admin-menu-toolbar"><input id="adminMenuSearch" class="field" type="search" placeholder="ค้นหาชื่อเมนู / วัตถุดิบ" oninput="filterAdminOnlineMenu()"><select id="adminMenuCategory" class="field" onchange="filterAdminOnlineMenu()"><option value="">ทุกหมวดหมู่</option></select><select id="adminMenuStatus" class="field" onchange="filterAdminOnlineMenu()"><option value="">ทุกสถานะ</option><option value="active">แสดงบนเว็บไซต์</option><option value="inactive">ซ่อนจากเว็บไซต์</option></select><span id="adminMenuCount" class="admin-menu-count"></span></div>
   <div id="adminMenuMessage" class="admin-menu-status">กำลังโหลดเมนูจาก Supabase…</div><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr><th>ชื่อเมนู</th><th>หมวดหมู่</th><th>ราคาขาย</th><th>สถานะเว็บไซต์</th><th>วัตถุดิบ</th></tr></thead><tbody id="adminMenuTbody"><tr><td colspan="5">กำลังโหลด…</td></tr></tbody></table></div>
-  <div class="admin-menu-readonly">ราคาดึงจาก <b>menus.sale_price</b> โดยตรง · สวิตช์แสดงสถานะปัจจุบันแบบอ่านอย่างเดียว (ยังไม่สามารถสลับบันทึกได้จนกว่าจะตั้งค่า RLS สำหรับผู้ดูแลอย่างปลอดภัย)</div>`;
+  <div class="admin-menu-readonly">ราคาดึงจาก <b>menus.sale_price</b> โดยตรง · สวิตช์ใช้เปิด/ปิดการแสดงเมนูบน Customer Website และบันทึกผ่าน Session ผู้ดูแล</div>`;
   if(adminOnlineMenuLoading)return;adminOnlineMenuLoading=true;
   try{
     if(!db)throw new Error('ไม่พบการเชื่อมต่อ Supabase');
