@@ -2702,7 +2702,18 @@ async function loadAdminAiLineData(){
     }).join(''):'<div class="admin-online-placeholder">ยังไม่มีออเดอร์ LINE ที่รอตรวจสอบ</div>';}
   }catch(error){status.textContent='เชื่อมต่อไม่สำเร็จ: '+(error.message||error);const host=document.getElementById('adminLineDraftList');if(host)host.innerHTML='<div class="admin-online-placeholder">โหลดข้อมูลไม่ได้ กรุณาตรวจสอบ admin-ai และสิทธิ์ฐานข้อมูล</div>';}
 }
-async function createOrderFromLineDraft(id){if(!confirm('สร้าง Order Draft จากรายการ AI นี้หรือไม่? ระบบจะใช้ราคาปัจจุบันจากตาราง menus และยังไม่ส่งเข้า Loyverse'))return;try{const r=await adminAiRequest('POST',{action:'draft_create_order',draft_id:id,order_type:'pickup'});if(!r.success)throw new Error(r.error||'สร้าง Order Draft ไม่สำเร็จ');showToast('สร้าง Order Draft สำเร็จ: '+r.order.order_number);loadAdminAiLineData();}catch(e){alert('สร้าง Order Draft ไม่สำเร็จ: '+e.message);}}
+async function createOrderFromLineDraft(id){
+  if(!confirm('สร้าง Order Draft จากรายการ AI นี้หรือไม่? ระบบจะใช้ราคาปัจจุบันจากตาราง menus และยังไม่ส่งเข้า Loyverse'))return;
+  try{
+    const r=await adminAiRequest('POST',{action:'draft_create_order',draft_id:id,order_type:'pickup'});
+    if(!r || r.success!==true)throw new Error(r?.error||'Backend ไม่ยืนยันการสร้าง Order Draft');
+    const orderNumber=r.order?.order_number||'-';
+    alert((r.already_created?'Order Draft นี้มีอยู่แล้ว':'สร้าง Order Draft สำเร็จ')+'\nเลขออเดอร์: '+orderNumber);
+    await loadAdminAiLineData();
+  }catch(e){
+    alert('สร้าง Order Draft ไม่สำเร็จ: '+(e?.message||String(e)));
+  }
+}
 
 // FAQ and Reward Links are managed on their own pages; AI & LINE is the workflow control center.
 async function renderAdminFaqPage(){
