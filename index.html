@@ -2626,6 +2626,28 @@ async function loadAdminAiLineData(){
   }
 }
 
+// FAQ and Reward Links are managed on their own pages; AI & LINE is the workflow control center.
+async function renderAdminFaqPage(){
+  const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
+  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>FAQ · ฐานความรู้ AI</h3><div class="admin-online-note">คำถามและคำตอบที่ AI ใช้ตอบลูกค้าผ่าน LINE</div></div><div style="display:flex;gap:8px"><button class="admin-orders-refresh" onclick="createAdminFaq()">＋ เพิ่ม FAQ</button><button class="admin-orders-refresh" onclick="renderAdminFaqPage()">↻ Refresh</button></div></div><div id="adminFaqStatus" class="admin-menu-status">กำลังโหลด FAQ…</div><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr><th>คำถาม</th><th>คำตอบ</th><th>ลำดับ</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="adminFaqBody"><tr><td colspan="5">กำลังโหลด…</td></tr></tbody></table></div>`;
+  try{const d=await adminAiRequest('GET');if(!d.success)throw new Error('อ่านข้อมูลไม่สำเร็จ');const rows=d.faq||[];const body=document.getElementById('adminFaqBody');if(body)body.innerHTML=rows.map(r=>`<tr><td>${escapeAdminOrderText(r.question)}</td><td style="max-width:360px;white-space:normal">${escapeAdminOrderText(r.answer)}</td><td>${Number(r.sort_order)||0}</td><td>${r.is_active?'เปิด':'ปิด'}</td><td><button class="admin-orders-refresh" onclick="editAdminFaq('${r.id}')">แก้ไข</button> <button class="admin-orders-refresh" onclick="toggleAdminFaq('${r.id}',${!r.is_active})">${r.is_active?'ปิด':'เปิด'}</button> <button class="admin-orders-refresh" onclick="deleteAdminFaq('${r.id}')">ลบ</button></td></tr>`).join('')||'<tr><td colspan="5">ยังไม่มี FAQ</td></tr>';const st=document.getElementById('adminFaqStatus');if(st)st.textContent=`โหลด FAQ สำเร็จ ${rows.length} รายการ`;
+  }catch(e){const st=document.getElementById('adminFaqStatus');if(st)st.textContent='โหลดไม่สำเร็จ: '+e.message;}
+}
+async function createAdminFaq(){const q=prompt('คำถาม FAQ:');if(q===null||!q.trim())return;const a=prompt('คำตอบ FAQ:');if(a===null||!a.trim())return;try{await adminAiRequest('POST',{action:'faq_create',question:q.trim(),answer:a.trim(),is_active:true});await renderAdminFaqPage();}catch(e){alert('บันทึก FAQ ไม่สำเร็จ: '+e.message)}}
+async function editAdminFaq(id){try{const d=await adminAiRequest('GET');const r=(d.faq||[]).find(x=>x.id===id);if(!r)return;const q=prompt('แก้ไขคำถาม:',r.question);if(q===null)return;const a=prompt('แก้ไขคำตอบ:',r.answer);if(a===null)return;const order=prompt('ลำดับการแสดง:',String(r.sort_order??0));if(order===null)return;await adminAiRequest('POST',{action:'faq_update',id,question:q,answer:a,sort_order:Number(order)});await renderAdminFaqPage();}catch(e){alert('แก้ไข FAQ ไม่สำเร็จ: '+e.message)}}
+async function toggleAdminFaq(id,is_active){try{await adminAiRequest('POST',{action:'faq_update',id,is_active});await renderAdminFaqPage()}catch(e){alert(e.message)}}
+async function deleteAdminFaq(id){if(!confirm('ยืนยันลบ FAQ รายการนี้?'))return;try{await adminAiRequest('POST',{action:'faq_delete',id});await renderAdminFaqPage()}catch(e){alert('ลบไม่สำเร็จ: '+e.message)}}
+async function renderAdminRewardLinksPage(){
+  const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
+  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Rewards · LINE Reward Links</h3><div class="admin-online-note">จัดการลิงก์ตามจำนวนแก้ว สูงสุด 30 แก้วต่อหนึ่งลิงก์</div></div><div style="display:flex;gap:8px"><button class="admin-orders-refresh" onclick="createAdminRewardLink()">＋ เพิ่มลิงก์</button><button class="admin-orders-refresh" onclick="renderAdminRewardLinksPage()">↻ Refresh</button></div></div><div id="adminRewardStatus" class="admin-menu-status">กำลังโหลด Reward Links…</div><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr><th>จำนวนแก้ว</th><th>LINE URL</th><th>ลำดับ</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="adminRewardBody"><tr><td colspan="5">กำลังโหลด…</td></tr></tbody></table></div>`;
+  try{const d=await adminAiRequest('GET');if(!d.success)throw new Error('อ่านข้อมูลไม่สำเร็จ');const rows=d.reward_links||[];const body=document.getElementById('adminRewardBody');if(body)body.innerHTML=rows.map(r=>`<tr><td>${Number(r.cups_required)}</td><td style="max-width:320px;overflow-wrap:anywhere"><a href="${escapeAdminOrderText(r.url)}" target="_blank" rel="noopener">${escapeAdminOrderText(r.url)}</a></td><td>${Number(r.sort_order)||0}</td><td>${r.is_active?'เปิด':'ปิด'}</td><td><button class="admin-orders-refresh" onclick="editAdminRewardLink('${r.id}')">แก้ไข</button> <button class="admin-orders-refresh" onclick="toggleAdminRewardLink('${r.id}',${!r.is_active})">${r.is_active?'ปิด':'เปิด'}</button> <button class="admin-orders-refresh" onclick="deleteAdminRewardLink('${r.id}')">ลบ</button></td></tr>`).join('')||'<tr><td colspan="5">ยังไม่มี Reward Link</td></tr>';const st=document.getElementById('adminRewardStatus');if(st)st.textContent=`โหลด Reward Links สำเร็จ ${rows.length} รายการ`;
+  }catch(e){const st=document.getElementById('adminRewardStatus');if(st)st.textContent='โหลดไม่สำเร็จ: '+e.message;}
+}
+async function createAdminRewardLink(){const cups=prompt('จำนวนแก้ว (สูงสุด 30):');if(cups===null)return;const n=Number(cups);if(!Number.isInteger(n)||n<1||n>30){alert('จำนวนแก้วต้องเป็นจำนวนเต็ม 1–30');return}const url=prompt('LINE Reward URL:');if(url===null||!url.trim())return;try{await adminAiRequest('POST',{action:'reward_create',cups_required:n,url:url.trim(),sort_order:n,is_active:true});await renderAdminRewardLinksPage()}catch(e){alert('เพิ่มลิงก์ไม่สำเร็จ: '+e.message)}}
+async function editAdminRewardLink(id){try{const d=await adminAiRequest('GET');const r=(d.reward_links||[]).find(x=>x.id===id);if(!r)return;const cups=prompt('จำนวนแก้ว (สูงสุด 30):',String(r.cups_required));if(cups===null)return;const n=Number(cups);if(!Number.isInteger(n)||n<1||n>30){alert('จำนวนแก้วต้องเป็นจำนวนเต็ม 1–30');return}const url=prompt('LINE Reward URL:',r.url);if(url===null)return;const order=prompt('ลำดับการแสดง:',String(r.sort_order??n));if(order===null)return;await adminAiRequest('POST',{action:'reward_update',id,cups_required:n,url,sort_order:Number(order)});await renderAdminRewardLinksPage()}catch(e){alert('แก้ไขไม่สำเร็จ: '+e.message)}}
+async function toggleAdminRewardLink(id,is_active){try{await adminAiRequest('POST',{action:'reward_update',id,is_active});await renderAdminRewardLinksPage()}catch(e){alert(e.message)}}
+async function deleteAdminRewardLink(id){if(!confirm('ยืนยันลบ Reward Link นี้?'))return;try{await adminAiRequest('POST',{action:'reward_delete',id});await renderAdminRewardLinksPage()}catch(e){alert('ลบไม่สำเร็จ: '+e.message)}}
+
 function switchAdminOnlineTab(tab,scroll=true){
   const meta=adminOnlineTabMeta[tab];if(!meta)return;
   document.querySelectorAll('.admin-online-tab').forEach(b=>b.classList.toggle('active',b.dataset.adminTab===tab));
@@ -2638,6 +2660,10 @@ function switchAdminOnlineTab(tab,scroll=true){
     renderAdminOnlineMenu();
   }else if(tab==='customers'){
     renderAdminOnlineCustomers();
+  }else if(tab==='faq'){
+    renderAdminFaqPage();
+  }else if(tab==='rewards'){
+    renderAdminRewardLinksPage();
   }else if(tab==='overview'){
     panel.innerHTML='<div class="admin-online-kpis"><div class="admin-online-kpi"><span>ออเดอร์วันนี้</span><b>—</b></div><div class="admin-online-kpi"><span>ยอดขายออนไลน์</span><b>—</b></div><div class="admin-online-kpi"><span>รอตรวจสอบ</span><b>—</b></div><div class="admin-online-kpi"><span>ยกเลิก</span><b>—</b></div></div><div class="admin-online-placeholder">กราฟยอดขายจะแสดงเมื่อเชื่อม Backend และฐานข้อมูลออเดอร์</div><div class="admin-online-note">ยังไม่มีการอ่านข้อมูลออเดอร์จริง</div>';
   }else{
