@@ -2579,7 +2579,7 @@ async function adminOnlineApi(path='', params={}){
 }
 
 const adminOnlineTabMeta={
-  overview:{title:'Overview',desc:'ภาพรวมยอดขายและสถานะออเดอร์'},orders:{title:'Orders',desc:'รายการออเดอร์ รายละเอียดสินค้า รูปสลิป และประวัติ'},menu:{title:'Menu',desc:'จัดการเมนู ราคา หมวดหมู่ และ Modifier'},customers:{title:'Customers',desc:'ฐานข้อมูลลูกค้าจาก Website และ LINE พร้อมประวัติออเดอร์'},payments:{title:'Payments',desc:'ช่องทางชำระเงินและตรวจสอบสลิป'},rewards:{title:'Rewards',desc:'คะแนนสะสม Reward Links และประวัติแต้ม'},settings:{title:'Settings',desc:'ตั้งค่าร้าน เวลาเปิดปิด Pickup และ Delivery'},'ai-line':{title:'AI & LINE',desc:'ตั้งค่าการอ่านออเดอร์และระบบตอบกลับ LINE'},faq:{title:'FAQ',desc:'คำถามที่พบบ่อยและข้อมูลร้าน'},broadcast:{title:'Broadcast',desc:'จัดการข้อความ Broadcast'},logs:{title:'Logs',desc:'ประวัติการเชื่อมต่อและข้อผิดพลาด'}
+  overview:{title:'Overview',desc:'ภาพรวมยอดขายและสถานะออเดอร์'},orders:{title:'Orders',desc:'รายการออเดอร์ รายละเอียดสินค้า รูปสลิป และประวัติ'},menu:{title:'Menu',desc:'จัดการเมนู ราคา หมวดหมู่ และ Modifier'},customers:{title:'Customers',desc:'ฐานข้อมูลลูกค้าจาก Website และ LINE พร้อมประวัติออเดอร์'},payments:{title:'Payments',desc:'ช่องทางชำระเงินและตรวจสอบสลิป'},rewards:{title:'Rewards',desc:'คะแนนสะสม Reward Links และประวัติแต้ม'},settings:{title:'Settings',desc:'ตั้งค่าระบบ AI, LINE, สะสมแต้ม และเวลาเปิดร้าน'},'ai-line':{title:'AI & LINE',desc:'ตั้งค่าการอ่านออเดอร์และระบบตอบกลับ LINE'},faq:{title:'FAQ',desc:'คำถามที่พบบ่อยและข้อมูลร้าน'},broadcast:{title:'Broadcast',desc:'จัดการข้อความ Broadcast'},logs:{title:'Logs',desc:'ประวัติการเชื่อมต่อและข้อผิดพลาด'}
 };
 function openAdminOrderOnline(){
   if(!currentUser){showLogin();return false}
@@ -2607,24 +2607,39 @@ async function adminAiRequest(method='GET', payload=null){
 }
 function renderAdminAiLine(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
-  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>AI &amp; LINE</h3><div class="admin-online-note">ตั้งค่าระบบ AI · FAQ · Reward Links</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminAiLine()">↻ Refresh</button></div><div id="adminAiLineStatus" class="admin-menu-status">กำลังเชื่อมต่อ admin-ai…</div><div id="adminAiLineContent"></div>`;
+  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>AI &amp; LINE</h3><div class="admin-online-note">กล่องข้อความจาก LINE · ตรวจออเดอร์ AI · ตั้งค่าการทำงาน</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminAiLine()">↻ Refresh</button></div>
+  <div id="adminAiLineStatus" class="admin-menu-status">กำลังโหลดข้อมูล…</div>
+  <section class="admin-online-kpis" id="adminAiKpis"></section>
+  <section style="margin-top:18px"><h3>ออเดอร์จาก LINE ที่รอตรวจสอบ</h3><div class="admin-online-note">ชื่อ LINE ลูกค้าจะแสดงเป็นหัวรายการ หาก LINE ไม่ส่งชื่อโปรไฟล์จะแสดงว่าไม่ทราบชื่อ</div><div id="adminLineDraftList" class="admin-online-placeholder">กำลังโหลดออเดอร์…</div></section>
+  <section style="margin-top:22px"><h3>ควบคุมระบบ AI &amp; LINE</h3><div id="adminAiToggles" class="admin-online-placeholder">กำลังโหลดการตั้งค่า…</div></section>`;
   loadAdminAiLineData();
 }
+function adminAiSettingValue(settings,key,fallback=false){const r=(settings||[]).find(x=>x.setting_key===key);if(!r)return fallback;const v=r.setting_value;if(typeof v==='boolean')return v;if(typeof v==='string')return v.toLowerCase()==='true'||v==='1';return !!v;}
+function renderAdminAiSwitch(label,key,checked,help){return `<label style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;margin:8px 0;background:var(--card)"><span><b>${esc(label)}</b><small style="display:block;color:var(--muted);margin-top:3px">${esc(help||'')}</small></span><input type="checkbox" style="width:22px;height:22px;accent-color:var(--accent)" ${checked?'checked':''} onchange="saveAdminAiToggle('${key}',this.checked)"></label>`;}
+async function saveAdminAiToggle(key,value){try{await adminAiRequest('POST',{action:'settings_update',setting_key:key,setting_value:!!value,description:'Managed from Balenrista Dashboard AI & LINE'});showToast('บันทึกการตั้งค่าสำเร็จ');}catch(e){showToast('บันทึกไม่สำเร็จ: '+e.message);renderAdminAiLine();}}
 async function loadAdminAiLineData(){
-  const status=document.getElementById('adminAiLineStatus');
-  const content=document.getElementById('adminAiLineContent');
-  if(!status||!content)return;
+  const status=document.getElementById('adminAiLineStatus');if(!status)return;
   try{
-    const data=await adminAiRequest('GET');
+    const [data,drafts]=await Promise.all([adminAiRequest('GET'),adminAiRequest('POST',{action:'drafts_list',limit:50})]);
     if(data.success!==true)throw new Error('Backend ไม่ยืนยันการอ่านข้อมูล');
     status.textContent='เชื่อมต่อ admin-ai สำเร็จ';
-    const rows=(title,list,fields)=>`<section style="margin-top:18px"><h3>${esc(title)} (${list.length})</h3><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr>${fields.map(f=>`<th>${esc(f.label)}</th>`).join('')}</tr></thead><tbody>${list.map(row=>`<tr>${fields.map(f=>`<td>${esc(row[f.key]??'—')}</td>`).join('')}</tr>`).join('')}</tbody></table></div></section>`;
-    content.innerHTML=`<div class="admin-online-kpis"><div class="admin-online-kpi"><span>Settings</span><b>${data.settings?.length||0}</b></div><div class="admin-online-kpi"><span>FAQ</span><b>${data.faq?.length||0}</b></div><div class="admin-online-kpi"><span>Reward Links</span><b>${data.reward_links?.length||0}</b></div></div>${rows('Settings',data.settings||[],[{key:'setting_key',label:'รายการ'},{key:'setting_value',label:'ค่า'}])}${rows('FAQ',data.faq||[],[{key:'question',label:'คำถาม'},{key:'answer',label:'คำตอบ'},{key:'is_active',label:'เปิดใช้งาน'}])}${rows('Reward Links',data.reward_links||[],[{key:'cups_required',label:'แต้ม/จำนวนแก้ว'},{key:'url',label:'ลิงก์'},{key:'is_active',label:'เปิดใช้งาน'}])}`;
-  }catch(error){
-    status.textContent='เชื่อมต่อไม่สำเร็จ: '+(error.message||error);
-    content.innerHTML='<div class="admin-online-placeholder">ยังโหลดข้อมูลไม่ได้ กรุณาตรวจสอบ Session และ Edge Function admin-ai</div>';
-  }
+    const pending=(drafts.drafts||[]).filter(x=>['pending','needs_review'].includes(x.review_status));
+    const k=document.getElementById('adminAiKpis');if(k)k.innerHTML=`<div class="admin-online-kpi"><span>รอตรวจสอบ</span><b>${pending.length}</b></div><div class="admin-online-kpi"><span>FAQ</span><b>${data.faq?.length||0}</b></div><div class="admin-online-kpi"><span>Reward Links</span><b>${data.reward_links?.length||0}</b></div>`;
+    const t=document.getElementById('adminAiToggles');if(t)t.innerHTML=[
+      renderAdminAiSwitch('เปิดใช้ AI Processor','ai_enabled',adminAiSettingValue(data.settings,'ai_enabled',true),'ปิดแล้วจะไม่ให้ AI วิเคราะห์ข้อความและรูปภาพใหม่'),
+      renderAdminAiSwitch('ตอบกลับ LINE อัตโนมัติ','line_auto_reply_enabled',adminAiSettingValue(data.settings,'line_auto_reply_enabled',true),'ควบคุมการส่งข้อความตอบกลับอัตโนมัติ'),
+      renderAdminAiSwitch('อ่านออเดอร์จากข้อความ/รูปภาพ','line_order_intake_enabled',adminAiSettingValue(data.settings,'line_order_intake_enabled',true),'เปิดหรือปิดการสร้างรายการร่างจากข้อความและ OCR'),
+      renderAdminAiSwitch('ระบบสะสมแต้ม / Reward','loyalty_enabled',adminAiSettingValue(data.settings,'loyalty_enabled',true),'แยกเปิดปิดจาก AI และ LINE ได้')
+    ].join('');
+    const host=document.getElementById('adminLineDraftList');if(host){const rows=drafts.drafts||[];host.innerHTML=rows.length?rows.map(d=>{
+      const customer=d.line_display_name||d.display_name||'ไม่ทราบชื่อ';
+      let items=Array.isArray(d.matched_items)?d.matched_items:[];
+      const itemsHtml=items.map(i=>`<div style="display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)"><span>${esc(i.menu_name||'ไม่พบเมนู')} × ${Number(i.quantity)||0}<small style="display:block;color:var(--muted)">${esc([i.temperature,i.sweetness].filter(Boolean).join(' · '))}</small></span><b>฿${Number(i.line_total||0).toLocaleString('th-TH')}</b></div>`).join('');
+      return `<article style="border:1px solid var(--line);border-radius:14px;padding:14px;margin:10px 0;background:var(--card)"><header style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;flex-wrap:wrap"><div><b style="font-size:16px">${esc(customer)}</b><div style="font-size:11px;color:var(--muted)">LINE · ${esc(d.line_user_id||'ไม่พบ LINE ID')} · ${d.created_at?new Date(d.created_at).toLocaleString('th-TH'):''}</div></div><span class="admin-order-tag" style="background:#fff0d5;color:#895400;padding:5px 9px;border-radius:20px">${esc(d.review_status||'pending')}</span></header><div style="margin:12px 0;padding:10px;background:var(--surface);border-radius:10px"><small style="color:var(--muted)">ข้อความต้นฉบับ</small><div style="white-space:pre-wrap">${esc(d.original_text||'—')}</div></div>${itemsHtml||'<div class="admin-online-note">ไม่มีรายการเมนูที่จับคู่ได้</div>'}<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:10px;flex-wrap:wrap"><b>รวมเบื้องต้น ฿${items.reduce((a,i)=>a+Number(i.line_total||0),0).toLocaleString('th-TH')}</b><button class="admin-orders-refresh" onclick="createOrderFromLineDraft('${d.id}')">สร้าง Order Draft</button></div></article>`;
+    }).join(''):'<div class="admin-online-placeholder">ยังไม่มีออเดอร์ LINE ที่รอตรวจสอบ</div>';}
+  }catch(error){status.textContent='เชื่อมต่อไม่สำเร็จ: '+(error.message||error);const host=document.getElementById('adminLineDraftList');if(host)host.innerHTML='<div class="admin-online-placeholder">โหลดข้อมูลไม่ได้ กรุณาตรวจสอบ admin-ai และสิทธิ์ฐานข้อมูล</div>';}
 }
+async function createOrderFromLineDraft(id){if(!confirm('สร้าง Order Draft จากรายการ AI นี้หรือไม่? ระบบจะใช้ราคาปัจจุบันจากตาราง menus และยังไม่ส่งเข้า Loyverse'))return;try{const r=await adminAiRequest('POST',{action:'draft_create_order',draft_id:id,order_type:'pickup'});if(!r.success)throw new Error(r.error||'สร้าง Order Draft ไม่สำเร็จ');showToast('สร้าง Order Draft สำเร็จ: '+r.order.order_number);loadAdminAiLineData();}catch(e){alert('สร้าง Order Draft ไม่สำเร็จ: '+e.message);}}
 
 // FAQ and Reward Links are managed on their own pages; AI & LINE is the workflow control center.
 async function renderAdminFaqPage(){
@@ -2664,6 +2679,8 @@ function switchAdminOnlineTab(tab,scroll=true){
     renderAdminFaqPage();
   }else if(tab==='rewards'){
     renderAdminRewardLinksPage();
+  }else if(tab==='settings'){
+    renderAdminAiSettingsPage();
   }else if(tab==='overview'){
     panel.innerHTML='<div class="admin-online-kpis"><div class="admin-online-kpi"><span>ออเดอร์วันนี้</span><b>—</b></div><div class="admin-online-kpi"><span>ยอดขายออนไลน์</span><b>—</b></div><div class="admin-online-kpi"><span>รอตรวจสอบ</span><b>—</b></div><div class="admin-online-kpi"><span>ยกเลิก</span><b>—</b></div></div><div class="admin-online-placeholder">กราฟยอดขายจะแสดงเมื่อเชื่อม Backend และฐานข้อมูลออเดอร์</div><div class="admin-online-note">ยังไม่มีการอ่านข้อมูลออเดอร์จริง</div>';
   }else{
@@ -2671,6 +2688,20 @@ function switchAdminOnlineTab(tab,scroll=true){
   }
   if(scroll)document.getElementById('adminOrderOnlineSection')?.scrollIntoView({block:'start'});
 }
+
+// AI & LINE settings page: settings are persisted through the authenticated admin-ai Edge Function.
+async function renderAdminAiSettingsPage(){
+ const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
+ panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Settings · AI &amp; LINE</h3><div class="admin-online-note">ตั้งค่าการทำงานแยกส่วนและบันทึกลง Supabase</div></div><button class="admin-orders-refresh" onclick="renderAdminAiSettingsPage()">↻ Refresh</button></div><div id="adminAiSettingsStatus" class="admin-menu-status">กำลังโหลดการตั้งค่า…</div><div id="adminAiSettingsBody"></div>`;
+ try{const d=await adminAiRequest('GET');if(!d.success)throw new Error('โหลดการตั้งค่าไม่สำเร็จ');const host=document.getElementById('adminAiSettingsBody');if(!host)return;
+ const schedule=d.store_schedule||{};const days=[['mon','จันทร์'],['tue','อังคาร'],['wed','พุธ'],['thu','พฤหัสบดี'],['fri','ศุกร์'],['sat','เสาร์'],['sun','อาทิตย์']];
+ host.innerHTML=`<section style="margin-top:16px"><h3>การทำงานของระบบ</h3>${renderAdminAiSwitch('เปิดใช้ AI Processor','ai_enabled',adminAiSettingValue(d.settings,'ai_enabled',true),'เปิด/ปิดการวิเคราะห์ข้อความและรูปภาพ')}${renderAdminAiSwitch('ตอบกลับ LINE อัตโนมัติ','line_auto_reply_enabled',adminAiSettingValue(d.settings,'line_auto_reply_enabled',true),'เปิด/ปิดการตอบกลับอัตโนมัติ')}${renderAdminAiSwitch('รับออเดอร์จาก LINE','line_order_intake_enabled',adminAiSettingValue(d.settings,'line_order_intake_enabled',true),'เปิด/ปิดการแยกรายการสั่งซื้อ')}${renderAdminAiSwitch('ระบบสะสมแต้ม','loyalty_enabled',adminAiSettingValue(d.settings,'loyalty_enabled',true),'เปิด/ปิดระบบ Reward แยกจาก AI')}</section>
+ <section style="margin-top:22px"><h3>เวลาเปิดร้าน</h3><div class="admin-online-note">เขตเวลา Asia/Bangkok · ตั้งค่าเวลารายวันและวันหยุด</div><div style="display:grid;gap:8px;margin-top:12px">${days.map(([k,label])=>{const x=schedule.weekly?.[k]||{enabled:true,open:'06:00',close:'13:30'};return `<div style="display:grid;grid-template-columns:minmax(90px,1fr) auto auto auto;gap:8px;align-items:center;padding:9px;border:1px solid var(--line);border-radius:10px"><b>${label}</b><input id="sched_${k}_enabled" type="checkbox" ${x.enabled?'checked':''} aria-label="เปิด ${label}"><input id="sched_${k}_open" type="time" value="${esc(x.open)}" class="field"><input id="sched_${k}_close" type="time" value="${esc(x.close)}" class="field"></div>`}).join('')}</div><button class="admin-orders-refresh" style="margin-top:12px" onclick="saveAdminStoreSchedule()">บันทึกเวลาเปิดร้าน</button></section>
+ <section style="margin-top:22px"><h3>การตั้งค่าที่จัดการอยู่</h3><div class="admin-online-note">FAQ และ Reward Links จัดการในแท็บของตัวเอง โดยใช้ตารางเดิม</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="admin-orders-refresh" onclick="switchAdminOnlineTab('faq')">จัดการ FAQ</button><button class="admin-orders-refresh" onclick="switchAdminOnlineTab('rewards')">จัดการ Reward Links</button></div></section>`;
+ const st=document.getElementById('adminAiSettingsStatus');if(st)st.textContent='โหลดการตั้งค่าจาก Supabase สำเร็จ';
+ }catch(e){const st=document.getElementById('adminAiSettingsStatus');if(st)st.textContent='โหลดไม่สำเร็จ: '+e.message;}
+}
+async function saveAdminStoreSchedule(){try{const weekly={};for(const [k] of [['mon'],['tue'],['wed'],['thu'],['fri'],['sat'],['sun']])weekly[k]={enabled:!!document.getElementById(`sched_${k}_enabled`)?.checked,open:document.getElementById(`sched_${k}_open`)?.value||'06:00',close:document.getElementById(`sched_${k}_close`)?.value||'13:30'};await adminAiRequest('POST',{action:'store_schedule_update',schedule:{timezone:'Asia/Bangkok',weekly,holidays:[],special_hours:[]}});showToast('บันทึกเวลาเปิดร้านสำเร็จ');}catch(e){alert('บันทึกเวลาไม่สำเร็จ: '+e.message);}}
 
 // Admin Order Online > Menu — isolated read-only catalog view.
 // Price is sourced only from public.menus.sale_price; no duplicate price writes.
@@ -4040,4 +4071,9 @@ async function deleteBillFromGoogleSheet(documentNo){
 }
 
 .bill-master-duplicate-warning{margin-top:7px;padding:9px 11px;border:1px solid rgba(158,53,31,.55);border-radius:10px;background:rgba(158,53,31,.10);color:#e58a72;font-size:13px;font-weight:600}.bill-master-duplicate{border-color:#c95a43!important;box-shadow:0 0 0 1px rgba(201,90,67,.22)}#billMasterSaveBtn:disabled{opacity:.45;cursor:not-allowed}
+
+/* AI & LINE admin review additions */
+#adminOnlinePanel input[type=time]{min-width:105px;padding:7px;border:1px solid var(--line);border-radius:8px;background:var(--card);color:var(--text)}
+#adminOnlinePanel input[type=checkbox]{cursor:pointer}
+@media(max-width:560px){#adminOnlinePanel input[type=time]{min-width:0;width:100%}#adminOnlinePanel .admin-online-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
