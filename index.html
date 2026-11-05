@@ -2707,17 +2707,10 @@ function lineListApplies(list,menu){
  return rules.some(r=>lineRuleApplies(r,menu));
 }
 async function loadLineModifierCatalog(menus){
- const ids=(menus||[]).map(m=>m.id).filter(Boolean);
- const [listsRes,optsRes,rulesRes,detailsRes]=await Promise.all([
-  db.from('modifier_lists').select('id,name,is_active').eq('is_active',true),
-  db.from('modifier_options').select('id,modifier_list_id,name,price,is_active').eq('is_active',true),
-  db.from('modifier_list_rules').select('id,modifier_list_id,scope_type,scope_value,is_active').eq('is_active',true),
-  ids.length?db.from('customer_menu_details').select('menu_id,category').in('menu_id',ids):Promise.resolve({data:[],error:null})
- ]);
- for(const r of [listsRes,optsRes,rulesRes,detailsRes])if(r.error)throw r.error;
- const categoryByMenu=new Map((detailsRes.data||[]).map(x=>[x.menu_id,x.category||'']));
- const enriched=(menus||[]).map(m=>({...m,category:categoryByMenu.get(m.id)||''}));
- return {menus:enriched,lists:listsRes.data||[],options:optsRes.data||[],rules:rulesRes.data||[]};
+ const catalog=await adminAiRequest('POST',{action:'modifier_catalog'});
+ const categoryByMenu=new Map((catalog.details||[]).map(x=>[x.menu_id,x.category||'']));
+ return {menus:(menus||[]).map(m=>({...m,category:categoryByMenu.get(m.id)||''})),
+  lists:catalog.lists||[],options:catalog.options||[],rules:catalog.rules||[]};
 }
 function lineSelected(item,listId){return (item.modifiers||[]).filter(m=>m.modifier_list_id===listId||m.list_id===listId);}
 function lineModifierCost(item){return (item.modifiers||[]).reduce((n,m)=>n+Number(m.price||0),0);}
