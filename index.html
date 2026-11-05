@@ -705,6 +705,65 @@
 }
 </style>
 
+
+<style id="balenrista-admin-unified-ui">
+/* Unified Balenrista Admin: aligned with the main Dashboard visual system. */
+#adminOrderOnlineSection{--admin-surface:rgba(255,255,255,.045);--admin-surface-strong:rgba(255,255,255,.075);--admin-border:rgba(243,237,231,.11);--admin-accent:var(--paper);--admin-radius:18px;color:var(--white)}
+#adminOrderOnlineSection .admin-online-head{align-items:center;margin:10px 0 20px;padding:4px 2px}
+#adminOrderOnlineSection .admin-online-title{font-size:clamp(23px,3vw,30px);font-weight:800;letter-spacing:-.7px;color:var(--white)}
+#adminOrderOnlineSection .admin-online-desc{font-size:11px;color:var(--muted);line-height:1.65}
+#adminOrderOnlineSection .admin-online-groups{gap:8px;margin:0 0 12px}
+#adminOrderOnlineSection .admin-online-group{display:inline-flex;align-items:center;gap:9px;min-height:38px;padding:8px 12px;border:1px solid var(--admin-border);border-radius:12px;background:var(--admin-surface);color:var(--muted);font-size:11px;font-weight:700;transition:background .18s,border-color .18s,color .18s}
+#adminOrderOnlineSection .admin-online-group[aria-expanded="true"]{background:rgba(181,151,133,.13);border-color:rgba(181,151,133,.35);color:var(--paper)}
+#adminOrderOnlineSection .admin-online-tabs{display:flex;gap:6px;overflow-x:auto;overflow-y:hidden;padding:5px 4px 12px;margin:0 0 14px;border-bottom:1px solid var(--admin-border);scrollbar-width:thin;scrollbar-color:rgba(181,151,133,.35) transparent;-webkit-overflow-scrolling:touch}
+#adminOrderOnlineSection .admin-online-tab{flex:0 0 auto;min-height:39px;padding:9px 14px;border:1px solid transparent;border-radius:12px;background:transparent;color:var(--muted);font-size:11px;font-weight:700;letter-spacing:.1px;transition:all .18s}
+#adminOrderOnlineSection .admin-online-tab:hover{background:var(--admin-surface);border-color:var(--admin-border);color:var(--white)}
+#adminOrderOnlineSection .admin-online-tab.active{background:var(--paper);border-color:var(--paper);color:var(--black);box-shadow:0 7px 22px rgba(181,151,133,.14)}
+#adminOrderOnlineSection .admin-online-panel{min-height:260px;padding:clamp(14px,2.2vw,22px);border:1px solid var(--admin-border);border-radius:22px;background:linear-gradient(145deg,rgba(255,255,255,.065),rgba(255,255,255,.022));box-shadow:var(--shadow);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px)}
+#adminOrderOnlineSection .admin-orders-headline{align-items:center;margin:0 0 17px;padding-bottom:14px;border-bottom:1px solid rgba(243,237,231,.075)}
+#adminOrderOnlineSection .admin-orders-headline h3,#adminOrderOnlineSection .admin-online-panel>div>h3,#adminOrderOnlineSection .admin-online-panel section h3{margin:0 0 4px;color:var(--white);font-size:16px;font-weight:800;letter-spacing:-.2px}
+#adminOrderOnlineSection .admin-online-note,#adminOrderOnlineSection .admin-menu-status,#adminOrderOnlineSection .admin-customer-message{color:var(--muted);font-size:10px;line-height:1.65}
+#adminOrderOnlineSection .admin-online-kpi,#adminOrderOnlineSection .admin-orders-stat,#adminOrderOnlineSection .admin-customer-kpi{border:1px solid var(--admin-border);border-radius:15px;padding:14px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.02));box-shadow:0 10px 28px rgba(0,0,0,.12)}
+#adminOrderOnlineSection .admin-online-kpi span,#adminOrderOnlineSection .admin-orders-stat span,#adminOrderOnlineSection .admin-customer-kpi span{font-size:10px;color:var(--muted)}
+#adminOrderOnlineSection .admin-online-kpi b,#adminOrderOnlineSection .admin-orders-stat b,#adminOrderOnlineSection .admin-customer-kpi b{font-size:23px;font-weight:800;letter-spacing:-.4px;color:var(--white)}
+#adminOrderOnlineSection .admin-menu-toolbar,#adminOrderOnlineSection .admin-customer-toolbar,#adminOrderOnlineSection .admin-orders-toolbar{gap:9px;margin:14px 0}
+#adminOrderOnlineSection .field,#adminOrderOnlineSection input:not([type=checkbox]):not([type=radio]),#adminOrderOnlineSection select,#adminOrderOnlineSection textarea{border:1px solid var(--admin-border);border-radius:12px;background:rgba(0,0,0,.19);color:var(--white);outline:none}
+#adminOrderOnlineSection .field:focus,#adminOrderOnlineSection input:focus,#adminOrderOnlineSection select:focus,#adminOrderOnlineSection textarea:focus{border-color:rgba(181,151,133,.55);box-shadow:0 0 0 3px rgba(181,151,133,.08)}
+#adminOrderOnlineSection .admin-orders-refresh,#adminOrderOnlineSection .admin-customer-detail-btn,#adminOrderOnlineSection .admin-menu-editor-actions button,#adminOrderOnlineSection .admin-menu-image-actions button,#adminOrderOnlineSection .admin-menu-image-box button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:38px;padding:8px 12px;border:1px solid var(--admin-border);border-radius:11px;background:rgba(255,255,255,.035);color:var(--white);font-size:10px;font-weight:700;transition:all .18s}
+#adminOrderOnlineSection .admin-orders-refresh:hover,#adminOrderOnlineSection .admin-customer-detail-btn:hover,#adminOrderOnlineSection .admin-menu-editor-actions button:hover,#adminOrderOnlineSection .admin-menu-image-actions button:hover,#adminOrderOnlineSection .admin-menu-image-box button:hover{background:rgba(181,151,133,.13);border-color:rgba(181,151,133,.38);color:var(--paper)}
+#adminOrderOnlineSection .admin-icon{display:inline-block;width:15px;height:15px;flex:0 0 15px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;vertical-align:middle}
+#adminOrderOnlineSection .admin-menu-edit{width:30px;height:30px;margin-left:8px;border-radius:9px;background:var(--admin-surface);color:var(--paper)}
+#adminOrderOnlineSection .admin-menu-table-wrap,#adminOrderOnlineSection .admin-customer-table-wrap,#adminOrderOnlineSection .admin-orders-table-wrap{border:1px solid var(--admin-border);border-radius:15px;background:rgba(0,0,0,.12)}
+#adminOrderOnlineSection .admin-menu-table,#adminOrderOnlineSection .admin-customer-table,#adminOrderOnlineSection .admin-orders-table{border-collapse:separate;border-spacing:0}
+#adminOrderOnlineSection .admin-menu-table th,#adminOrderOnlineSection .admin-customer-table th,#adminOrderOnlineSection .admin-orders-table th{background:rgba(181,151,133,.09);color:var(--paper);font-size:9px;font-weight:800;letter-spacing:.65px}
+#adminOrderOnlineSection .admin-menu-table td,#adminOrderOnlineSection .admin-customer-table td,#adminOrderOnlineSection .admin-orders-table td{border-bottom:1px solid rgba(243,237,231,.065);color:var(--white)}
+#adminOrderOnlineSection .admin-menu-table tr:last-child td,#adminOrderOnlineSection .admin-customer-table tr:last-child td,#adminOrderOnlineSection .admin-orders-table tr:last-child td{border-bottom:0}
+#adminOrderOnlineSection .admin-menu-table tbody tr:hover td,#adminOrderOnlineSection .admin-customer-table tbody tr:hover td,#adminOrderOnlineSection .admin-orders-table tbody tr:hover td{background:rgba(255,255,255,.025)}
+#adminOrderOnlineSection .admin-menu-editor,#adminOrderOnlineSection .admin-customer-detail,#adminOrderOnlineSection .admin-order-detail,#adminOrderOnlineSection .bal-editor-shell{border:1px solid var(--admin-border);border-radius:17px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.02));box-shadow:0 12px 32px rgba(0,0,0,.14)}
+#adminOrderOnlineSection .admin-online-placeholder{border:1px dashed rgba(243,237,231,.10);border-radius:14px;background:rgba(255,255,255,.018);color:var(--muted);line-height:1.7}
+#adminOrderOnlineSection .bal-addon-icon{display:grid;place-items:center;width:34px;height:34px;border:1px solid var(--admin-border);border-radius:10px;background:rgba(181,151,133,.08);color:var(--paper)}
+#adminOrderOnlineSection .bal-addon-icon .admin-icon{width:18px;height:18px}
+#adminOrderOnlineSection .admin-online-group .admin-icon{width:13px;height:13px;transition:transform .18s}
+#adminOrderOnlineSection .admin-online-group.is-collapsed .admin-icon{transform:rotate(-90deg)}
+#adminOrderOnlineSection button:focus-visible,#adminOrderOnlineSection a:focus-visible{outline:2px solid var(--paper);outline-offset:2px}
+@media(max-width:700px){
+ #adminOrderOnlineSection .admin-online-head{display:block;margin-bottom:15px}
+ #adminOrderOnlineSection .admin-online-title{font-size:22px}
+ #adminOrderOnlineSection .admin-online-groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+ #adminOrderOnlineSection .admin-online-group{justify-content:space-between;min-width:0}
+ #adminOrderOnlineSection .admin-online-tabs{gap:6px;margin-bottom:11px;padding-bottom:9px}
+ #adminOrderOnlineSection .admin-online-tab{min-height:37px;padding:8px 11px;font-size:10px}
+ #adminOrderOnlineSection .admin-online-panel{padding:13px 11px;border-radius:17px}
+ #adminOrderOnlineSection .admin-orders-headline{align-items:flex-start;flex-wrap:wrap}
+ #adminOrderOnlineSection .admin-orders-headline>div:first-child{min-width:0;flex:1 1 100%}
+ #adminOrderOnlineSection .admin-orders-headline>div:last-child{max-width:100%;flex-wrap:wrap}
+ #adminOrderOnlineSection .admin-orders-refresh{min-height:37px;padding:7px 10px}
+ #adminOrderOnlineSection .admin-online-kpis{gap:7px}
+ #adminOrderOnlineSection .admin-online-kpi,#adminOrderOnlineSection .admin-orders-stat,#adminOrderOnlineSection .admin-customer-kpi{padding:11px}
+ #adminOrderOnlineSection .admin-online-kpi b,#adminOrderOnlineSection .admin-orders-stat b,#adminOrderOnlineSection .admin-customer-kpi b{font-size:19px}
+}
+</style>
+
 </head>
 <body>
 <div id="authOverlay" class="auth-overlay hidden">
@@ -746,10 +805,10 @@
     <div><div class="bills-kicker">Balenrista / Online</div><div class="admin-online-title">Admin Order Online</div><div class="admin-online-desc">ศูนย์ควบคุมออเดอร์จาก Website และ LINE</div></div>
   </div>
   <div class="admin-online-groups" role="group" aria-label="หมวดหมู่ Admin Order Online">
-    <button class="admin-online-group" type="button" aria-expanded="true" data-admin-group="sales" onclick="toggleAdminGroup('sales')">การขาย⌃</button>
-    <button class="admin-online-group" type="button" aria-expanded="true" data-admin-group="catalog" onclick="toggleAdminGroup('catalog')">ข้อมูลร้าน⌃</button>
-    <button class="admin-online-group" type="button" aria-expanded="true" data-admin-group="finance" onclick="toggleAdminGroup('finance')">การเงินและสมาชิก⌃</button>
-    <button class="admin-online-group" type="button" aria-expanded="true" data-admin-group="system" onclick="toggleAdminGroup('system')">ตั้งค่าระบบ⌃</button>
+    <button class="admin-online-group" type="button" aria-expanded="true" data-admin-group="sales" onclick="toggleAdminGroup('sales')">การขาย<svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+    <button class="admin-online-group" type="button" aria-expanded="true" data-admin-group="catalog" onclick="toggleAdminGroup('catalog')">ข้อมูลร้าน<svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+    <button class="admin-online-group" type="button" aria-expanded="true" data-admin-group="finance" onclick="toggleAdminGroup('finance')">การเงินและสมาชิก<svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+    <button class="admin-online-group" type="button" aria-expanded="true" data-admin-group="system" onclick="toggleAdminGroup('system')">ตั้งค่าระบบ<svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
   </div>
   <div class="admin-online-tabs" id="adminOnlineTabs" role="tablist" aria-label="Admin Order Online tabs">
     <button class="admin-online-tab active" data-admin-tab="overview" onclick="switchAdminOnlineTab('overview')">Overview</button>
@@ -2710,6 +2769,22 @@ async function adminOnlineApi(path='', params={}){
   return body;
 }
 
+function adminIconSvg(name){
+ const paths={
+  refresh:'<path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/>',
+  plus:'<path d="M12 5v14M5 12h14"/>',
+  close:'<path d="m18 6-12 12M6 6l12 12"/>',
+  edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',
+  filter:'<path d="M4 6h16M7 12h10m-7 6h4"/>',
+  chevron:'<path d="m6 9 6 6 6-6"/>',
+  droplet:'<path d="M12 3s6 6.2 6 11a6 6 0 0 1-12 0c0-4.8 6-11 6-11Z"/>',
+  snow:'<path d="M12 2v20M4 6l16 12M20 6 4 18M8 3l4 3 4-3M8 21l4-3 4 3M3 10l1-4 4 1M16 17l4 1 1-4"/>',
+  coffee:'<path d="M4 8h13v7a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8ZM17 10h2a2 2 0 1 1 0 4h-2M7 3v2m4-2v2m4-2v2"/>',
+  layers:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5"/>',
+  check:'<path d="m5 12 4 4L19 6"/>'
+ };
+ return `<svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${paths[name]||paths.layers}</svg>`;
+}
 const adminOnlineTabMeta={
   overview:{title:'Overview',desc:'ภาพรวมยอดขายและสถานะออเดอร์'},orders:{title:'Orders',desc:'รายการออเดอร์ รายละเอียดสินค้า รูปสลิป และประวัติ'},menu:{title:'Menu',desc:'จัดการเมนู ราคา หมวดหมู่ และ Modifier'},customers:{title:'Customers',desc:'ฐานข้อมูลลูกค้าจาก Website และ LINE พร้อมประวัติออเดอร์'},payments:{title:'Payments',desc:'ช่องทางชำระเงินและตรวจสอบสลิป'},rewards:{title:'Rewards',desc:'คะแนนสะสม Reward Links และประวัติแต้ม'},settings:{title:'Settings',desc:'ตั้งค่าระบบ AI, LINE, สะสมแต้ม และเวลาเปิดร้าน'},'ai-line':{title:'AI & LINE',desc:'ตั้งค่าการอ่านออเดอร์และระบบตอบกลับ LINE'},faq:{title:'FAQ',desc:'คำถามที่พบบ่อยและข้อมูลร้าน'},broadcast:{title:'Broadcast',desc:'จัดการข้อความ Broadcast'},logs:{title:'Logs',desc:'ประวัติการเชื่อมต่อและข้อผิดพลาด'}
 };
@@ -2739,7 +2814,7 @@ async function adminAiRequest(method='GET', payload=null){
 }
 function renderAdminAiLine(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
-  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>AI &amp; LINE</h3><div class="admin-online-note">กล่องข้อความจาก LINE · ตรวจออเดอร์ AI · ตั้งค่าการทำงาน</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminAiLine()">↻ Refresh</button></div>
+  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>AI &amp; LINE</h3><div class="admin-online-note">กล่องข้อความจาก LINE · ตรวจออเดอร์ AI · ตั้งค่าการทำงาน</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminAiLine()">${adminIconSvg('refresh')}<span>Refresh</span></button></div>
   <div id="adminAiLineStatus" class="admin-menu-status">กำลังโหลดข้อมูล…</div>
   <section class="admin-online-kpis" id="adminAiKpis"></section>
   <section style="margin-top:18px"><h3>ออเดอร์จาก LINE ที่รอตรวจสอบ</h3><div class="admin-online-note">ชื่อ LINE ลูกค้าจะแสดงเป็นหัวรายการ หาก LINE ไม่ส่งชื่อโปรไฟล์จะแสดงว่าไม่ทราบชื่อ</div><div id="adminLineDraftList" class="admin-online-placeholder">กำลังโหลดออเดอร์…</div></section>
@@ -2760,7 +2835,6 @@ const LINE_MODIFIER_GROUPS={
   '55932bef-cb7d-4396-9755-31e942d9e80b':{key:'additional',multi:true}
 };
 function lineNorm(v){return String(v??'').trim().toLocaleLowerCase();}
-function lineIsHot(menu){return lineNorm(menu?.category)==='hot';}
 function lineIsDriff(menu){return lineNorm(menu?.category)==='driff';}
 function lineMenuCategory(menu){return String(menu?.category||'').trim();}
 function lineRuleApplies(rule,menu){
@@ -2857,33 +2931,21 @@ async function openLineDraftEditor(id){
   if(d.draft_order_id){alert('รายการนี้สร้าง Order Draft แล้ว สามารถกดยืนยันและส่ง LINE ได้');return;}
   const catalog=await loadLineModifierCatalog(mc.menus||[]);
   lineDraftEditorState={draftId:id,menus:catalog.menus,modifierLists:catalog.lists,modifierOptions:catalog.options,rules:catalog.rules,items:[]};
-  const normalizedItems=(d.matched_items||[]).map(i=>{const menu=catalog.menus.find(x=>String(x.id)===String(i.menu_id))||catalog.menus.find(x=>lineNorm(x.name)===lineNorm(i.menu_name));const raw=Array.isArray(i.modifiers)?i.modifiers:[];const resolved=raw.map(m=>lineResolveModifier(m,menu)).filter(Boolean);return {...i,menu_id:menu?.id||i.menu_id||null,menu_name:menu?.name||i.menu_name||'',modifiers:resolved};});
+  const normalizedItems=(d.matched_items||[]).map(i=>{const {temperature:_legacyTemperature,...cleanItem}=i;const menu=catalog.menus.find(x=>String(x.id)===String(i.menu_id))||catalog.menus.find(x=>lineNorm(x.name)===lineNorm(i.menu_name));const raw=Array.isArray(i.modifiers)?i.modifiers:[];const resolved=raw.map(m=>lineResolveModifier(m,menu)).filter(Boolean);return {...cleanItem,menu_id:menu?.id||i.menu_id||null,menu_name:menu?.name||i.menu_name||'',modifiers:resolved};});
   lineDraftEditorState.items=normalizedItems;
-  if(!lineDraftEditorState.items.length)lineDraftEditorState.items=[{menu_id:null,menu_name:'',quantity:1,temperature:'เย็น',sweetness:'หวานปกติ 100%',modifiers:[],note:''}];
+  if(!lineDraftEditorState.items.length)lineDraftEditorState.items=[{menu_id:null,menu_name:'',quantity:1,sweetness:'หวานปกติ 100%',modifiers:[],note:''}];
   renderLineDraftEditor();
  }catch(e){alert('เปิดตัวแก้ไขไม่สำเร็จ: '+e.message);}
 }
 function lineModifierIcon(group, option){
- const name=String(option?.name||'');
- if(group==='sweetness'){
-  const pct=(name.match(/\d+\s*%/)||[])[0]?.replace(/\s/g,'')||'';
-  return ({'0%':'🚫','10%':'💧','25%':'🍃','50%':'🥛','75%':'🍯','100%':'🍯','125%':'🍬','200%':'🍭'})[pct]||'🍯';
- }
- if(group==='ice'){
-  return /แยก/.test(name)&&!/ไม่แยก/.test(name)?'🧊':'🥤';
- }
- if(group==='ingredient'||group==='additional'){
-  const n=name.toLowerCase();
-  if(n.includes('chocolate'))return '🍫';
-  if(n.includes('coco')||n.includes('coco flower'))return '🌼';
-  if(n.includes('orange'))return '🍊';
-  if(n.includes('milk'))return '🥛';
-  if(n.includes('coffee'))return '☕';
-  return '✨';
- }
- if(group==='top_layer')return '🍓';
- if(group==='extraction')return '☕';
- return '✨';
+ const name=String(option?.name||'').toLowerCase();
+ let icon='layers';
+ if(group==='sweetness')icon='droplet';
+ else if(group==='ice')icon=/แยก/.test(name)&&!/ไม่แยก/.test(name)?'snow':'coffee';
+ else if(group==='ingredient'||group==='additional')icon=/coffee|กาแฟ/.test(name)?'coffee':'layers';
+ else if(group==='top_layer')icon='layers';
+ else if(group==='extraction')icon='coffee';
+ return adminIconSvg(icon);
 }
 function lineSweetnessCaption(option){
  const name=String(option?.name||'');
@@ -2913,7 +2975,7 @@ function renderLineDraftEditor(){
    return `<section class="bal-choice-section"><div class="bal-choice-title">${label}</div><div class="bal-ice-grid">${options.map(o=>{const active=selected.includes(o.id);return `<button type="button" class="bal-ice-option ${active?'is-selected':''}" aria-pressed="${active}" onclick="chooseLineModifier(${idx},'${list.id}','${o.id}')"><span class="bal-ice-icon">${lineModifierIcon(group,o)}</span><span>${esc(o.name)}</span></button>`;}).join('')}</div></section>`;
   }
   if(cfg.multi){
-   return `<section class="bal-choice-section"><div class="bal-choice-title">${label}<small>เลือกได้หลายรายการ</small></div><div class="bal-addon-grid">${options.map(o=>{const active=selected.includes(o.id);return `<button type="button" class="bal-addon-option ${active?'is-selected':''}" aria-pressed="${active}" onclick="toggleLineModifier(${idx},'${list.id}','${o.id}',${!active})"><span class="bal-addon-icon">${lineModifierIcon(group,o)}</span><span class="bal-addon-copy">${esc(o.name)}<b>${Number(o.price||0)>0?`+฿${Number(o.price).toLocaleString('th-TH')}`:'ฟรี'}</b></span><span class="bal-addon-mark">${active?'✓':'＋'}</span></button>`;}).join('')}</div></section>`;
+   return `<section class="bal-choice-section"><div class="bal-choice-title">${label}<small>เลือกได้หลายรายการ</small></div><div class="bal-addon-grid">${options.map(o=>{const active=selected.includes(o.id);return `<button type="button" class="bal-addon-option ${active?'is-selected':''}" aria-pressed="${active}" onclick="toggleLineModifier(${idx},'${list.id}','${o.id}',${!active})"><span class="bal-addon-icon">${lineModifierIcon(group,o)}</span><span class="bal-addon-copy">${esc(o.name)}<b>${Number(o.price||0)>0?`+฿${Number(o.price).toLocaleString('th-TH')}`:'ฟรี'}</b></span><span class="bal-addon-mark">${active?adminIconSvg('check'):adminIconSvg('plus')}</span></button>`;}).join('')}</div></section>`;
   }
   return `<section class="bal-choice-section"><div class="bal-choice-title">${label}</div><div class="bal-simple-grid">${options.map(o=>{const active=selected.includes(o.id);return `<button type="button" class="bal-simple-option ${active?'is-selected':''}" aria-pressed="${active}" onclick="chooseLineModifier(${idx},'${list.id}','${o.id}')"><span>${lineModifierIcon(group,o)}</span><b>${esc(o.name)}</b>${Number(o.price||0)>0?`<small>+฿${Number(o.price).toLocaleString('th-TH')}</small>`:''}</button>`;}).join('')}</div></section>`;
  };
@@ -2953,18 +3015,18 @@ function renderLineDraftEditor(){
  #lineDraftEditorModal .bal-total-bar{position:sticky;bottom:-18px;background:#171514;padding:14px 0 max(8px,env(safe-area-inset-bottom));border-top:1px solid #403633;display:flex;justify-content:space-between;align-items:center;gap:10px}
  @media(max-width:430px){#lineDraftEditorModal .bal-editor-shell{padding:14px;border-radius:18px}#lineDraftEditorModal .bal-addon-grid{grid-template-columns:1fr}#lineDraftEditorModal .bal-sweetness-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}#lineDraftEditorModal .bal-sweetness-option{min-height:78px}#lineDraftEditorModal .bal-sweetness-name{font-size:10px}}
  </style>
- <div class="bal-editor-shell"><div class="bal-editor-head"><h2 style="margin:0;font-size:clamp(18px,4vw,24px)">ปรับแต่งออเดอร์ ☕</h2><button class="admin-orders-refresh" onclick="closeLineDraftEditor()">ปิด ✕</button></div>
+ <div class="bal-editor-shell"><div class="bal-editor-head"><h2 style="margin:0;font-size:clamp(18px,4vw,24px)">ปรับแต่งออเดอร์</h2><button class="admin-orders-refresh" onclick="closeLineDraftEditor()">ปิด ${adminIconSvg('close')}</button></div>
  <p class="admin-online-note">ตัวเลือกและราคาอ้างอิงจาก Modifier Master ใน Supabase</p>
  <div id="lineDraftEditorItems">${lineDraftEditorState.items.map((it,idx)=>{
   const m=lineDraftEditorState.menus.find(x=>String(x.id)===String(it.menu_id))||lineDraftEditorState.menus.find(x=>lineNorm(x.name)===lineNorm(it.menu_name));
   return `<section class="bal-editor-item"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b style="font-size:17px">รายการ ${idx+1}</b><button class="admin-orders-refresh" onclick="removeLineDraftItem(${idx})">ลบรายการ</button></div>
   <label class="bal-field-label">เมนู<select class="bal-menu-select" value="${esc(it.menu_id||'')}" onchange="setLineDraftMenu(${idx},this.value)">${optsFor(it.menu_id||'')}</select></label>
-  <div class="bal-field-label">จำนวน</div><div class="bal-qty"><button type="button" aria-label="ลดจำนวน" onclick="setLineDraftQuantity(${idx},-1)">−</button><strong>${Number(it.quantity)||1}</strong><button type="button" aria-label="เพิ่มจำนวน" onclick="setLineDraftQuantity(${idx},1)">＋</button></div>
+  <div class="bal-field-label">จำนวน</div><div class="bal-qty"><button type="button" aria-label="ลดจำนวน" onclick="setLineDraftQuantity(${idx},-1)">−</button><strong>${Number(it.quantity)||1}</strong><button type="button" aria-label="เพิ่มจำนวน" onclick="setLineDraftQuantity(${idx},1)">${adminIconSvg('plus')}</button></div>
   ${m?lineDraftEditorState.modifierLists.map(list=>renderList(it,list,idx)).join(''):'<p class="admin-online-note">กรุณาเลือกเมนูก่อนเลือกตัวเลือกเสริม</p>'}
   <label class="bal-field-label">หมายเหตุ<input class="bal-menu-select" value="${esc(it.note||'')}" onchange="setLineDraftField(${idx},'note',this.value)"></label>
   <div class="bal-item-price">฿${(lineItemPrice(it)*(Number(it.quantity)||0)).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></section>`;
  }).join('')}</div>
- <button class="admin-orders-refresh" onclick="addLineDraftItem()">＋ เพิ่มรายการเมนู</button>
+ <button class="admin-orders-refresh" onclick="addLineDraftItem()">${adminIconSvg('plus')}<span>เพิ่มรายการเมนู</span></button>
  <div class="bal-total-bar"><b style="font-size:18px">ยอดรวม ฿${lineDraftTotal().toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}</b><button class="admin-orders-refresh" onclick="saveAndCreateLineOrder()">บันทึกและสร้าง Order Draft</button></div>
  </div>`;
  modal.style.display='flex';
@@ -2972,15 +3034,15 @@ function renderLineDraftEditor(){
 function closeLineDraftEditor(){document.getElementById('lineDraftEditorModal')?.remove();document.body.style.overflow=document.body.dataset.lineEditorPrevOverflow||'';delete document.body.dataset.lineEditorPrevOverflow;}
 function setLineDraftField(i,k,v){const it=lineDraftEditorState.items[i];if(!it)return;it[k]=k==='quantity'?Math.max(1,Math.min(999,Number(v)||1)):v;renderLineDraftEditor();}
 function setLineDraftQuantity(i,delta){const it=lineDraftEditorState.items[i];if(!it)return;it.quantity=Math.max(1,Math.min(999,(Number(it.quantity)||1)+Number(delta||0)));renderLineDraftEditor();}
-function setLineDraftMenu(i,menuId){const it=lineDraftEditorState.items[i];if(!it)return;const menu=lineDraftEditorState.menus.find(m=>String(m.id)===String(menuId));it.menu_id=menu?.id||null;it.menu_name=menu?.name||'';it.modifiers=[];it.temperature='เย็น';it.sweetness='';renderLineDraftEditor();}
+function setLineDraftMenu(i,menuId){const it=lineDraftEditorState.items[i];if(!it)return;const menu=lineDraftEditorState.menus.find(m=>String(m.id)===String(menuId));it.menu_id=menu?.id||null;it.menu_name=menu?.name||'';it.modifiers=[];delete it.temperature;it.sweetness='';renderLineDraftEditor();}
 function chooseLineModifier(i,listId,optionId){const it=lineDraftEditorState.items[i];const list=lineDraftEditorState.modifierLists.find(x=>x.id===listId);if(!it||!list)return;const option=lineDraftEditorState.modifierOptions.find(x=>x.id===optionId);lineSetModifierOption(it,list,option||{},!!optionId);renderLineDraftEditor();}
 function toggleLineModifier(i,listId,optionId,checked){const it=lineDraftEditorState.items[i];const list=lineDraftEditorState.modifierLists.find(x=>x.id===listId);const option=lineDraftEditorState.modifierOptions.find(x=>x.id===optionId);if(!it||!list||!option)return;lineSetModifierOption(it,list,option,checked);renderLineDraftEditor();}
-function addLineDraftItem(){lineDraftEditorState.items.push({menu_id:null,menu_name:'',quantity:1,temperature:'เย็น',sweetness:'หวานปกติ 100%',modifiers:[],note:''});renderLineDraftEditor();}
+function addLineDraftItem(){lineDraftEditorState.items.push({menu_id:null,menu_name:'',quantity:1,sweetness:'หวานปกติ 100%',modifiers:[],note:''});renderLineDraftEditor();}
 function removeLineDraftItem(i){lineDraftEditorState.items.splice(i,1);if(!lineDraftEditorState.items.length)addLineDraftItem();else renderLineDraftEditor();}
 async function saveAndCreateLineOrder(){
  const items=lineDraftEditorState.items;if(!items.length||items.some(i=>(!i.menu_id&&!i.menu_name)||!Number.isInteger(Number(i.quantity))||Number(i.quantity)<1)){alert('กรุณาเลือกเมนูและจำนวนให้ครบ');return;}
  try{
-  const payloadItems=items.map(i=>{const menu=lineDraftEditorState.menus.find(m=>String(m.id)===String(i.menu_id))||lineDraftEditorState.menus.find(m=>lineNorm(m.name)===lineNorm(i.menu_name));if(!menu)throw new Error(`ไม่พบเมนูใน Menu Master: ${i.menu_name||'ไม่ระบุชื่อ'}`);const resolved=(i.modifiers||[]).map(m=>lineResolveModifier(m,menu));const invalid=(i.modifiers||[]).filter((m,n)=>!resolved[n]);if(invalid.length)throw new Error(`พบ Modifier เก่าที่ไม่มีรหัสของเมนู ${i.menu_name}: ${invalid.map(x=>x?.name||x?.group||'ไม่ทราบชื่อ').join(', ')} กรุณาเอาตัวเลือกเดิมออก แล้วเลือกจากรายการ Modifier Master อีกครั้ง`);return {...i,menu_id:menu.id,menu_name:menu.name,temperature:lineIsHot(menu)?'ร้อน':(i.temperature||'เย็น'),sweetness:resolved.find(m=>m.group==='sweetness')?.name||'',modifiers:resolved.map(m=>({group:m.group,name:m.name,modifier_list_id:m.modifier_list_id,option_id:m.option_id,price:m.price}))};});
+  const payloadItems=items.map(i=>{const menu=lineDraftEditorState.menus.find(m=>String(m.id)===String(i.menu_id))||lineDraftEditorState.menus.find(m=>lineNorm(m.name)===lineNorm(i.menu_name));if(!menu)throw new Error(`ไม่พบเมนูใน Menu Master: ${i.menu_name||'ไม่ระบุชื่อ'}`);const resolved=(i.modifiers||[]).map(m=>lineResolveModifier(m,menu));const invalid=(i.modifiers||[]).filter((m,n)=>!resolved[n]);if(invalid.length)throw new Error(`พบ Modifier เก่าที่ไม่มีรหัสของเมนู ${i.menu_name}: ${invalid.map(x=>x?.name||x?.group||'ไม่ทราบชื่อ').join(', ')} กรุณาเอาตัวเลือกเดิมออก แล้วเลือกจากรายการ Modifier Master อีกครั้ง`);const {temperature:_legacyTemperature,...cleanItem}=i;return {...cleanItem,menu_id:menu.id,menu_name:menu.name,sweetness:resolved.find(m=>m.group==='sweetness')?.name||'',modifiers:resolved.map(m=>({group:m.group,name:m.name,modifier_list_id:m.modifier_list_id,option_id:m.option_id,price:m.price}))};});
   const saved=await adminAiRequest('POST',{action:'draft_update_items',draft_id:lineDraftEditorState.draftId,matched_items:payloadItems});if(saved.success!==true)throw new Error(saved.error||'บันทึก Draft ไม่สำเร็จ');
   const created=await adminAiRequest('POST',{action:'draft_create_order',draft_id:lineDraftEditorState.draftId,order_type:'pickup'});if(created.success!==true)throw new Error(created.error||'สร้าง Order Draft ไม่สำเร็จ');
   closeLineDraftEditor();alert(`สร้าง Order Draft สำเร็จ\nเลขออเดอร์: ${created.order?.order_number||'-'}\nยอดรวม: ฿${Number(created.order?.total_amount||0).toLocaleString('th-TH')}\n\nตรวจสอบแล้วกดยืนยันเพื่อส่งสรุปไป LINE`);await loadAdminAiLineData();
@@ -2991,7 +3053,7 @@ async function deleteLineDraft(id){if(!confirm('ลบข้อความน�
 // FAQ and Reward Links are managed on their own pages; AI & LINE is the workflow control center.
 async function renderAdminFaqPage(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
-  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>FAQ · ฐานความรู้ AI</h3><div class="admin-online-note">คำถามและคำตอบที่ AI ใช้ตอบลูกค้าผ่าน LINE</div></div><div style="display:flex;gap:8px"><button class="admin-orders-refresh" onclick="createAdminFaq()">＋ เพิ่ม FAQ</button><button class="admin-orders-refresh" onclick="renderAdminFaqPage()">↻ Refresh</button></div></div><div id="adminFaqStatus" class="admin-menu-status">กำลังโหลด FAQ…</div><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr><th>คำถาม</th><th>คำตอบ</th><th>ลำดับ</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="adminFaqBody"><tr><td colspan="5">กำลังโหลด…</td></tr></tbody></table></div>`;
+  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>FAQ · ฐานความรู้ AI</h3><div class="admin-online-note">คำถามและคำตอบที่ AI ใช้ตอบลูกค้าผ่าน LINE</div></div><div style="display:flex;gap:8px"><button class="admin-orders-refresh" onclick="createAdminFaq()">${adminIconSvg('plus')}<span>เพิ่ม FAQ</span></button><button class="admin-orders-refresh" onclick="renderAdminFaqPage()">${adminIconSvg('refresh')}<span>Refresh</span></button></div></div><div id="adminFaqStatus" class="admin-menu-status">กำลังโหลด FAQ…</div><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr><th>คำถาม</th><th>คำตอบ</th><th>ลำดับ</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="adminFaqBody"><tr><td colspan="5">กำลังโหลด…</td></tr></tbody></table></div>`;
   try{const d=await adminAiRequest('GET');if(!d.success)throw new Error('อ่านข้อมูลไม่สำเร็จ');const rows=d.faq||[];const body=document.getElementById('adminFaqBody');if(body)body.innerHTML=rows.map(r=>`<tr><td>${escapeAdminOrderText(r.question)}</td><td style="max-width:360px;white-space:normal">${escapeAdminOrderText(r.answer)}</td><td>${Number(r.sort_order)||0}</td><td>${r.is_active?'เปิด':'ปิด'}</td><td><button class="admin-orders-refresh" onclick="editAdminFaq('${r.id}')">แก้ไข</button> <button class="admin-orders-refresh" onclick="toggleAdminFaq('${r.id}',${!r.is_active})">${r.is_active?'ปิด':'เปิด'}</button> <button class="admin-orders-refresh" onclick="deleteAdminFaq('${r.id}')">ลบ</button></td></tr>`).join('')||'<tr><td colspan="5">ยังไม่มี FAQ</td></tr>';const st=document.getElementById('adminFaqStatus');if(st)st.textContent=`โหลด FAQ สำเร็จ ${rows.length} รายการ`;
   }catch(e){const st=document.getElementById('adminFaqStatus');if(st)st.textContent='โหลดไม่สำเร็จ: '+e.message;}
 }
@@ -3001,7 +3063,7 @@ async function toggleAdminFaq(id,is_active){try{await adminAiRequest('POST',{act
 async function deleteAdminFaq(id){if(!confirm('ยืนยันลบ FAQ รายการนี้?'))return;try{await adminAiRequest('POST',{action:'faq_delete',id});await renderAdminFaqPage()}catch(e){alert('ลบไม่สำเร็จ: '+e.message)}}
 async function renderAdminRewardLinksPage(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
-  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Rewards · LINE Reward Links</h3><div class="admin-online-note">จัดการลิงก์ตามจำนวนแก้ว สูงสุด 30 แก้วต่อหนึ่งลิงก์</div></div><div style="display:flex;gap:8px"><button class="admin-orders-refresh" onclick="createAdminRewardLink()">＋ เพิ่มลิงก์</button><button class="admin-orders-refresh" onclick="renderAdminRewardLinksPage()">↻ Refresh</button></div></div><div id="adminRewardStatus" class="admin-menu-status">กำลังโหลด Reward Links…</div><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr><th>จำนวนแก้ว</th><th>LINE URL</th><th>ลำดับ</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="adminRewardBody"><tr><td colspan="5">กำลังโหลด…</td></tr></tbody></table></div>`;
+  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Rewards · LINE Reward Links</h3><div class="admin-online-note">จัดการลิงก์ตามจำนวนแก้ว สูงสุด 30 แก้วต่อหนึ่งลิงก์</div></div><div style="display:flex;gap:8px"><button class="admin-orders-refresh" onclick="createAdminRewardLink()">${adminIconSvg('plus')}<span>เพิ่มลิงก์</span></button><button class="admin-orders-refresh" onclick="renderAdminRewardLinksPage()">${adminIconSvg('refresh')}<span>Refresh</span></button></div></div><div id="adminRewardStatus" class="admin-menu-status">กำลังโหลด Reward Links…</div><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr><th>จำนวนแก้ว</th><th>LINE URL</th><th>ลำดับ</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="adminRewardBody"><tr><td colspan="5">กำลังโหลด…</td></tr></tbody></table></div>`;
   try{const d=await adminAiRequest('GET');if(!d.success)throw new Error('อ่านข้อมูลไม่สำเร็จ');const rows=d.reward_links||[];const body=document.getElementById('adminRewardBody');if(body)body.innerHTML=rows.map(r=>`<tr><td>${Number(r.cups_required)}</td><td style="max-width:320px;overflow-wrap:anywhere"><a href="${escapeAdminOrderText(r.url)}" target="_blank" rel="noopener">${escapeAdminOrderText(r.url)}</a></td><td>${Number(r.sort_order)||0}</td><td>${r.is_active?'เปิด':'ปิด'}</td><td><button class="admin-orders-refresh" onclick="editAdminRewardLink('${r.id}')">แก้ไข</button> <button class="admin-orders-refresh" onclick="toggleAdminRewardLink('${r.id}',${!r.is_active})">${r.is_active?'ปิด':'เปิด'}</button> <button class="admin-orders-refresh" onclick="deleteAdminRewardLink('${r.id}')">ลบ</button></td></tr>`).join('')||'<tr><td colspan="5">ยังไม่มี Reward Link</td></tr>';const st=document.getElementById('adminRewardStatus');if(st)st.textContent=`โหลด Reward Links สำเร็จ ${rows.length} รายการ`;
   }catch(e){const st=document.getElementById('adminRewardStatus');if(st)st.textContent='โหลดไม่สำเร็จ: '+e.message;}
 }
@@ -3039,7 +3101,7 @@ function switchAdminOnlineTab(tab,scroll=true){
 // AI & LINE settings page: settings are persisted through the authenticated admin-ai Edge Function.
 async function renderAdminAiSettingsPage(){
  const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
- panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Settings</h3><div class="admin-online-note">ตั้งค่าเวลาเปิดร้านและข้อมูลการให้บริการ</div></div><button class="admin-orders-refresh" onclick="renderAdminAiSettingsPage()">↻ Refresh</button></div><div id="adminAiSettingsStatus" class="admin-menu-status">กำลังโหลดการตั้งค่า…</div><div id="adminAiSettingsBody"></div>`;
+ panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Settings</h3><div class="admin-online-note">ตั้งค่าเวลาเปิดร้านและข้อมูลการให้บริการ</div></div><button class="admin-orders-refresh" onclick="renderAdminAiSettingsPage()">${adminIconSvg('refresh')}<span>Refresh</span></button></div><div id="adminAiSettingsStatus" class="admin-menu-status">กำลังโหลดการตั้งค่า…</div><div id="adminAiSettingsBody"></div>`;
  try{const d=await adminAiRequest('GET');if(!d.success)throw new Error('โหลดการตั้งค่าไม่สำเร็จ');const host=document.getElementById('adminAiSettingsBody');if(!host)return;
  const schedule=d.store_schedule||{};const days=[['mon','จันทร์'],['tue','อังคาร'],['wed','พุธ'],['thu','พฤหัสบดี'],['fri','ศุกร์'],['sat','เสาร์'],['sun','อาทิตย์']];
  host.innerHTML=`<section class="bal-settings-section"><div class="bal-section-heading"><h3>เวลาเปิดร้าน</h3><span>STORE HOURS</span></div><div class="admin-online-note">เขตเวลา Asia/Bangkok · ตั้งค่าเวลารายวันและวันหยุด</div><div style="display:grid;gap:8px;margin-top:12px">${days.map(([k,label])=>{const x=schedule.weekly?.[k]||{enabled:true,open:'06:00',close:'13:30'};return `<div class="bal-schedule-row"><div class="bal-schedule-day"><b>${label}</b><input id="sched_${k}_enabled" type="checkbox" ${x.enabled?'checked':''} aria-label="เปิด ${label}"></div><label class="bal-time-field"><small>เปิด</small><input id="sched_${k}_open" type="time" value="${esc(x.open)}" class="field"></label><label class="bal-time-field"><small>ปิด</small><input id="sched_${k}_close" type="time" value="${esc(x.close)}" class="field"></label></div>`}).join('')}</div><button class="admin-orders-refresh" style="margin-top:12px" onclick="saveAdminStoreSchedule()">บันทึกเวลาเปิดร้าน</button></section>
@@ -3241,12 +3303,12 @@ function filterAdminOnlineMenu(){
     return (!q||hay.includes(q))&&(!cat||(d.category||'')===cat)&&(!status||(status==='active'?r.is_active:!r.is_active));
   });
   const tbody=document.getElementById('adminMenuTbody');if(!tbody)return;
-  tbody.innerHTML=rows.length?rows.map(r=>{const d=r.customer_menu_details||{};const on=!!r.is_active;const busy=adminOnlineMenuSavingIds.has(r.id);return `<tr><td><strong>${adminMenuEsc(r.name)}</strong><button type="button" class="admin-menu-edit" title="แก้ไขหมวดหมู่และวัตถุดิบ" aria-label="แก้ไข ${adminMenuEsc(r.name)}" onclick="openAdminMenuEditor('${adminMenuEsc(r.id)}')">✎</button></td><td>${adminMenuEsc(d.category||r.group_name||'—')}</td><td class="admin-menu-price">฿${adminMenuMoney(r.sale_price)}</td><td><div class="admin-menu-toggle"><label class="admin-menu-switch" title="${on?'เปิดแสดงบนเว็บไซต์':'ปิดซ่อนจากเว็บไซต์'}"><input type="checkbox" ${on?'checked':''} ${busy?'disabled':''} onchange="toggleAdminOnlineMenuStatus('${adminMenuEsc(r.id)}',this.checked)" aria-label="สลับสถานะแสดงบนเว็บไซต์"><span class="admin-menu-switch-track"></span></label><span class="admin-menu-switch-label">${busy?'กำลังบันทึก…':(on?'เปิด':'ปิด')}</span></div></td><td>${adminMenuEsc(d.ingredients||'—')}</td></tr>`}).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:25px">ไม่พบเมนูที่ค้นหา</td></tr>';
+  tbody.innerHTML=rows.length?rows.map(r=>{const d=r.customer_menu_details||{};const on=!!r.is_active;const busy=adminOnlineMenuSavingIds.has(r.id);return `<tr><td><strong>${adminMenuEsc(r.name)}</strong><button type="button" class="admin-menu-edit" title="แก้ไขหมวดหมู่และวัตถุดิบ" aria-label="แก้ไข ${adminMenuEsc(r.name)}" onclick="openAdminMenuEditor('${adminMenuEsc(r.id)}')">${adminIconSvg('edit')}</button></td><td>${adminMenuEsc(d.category||r.group_name||'—')}</td><td class="admin-menu-price">฿${adminMenuMoney(r.sale_price)}</td><td><div class="admin-menu-toggle"><label class="admin-menu-switch" title="${on?'เปิดแสดงบนเว็บไซต์':'ปิดซ่อนจากเว็บไซต์'}"><input type="checkbox" ${on?'checked':''} ${busy?'disabled':''} onchange="toggleAdminOnlineMenuStatus('${adminMenuEsc(r.id)}',this.checked)" aria-label="สลับสถานะแสดงบนเว็บไซต์"><span class="admin-menu-switch-track"></span></label><span class="admin-menu-switch-label">${busy?'กำลังบันทึก…':(on?'เปิด':'ปิด')}</span></div></td><td>${adminMenuEsc(d.ingredients||'—')}</td></tr>`}).join(''):'<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:25px">ไม่พบเมนูที่ค้นหา</td></tr>';
   const count=document.getElementById('adminMenuCount');if(count)count.textContent=`แสดง ${rows.length} / ${adminOnlineMenuRows.length} เมนู`;
 }
 async function renderAdminOnlineMenu(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
-  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Menu Management</h3><div class="admin-online-note">รายการเมนูสำหรับ Customer Website · ราคาอ้างอิงจาก Dashboard</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminOnlineMenu()">↻ Refresh</button></div>
+  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Menu Management</h3><div class="admin-online-note">รายการเมนูสำหรับ Customer Website · ราคาอ้างอิงจาก Dashboard</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminOnlineMenu()">${adminIconSvg('refresh')}<span>Refresh</span></button></div>
   <div class="admin-menu-toolbar"><input id="adminMenuSearch" class="field" type="search" placeholder="ค้นหาชื่อเมนู / วัตถุดิบ" oninput="filterAdminOnlineMenu()"><select id="adminMenuCategory" class="field" onchange="filterAdminOnlineMenu()"><option value="">ทุกหมวดหมู่</option></select><select id="adminMenuStatus" class="field" onchange="filterAdminOnlineMenu()"><option value="">ทุกสถานะ</option><option value="active">แสดงบนเว็บไซต์</option><option value="inactive">ซ่อนจากเว็บไซต์</option></select><span id="adminMenuCount" class="admin-menu-count"></span></div>
   <div id="adminMenuMessage" class="admin-menu-status">กำลังโหลดเมนูจาก Supabase…</div><div id="adminMenuEditorHost"></div><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr><th>ชื่อเมนู</th><th>หมวดหมู่</th><th>ราคาขาย</th><th>สถานะเว็บไซต์</th><th>วัตถุดิบ</th></tr></thead><tbody id="adminMenuTbody"><tr><td colspan="5">กำลังโหลด…</td></tr></tbody></table></div>
   <div class="admin-menu-readonly">ราคาอ่านจาก <b>menus.sale_price</b> เท่านั้น · แก้ไขหมวดหมู่และวัตถุดิบได้ · สวิตช์ควบคุมการแสดงบน Customer Website</div>`;
@@ -3303,7 +3365,7 @@ function renderAdminOnlineCustomers(){
   panel.innerHTML=`
     <div class="admin-orders-headline">
       <div><h3>Customer Management</h3><div class="admin-online-note">ฐานข้อมูลลูกค้า · ข้อมูลติดต่อและช่องทางเท่านั้น</div></div>
-      <button class="admin-orders-refresh" type="button" onclick="loadAdminOnlineCustomers(true)">↻ Refresh</button>
+      <button class="admin-orders-refresh" type="button" onclick="loadAdminOnlineCustomers(true)">${adminIconSvg('refresh')}<span>Refresh</span></button>
     </div>
     <div class="admin-customer-kpis">
       <div class="admin-customer-kpi"><span>ลูกค้าทั้งหมด</span><b id="adminCustomerTotal">—</b></div>
@@ -3389,7 +3451,7 @@ let adminOnlineOrdersLoading=false;
 async function renderAdminOrders(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
   panel.innerHTML=`
-    <div class="admin-orders-headline"><div><h3>Order Management</h3><div class="admin-online-note">รวมออเดอร์ Website, LINE และใบจดกระดาษในหน้าเดียว</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="admin-orders-refresh" type="button" onclick="previewAdminOrderDetail()">ดูตัวอย่างรายละเอียด</button><button class="admin-orders-refresh" type="button" onclick="renderAdminOrders()">↻ Refresh</button></div></div>
+    <div class="admin-orders-headline"><div><h3>Order Management</h3><div class="admin-online-note">รวมออเดอร์ Website, LINE และใบจดกระดาษในหน้าเดียว</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="admin-orders-refresh" type="button" onclick="previewAdminOrderDetail()">ดูตัวอย่างรายละเอียด</button><button class="admin-orders-refresh" type="button" onclick="renderAdminOrders()">${adminIconSvg('refresh')}<span>Refresh</span></button></div></div>
     <div class="admin-orders-summary">
       <div class="admin-orders-stat"><span>ออเดอร์ที่โหลด</span><b id="adminOrdersTotal">—</b></div>
       <div class="admin-orders-stat"><span>รอยืนยัน</span><b id="adminOrdersPending">—</b></div>
@@ -3397,7 +3459,7 @@ async function renderAdminOrders(){
       <div class="admin-orders-stat"><span>ส่ง Loyverse ไม่สำเร็จ</span><b id="adminOrdersSyncFailed">—</b></div>
     </div>
     <div class="admin-orders-queue" style="display:flex;gap:8px;flex-wrap:wrap;margin:12px 0">
-      <button class="admin-orders-refresh" type="button" onclick="setAdminOrderQuickFilter('review')">⚑ รอตรวจสอบ LINE / กระดาษ</button>
+      <button class="admin-orders-refresh" type="button" onclick="setAdminOrderQuickFilter('review')">${adminIconSvg('filter')}<span>รอตรวจสอบ LINE / กระดาษ</span></button>
       <button class="admin-orders-refresh" type="button" onclick="setAdminOrderQuickFilter('website')">Website อัตโนมัติ</button>
       <button class="admin-orders-refresh" type="button" onclick="setAdminOrderQuickFilter('all')">ทั้งหมด</button>
     </div>
@@ -3483,7 +3545,7 @@ function previewAdminOrderDetail(){
     {name:'Iced Americano',detail:'หวาน 50% · ไม่เพิ่มช็อต',qty:2,unit:70,total:140},
     {name:'Matcha Latte',detail:'หวาน 25%',qty:1,unit:85,total:85}
   ];
-  box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ตัวอย่างรายละเอียดออเดอร์</h3><div class="admin-online-note">DEMO PREVIEW · ข้อมูลจำลอง ไม่ใช่รายการสั่งซื้อจริง</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ✕</button></div>
+  box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ตัวอย่างรายละเอียดออเดอร์</h3><div class="admin-online-note">DEMO PREVIEW · ข้อมูลจำลอง ไม่ใช่รายการสั่งซื้อจริง</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div>
   <div class="admin-order-detail-grid">
     ${adminOrderCell('เลขออเดอร์','ตัวอย่าง BL-00125')}${adminOrderCell('วันที่','ตัวอย่าง 04/11/2026 09:30')}${adminOrderCell('ช่องทาง','Website')}
     ${adminOrderCell('ชื่อลูกค้า','คุณลูกค้าตัวอย่าง')}${adminOrderCell('เบอร์โทร','08X-XXX-XXXX')}${adminOrderCell('ประเภท','รับที่ร้าน')}
@@ -3510,8 +3572,8 @@ async function openAdminOrderDetail(orderId){
     const itemRows=items.length?items.map(x=>`<tr><td>${escapeAdminOrderText(x.menu_name_snapshot||'—')}<div class="admin-online-note">${escapeAdminOrderText(x.note||'')}</div>${x.modifiers?`<div class="admin-online-note">ตัวเลือก: ${escapeAdminOrderText(typeof x.modifiers==='string'?x.modifiers:JSON.stringify(x.modifiers))}</div>`:''}</td><td>${Number(x.quantity||0)}</td><td>${adminOrderMoney(x.unit_price)}</td><td>${adminOrderMoney(x.line_total)}</td></tr>`).join(''):'<tr><td colspan="4">ไม่มีรายการสินค้า</td></tr>';
     const paymentRows=payments.length?payments.map(x=>`<tr><td>${escapeAdminOrderText(x.payment_method||'—')}</td><td>${escapeAdminOrderText(x.payment_status||'—')}</td><td>${adminOrderMoney(x.amount)}</td><td>${escapeAdminOrderText(x.provider_transaction_ref||'—')}</td><td>${escapeAdminOrderText(x.proof_storage_path?'มีไฟล์สลิป (รอระบบลิงก์แบบปลอดภัย)':'—')}</td><td>${escapeAdminOrderText(adminOrderDate(x.verified_at))}</td></tr>`).join(''):'<tr><td colspan="6">ยังไม่มีข้อมูลการชำระเงิน</td></tr>';
     const eventRows=events.length?events.map(x=>`<div class="admin-order-event"><b>${escapeAdminOrderText(x.event_type||'เปลี่ยนแปลง')}</b><span>${escapeAdminOrderText(adminOrderDate(x.created_at))} · ${escapeAdminOrderText(x.actor_type||'ระบบ')}</span>${x.note?`<div>${escapeAdminOrderText(x.note)}</div>`:''}<div class="admin-online-note">${escapeAdminOrderText(JSON.stringify({old:x.old_value??null,new:x.new_value??null}))}</div></div>`).join(''):'<div class="admin-online-note">ยังไม่มีประวัติเหตุการณ์</div>';
-    box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ✕</button></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',o.customer_name_snapshot)}${adminOrderCell('เบอร์โทร',o.customer_phone_snapshot)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table><h4>การชำระเงิน</h4><div style="overflow:auto"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div>${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div>${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4>${eventRows}`;
-  }catch(err){box.innerHTML=`<div class="admin-order-detail-head"><b>โหลดรายละเอียดไม่สำเร็จ</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ✕</button></div><div class="admin-online-note">${escapeAdminOrderText(err.message||err)}</div>`;}
+    box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',o.customer_name_snapshot)}${adminOrderCell('เบอร์โทร',o.customer_phone_snapshot)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table><h4>การชำระเงิน</h4><div style="overflow:auto"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div>${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div>${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4>${eventRows}`;
+  }catch(err){box.innerHTML=`<div class="admin-order-detail-head"><b>โหลดรายละเอียดไม่สำเร็จ</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-online-note">${escapeAdminOrderText(err.message||err)}</div>`;}
 }
 function closeAdminOrderDetail(){const box=document.getElementById('adminOrderDetail');if(box){box.classList.remove('open');box.innerHTML='';}}
 
@@ -3519,7 +3581,7 @@ function toggleAdminGroup(group){
   const map={sales:['overview','orders'],catalog:['menu','customers'],finance:['payments','rewards'],system:['settings','ai-line','faq','broadcast','logs']};
   const btn=document.querySelector('[data-admin-group="'+group+'"]');if(!btn)return;
   const expanded=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!expanded));
-  btn.textContent=({sales:'การขาย',catalog:'ข้อมูลร้าน',finance:'การเงินและสมาชิก',system:'ตั้งค่าระบบ'})[group]+(expanded?'⌄':'⌃');
+  btn.innerHTML=({sales:'การขาย',catalog:'ข้อมูลร้าน',finance:'การเงินและสมาชิก',system:'ตั้งค่าระบบ'})[group]+adminIconSvg('chevron');btn.classList.toggle('is-collapsed',expanded);
   const hiddenGroups=[...document.querySelectorAll('.admin-online-tab')].filter(x=>map[group].includes(x.dataset.adminTab));
   hiddenGroups.forEach(x=>x.style.display=expanded?'none':'');
 }
