@@ -1868,7 +1868,7 @@ function effectivePriceFromHistory(menu,history,date){
   return price;
 }
 async function getMenus(forDate=iso(today)){
-  const r=await db.from('menus').select('id,name,sale_price,avg_ingredient_cost,is_active').eq('is_active',true).order('name');
+  const r=await db.from('menus').select('id,name,sale_price,avg_ingredient_cost,is_active').order('name');
   if(r.error)throw r.error;
   const menus=r.data||[];
   if(!menus.length)return menus;
