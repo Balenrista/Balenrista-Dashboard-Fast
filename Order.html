@@ -820,13 +820,23 @@
   <script src="./balenrista-customer-adapter.js"></script>
   <script>
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwq2qxAuzytNWf70UhAdSvTs6YHKUU1akIuVioGkZ7GGAMX4UdxxvHNGfUlWTS4ozz0RA/exec";
-    // Public client key only. Never put Supabase service_role here.
+    // Public read-only key for the Customer Website menu catalog.
+    // Do not configure the order API with a publishable key: order submission
+    // requires its separately provisioned API credential and remains unchanged.
     const CUSTOMER_ORDERS_API_URL = 'https://iftsmcgvperrhjjfnhqa.supabase.co';
-    const CUSTOMER_ORDERS_ANON_KEY = 'PASTE_SUPABASE_ANON_KEY_HERE';
     const SUPABASE_MENU_PUBLIC_KEY = 'sb_publishable_AezycpnUmhgvMWJlUsg2qA_S3JbiR0';
     let checkoutSubmitting = false;
     let checkoutIdempotencyKey = null;
-    try { if (window.BalenristaCustomerAdapter) BalenristaCustomerAdapter.configure({apiUrl:CUSTOMER_ORDERS_API_URL, anonKey:SUPABASE_MENU_PUBLIC_KEY}); } catch(e) { console.error('Customer API config error',e); } 
+    try {
+      if (!window.BalenristaCustomerAdapter) throw new Error('ไม่พบ balenrista-customer-adapter.js');
+      BalenristaCustomerAdapter.configureMenuRead({
+        apiUrl: CUSTOMER_ORDERS_API_URL,
+        anonKey: SUPABASE_MENU_PUBLIC_KEY
+      });
+      console.info('Balenrista menu catalog configured for Supabase read');
+    } catch (e) {
+      console.error('Customer menu catalog config error:', e);
+    }
 
         // 🌟 คลังเก็บ SVG ของคุณ (เอาโค้ด SVG ของคุณมาแปะในเครื่องหมาย ` ` ได้เลย)
     const customSVGs = {
@@ -920,7 +930,10 @@
           if (!response.ok) throw new Error('โหลดข้อมูลหน้าร้านไม่สำเร็จ');
           return response.json();
         }),
-        BalenristaCustomerAdapter.loadMenuCatalog()
+        (async () => {
+          if (!window.BalenristaCustomerAdapter) throw new Error('ไม่พบไฟล์ balenrista-customer-adapter.js');
+          return BalenristaCustomerAdapter.loadMenuCatalog();
+        })()
       ])
         .then(([storeData, supabaseCatalog]) => {
           const liveData = BalenristaCustomerAdapter.mergeMenuCatalog(storeData, supabaseCatalog);
