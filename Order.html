@@ -686,9 +686,7 @@
       </div>
 
       <div class="contact-hours">
-        <strong>เวลาเปิดร้าน 06:00–13:00 น.</strong><br>
-        วันอังคาร–อาทิตย์<br>
-        วันจันทร์เปิดเฉพาะวันหยุดนักขัตฤกษ์หรือวันหยุดชดเชย
+        <strong>กำลังอ่านเวลาเปิดร้านจาก Admin…</strong>
       </div>
     </section>
   </div>
@@ -819,7 +817,6 @@
   <!-- Javascript ด้านล่างนี้คือของเดิม 100% ไม่ได้แตะต้องครับ -->
   <script src="./balenrista-customer-adapter.js"></script>
   <script>
-    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwq2qxAuzytNWf70UhAdSvTs6YHKUU1akIuVioGkZ7GGAMX4UdxxvHNGfUlWTS4ozz0RA/exec";
     // Public read-only key for the Customer Website menu catalog.
     // Do not configure the order API with a publishable key: order submission
     // requires its separately provisioned API credential and remains unchanged.
@@ -902,7 +899,72 @@
 
     let allMenus = []; 
     let cart = []; 
-    let shopIsOpen = true; 
+    let shopIsOpen = false; // Fail closed until the Admin schedule is confirmed.
+    let storeSchedule = null;
+    let storeScheduleStatus = null;
+    const STORE_SCHEDULE_ENDPOINT = `${CUSTOMER_ORDERS_API_URL}/functions/v1/admin-ai?public=store-hours`;
+
+    async function loadStoreScheduleStatus() {
+      const response = await fetch(STORE_SCHEDULE_ENDPOINT, {
+        method: 'GET',
+        headers: { apikey: SUPABASE_MENU_PUBLIC_KEY, Accept: 'application/json' },
+        cache: 'no-store'
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.success !== true || !result.schedule) {
+        throw new Error(result.message || result.error || `อ่านเวลาเปิดร้านไม่สำเร็จ (HTTP ${response.status})`);
+      }
+      storeSchedule = result.schedule;
+      storeScheduleStatus = result;
+      shopIsOpen = result.is_open === true;
+      updateStoreHoursDisplay(result);
+      updateCartStatus();
+      return result;
+    }
+
+    function getBangkokDateParts(dateValue) {
+      const d = new Date(dateValue);
+      if (Number.isNaN(d.getTime())) return null;
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Bangkok', year: 'numeric', month: '2-digit', day: '2-digit',
+        weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+      }).formatToParts(d);
+      const get = k => parts.find(x => x.type === k)?.value || '';
+      return { date: `${get('year')}-${get('month')}-${get('day')}`, time: `${get('hour')}:${get('minute')}`, day: get('weekday').toLowerCase().slice(0,3) };
+    }
+
+    function isPickupTimeAllowed(value) {
+      if (!storeSchedule || !value) return false;
+      const selected = new Date(value);
+      const parts = getBangkokDateParts(selected);
+      if (!parts) return false;
+      const holidays = Array.isArray(storeSchedule.holidays) ? storeSchedule.holidays : [];
+      if (holidays.some(h => parts.date >= h.start_date && parts.date <= h.end_date)) return false;
+      const special = (Array.isArray(storeSchedule.special_hours) ? storeSchedule.special_hours : []).find(h => h.date === parts.date);
+      let hours;
+      if (special) {
+        if (special.enabled === false) return false;
+        hours = special;
+      } else {
+        hours = storeSchedule.weekly?.[parts.day];
+        if (!hours || hours.enabled !== true) return false;
+      }
+      return !!hours.open && !!hours.close && parts.time >= hours.open && parts.time < hours.close;
+    }
+
+    function updateStoreHoursDisplay(status) {
+      const host = document.querySelector('.contact-hours');
+      if (!host) return;
+      const schedule = status?.schedule || storeSchedule;
+      const date = status?.date || '';
+      const reason = status?.reason || '';
+      let label = 'กำลังอ่านเวลาเปิดร้านจาก Admin…';
+      if (reason === 'holiday' || reason === 'special_closed' || reason === 'weekly_closed') label = 'วันนี้ร้านหยุดให้บริการ';
+      else if (status?.open && status?.close) label = `เวลาเปิดวันนี้ ${status.open}–${status.close} น.`;
+      else if (status?.is_open === false) label = 'ขณะนี้ร้านปิดทำการ';
+      else if (status?.is_open === true) label = 'ขณะนี้ร้านเปิดให้บริการ';
+      host.innerHTML = `<strong>${label}</strong><br><span>อ้างอิงเวลาและวันหยุดจาก Admin · ${date}</span>`;
+    }
     let currentCategory = "";
     
     let lineUserId = "U_ONLINE_CUSTOMER";
@@ -912,7 +974,7 @@
     let currentOptions = { sweetness: "", topLayer: "", topLayerPrice: 0, delicious: "", deliciousPrice: 0, icePack: "ไม่แยกน้ำแข็ง" };
 
     window.onload = function() {
-      liff.init({ liffId: "2010475919-EKZVGpBS" }) 
+      liff.init({ liffId: "2010475919-EKZVGpBS" })
         .then(() => {
           if (liff.isLoggedIn()) {
             liff.getProfile().then(profile => {
@@ -921,28 +983,29 @@
               lineDisplayName = profile.displayName;
             });
           }
-        }).catch(err => console.log("LIFF บอสทำงานนอกแอป LINE ข้อมูลจะใช้โหมดทดสอบภายนอก"));
+        }).catch(err => console.log("LIFF ทำงานนอกแอป LINE ข้อมูลจะใช้โหมดทดสอบภายนอก"));
 
-      // Load presentation metadata from the existing endpoint, then replace
-      // every displayed base price with the current active price from Supabase.
       Promise.all([
-        fetch(`${WEB_APP_URL}?action=get_customer_data`, { cache: 'no-store' }).then(response => {
-          if (!response.ok) throw new Error('โหลดข้อมูลหน้าร้านไม่สำเร็จ');
-          return response.json();
-        }),
-        (async () => {
-          if (!window.BalenristaCustomerAdapter) throw new Error('ไม่พบไฟล์ balenrista-customer-adapter.js');
-          return BalenristaCustomerAdapter.loadMenuCatalog();
-        })()
+        BalenristaCustomerAdapter.loadMenuCatalog(),
+        loadStoreScheduleStatus()
       ])
-        .then(([storeData, supabaseCatalog]) => {
-          const liveData = BalenristaCustomerAdapter.mergeMenuCatalog(storeData, supabaseCatalog);
-          shopIsOpen = liveData.isOpen;
-          initializeStore(liveData);
+        .then(([supabaseCatalog]) => {
+          initializeStore(supabaseCatalog);
+          // Keep the storefront synchronized with Admin changes and opening/closing time.
+          window.setInterval(() => {
+            loadStoreScheduleStatus().catch(err => {
+              console.error('Store schedule refresh error:', err);
+              shopIsOpen = false;
+              updateCartStatus();
+              updateStoreHoursDisplay({ is_open: false, reason: 'schedule_unavailable' });
+            });
+          }, 60000);
         })
         .catch(err => {
-          console.error('Customer menu load error:', err);
-          document.getElementById('loading').innerText = 'โหลดเมนู/ราคาจากระบบกลางไม่สำเร็จ กรุณาลองใหม่อีกครั้ง';
+          console.error('Customer Supabase load error:', err);
+          shopIsOpen = false;
+          const loading = document.getElementById('loading');
+          if (loading) loading.innerText = 'โหลดเมนูหรือเวลาเปิดร้านจาก Supabase ไม่สำเร็จ จึงปิดรับคำสั่งซื้อชั่วคราว กรุณาลองใหม่';
         });
     };
 
@@ -1398,10 +1461,8 @@ else {
         if (!pickupAt) { alert('กรุณาเลือกวันและเวลารับเครื่องดื่ม'); return; }
         const pickupDate = new Date(pickupAt);
         const now = new Date();
-        const hour = pickupDate.getHours();
-        const minute = pickupDate.getMinutes();
         if (Number.isNaN(pickupDate.getTime()) || pickupDate <= now) { alert('กรุณาเลือกเวลารับที่ยังมาไม่ถึง'); return; }
-        if (hour < 6 || hour > 13 || (hour === 13 && minute > 0)) { alert('เวลารับสินค้าต้องอยู่ระหว่าง 06:00–13:00 น.'); return; }
+        if (!isPickupTimeAllowed(pickupAt)) { alert('เวลาที่เลือกอยู่นอกเวลาเปิดร้านหรือเป็นวันหยุด กรุณาเลือกวันและเวลาตามตารางของร้าน'); return; }
       }
       const totalCups = cart.reduce((n,item) => n + Number(item.qty || 0), 0);
       if (currentOrderType === 'delivery' && totalCups < 4) { alert('บริการจัดส่งต้องสั่งขั้นต่ำ 4 แก้ว'); return; }
@@ -1458,62 +1519,10 @@ else {
     }
 
     async function loadOrderHistory() {
-    const list = document.getElementById('historyList');
-    if (!lineUserId || lineUserId === "U_ONLINE_CUSTOMER") return;
-    
-    list.innerHTML = '<div style="text-align:center; padding: 20px;">Loading...</div>'; 
-    
-    try {
-        const res = await fetch(WEB_APP_URL + "?action=get_history&userId=" + lineUserId);
-        const data = await res.json();
-        
-        if (data.length === 0) { 
-            list.innerHTML = '<div style="text-align:center; padding: 20px;">ไม่มีประวัติการสั่งซื้อ</div>'; 
-            return; 
-        }
-        
-        list.innerHTML = data.map(o => {
-            let d = new Date(o.date);
-            let items = JSON.parse(o.summary); 
-            
-            let grandTotal = 0; 
-
-            let tableRows = items.map(item => {
-                let details = [];
-                if(item.sweetness) details.push(item.sweetness);
-                if(item.topLayer) details.push(item.topLayer);
-                if(item.delicious) details.push(item.delicious);
-                if(item.packaging) details.push(item.packaging);
-                let detailsText = details.join(' | ');
-
-                let totalRowPrice = item.price * item.quantity;
-                grandTotal += totalRowPrice; 
-
-                return `
-                <div style="padding:12px 0; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                    <div style="display:flex; justify-content:space-between; font-size:13px;">
-                        <div style="font-weight:600; color:var(--col-active);">${item.name}</div>
-                        <div style="color:#4CAF50; font-weight:700;">${item.quantity} x ${item.price}฿ = ${totalRowPrice}฿</div>
-                    </div>
-                    <div style="font-size:11px; color:var(--text-muted); margin-top:4px;">${detailsText}</div>
-                </div>`;
-            }).join('');
-
-            return `
-            <div style="background:var(--bg-main); border-radius:16px; padding:20px; margin-bottom:20px; box-shadow: var(--shadow-in);">
-                <div style="font-size:12px; color:var(--text-muted); margin-bottom:12px; font-weight: 500;">
-                    ${d.toLocaleDateString('th-TH')} ${d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}
-                </div>
-                ${tableRows}
-                <div style="text-align:right; margin-top:16px; font-size:15px; font-weight:700; color:var(--col-active);">
-                    ยอดรวมทั้งสิ้น: <span style="color:#4CAF50;">${grandTotal.toLocaleString()}฿</span>
-                </div>
-            </div>`;
-        }).join('');
-    } catch (e) { 
-        list.innerHTML = '<div style="text-align:center; color:#ff6b6b; padding: 20px;">ไม่สามารถโหลดประวัติได้</div>'; 
+      const list = document.getElementById('historyList');
+      if (!list) return;
+      list.innerHTML = '<div style="text-align:center;padding:20px;">ประวัติคำสั่งซื้อจะเปิดให้ใช้งานเมื่อเชื่อมต่อประวัติผ่าน Supabase เรียบร้อย</div>';
     }
-}
       // สร้างตัวแปรเก็บรูปแบบออเดอร์ และขั้นต่ำจำนวนแก้ว
   let currentOrderType = ''; 
   let minimumCupsRequired = 1; // ค่าเริ่มต้น
