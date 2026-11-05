@@ -698,63 +698,9 @@
       <button class="close-sheet" onclick="closeOptionsSheet()">✕</button>
     </div>
     <div class="sheet-content">
-      
-      <div class="option-group-title">ระดับความหวาน <span class="required">* บังคับเลือก</span></div>
-      <div class="option-selector-grid" id="sweetnessGrid">
-        <button class="opt-btn" onclick="selectOption('sweetness', this, 'หวานตัดขา (200%)', 0)">หวานตัดขา (200%)</button>
-        <button class="opt-btn" onclick="selectOption('sweetness', this, 'เพิ่มหวาน (125%)', 0)">เพิ่มหวาน (125%)</button>
-        <button class="opt-btn active" onclick="selectOption('sweetness', this, 'หวานปกติ (100%)', 0)">หวานปกติ (100%)</button>
-        <button class="opt-btn" onclick="selectOption('sweetness', this, 'หวานน้อย (75%)', 0)">หวานน้อย (75%)</button>
-        <button class="opt-btn" onclick="selectOption('sweetness', this, 'หวานกลาง (50%)', 0)">หวานกลาง (50%)</button>
-        <button class="opt-btn" onclick="selectOption('sweetness', this, 'หวานน้อยมากๆ (25%)', 0)">หวานน้อยมากๆ (25%)</button>
-        <button class="opt-btn" onclick="selectOption('sweetness', this, 'หวานจุ๊บจิ๊บ (10%)', 0)">หวานจุ๊บจิ๊บ (10%)</button>
-        <button class="opt-btn" onclick="selectOption('sweetness', this, 'ไม่หวาน (0%)', 0)">ไม่หวาน (0%)</button>
+      <div id="modifierGroupsContainer">
+        <div style="color:var(--text-muted);padding:12px;text-align:center;">กำลังโหลดตัวเลือก...</div>
       </div>
-
-      <div id="topLayerSection" style="display: none;">
-        <div class="option-group-title">Top Layer ซอสราดด้านบน <span style="color:var(--text-muted); font-weight:400; text-transform: none;">(เลือกได้ 1 อย่าง)</span></div>
-        <div class="option-selector-grid" id="topLayerGrid">
-          <button class="opt-btn" onclick="selectOption('topLayer', this, 'Coco', 0)">Coco</button>
-          <button class="opt-btn" onclick="selectOption('topLayer', this, 'Green Tea', 0)">Green Tea</button>
-          <button class="opt-btn" onclick="selectOption('topLayer', this, 'Thai Tea', 0)">Thai Tea</button>
-          <button class="opt-btn" onclick="selectOption('topLayer', this, 'Matcha', 10)">Matcha (+10฿)</button> 
-        </div>
-      </div>
-
-      <div id="deliciousSection" style="display: none;">
-        <div class="option-group-title">เพิ่มความอร่อย <span style="color:var(--text-muted); font-weight:400; text-transform: none;">(เลือกได้ 1 อย่าง)</span></div>
-        <div class="option-selector-grid" id="deliciousGrid">
-          <button class="opt-btn with-img" onclick="selectOption('delicious', this, 'Chocolate', 10)">
-            <img src="./Chocolate.png" alt="Chocolate">
-            <span>Chocolate (+10฿)</span>
-          </button>
-          <button class="opt-btn with-img" onclick="selectOption('delicious', this, 'Cocoflower (น้ำช่อดอกมะพร้าว)', 10)">
-            <img src="./Coconutflower.png" alt="Coconutflower">
-            <span>น้ำช่อดอกมะพร้าว (+10฿)</span>
-          </button>
-          <button class="opt-btn with-img" onclick="selectOption('delicious', this, 'Orange', 10)">
-            <img src="./Orange.png" alt="Orange">
-            <span>Orange (+10฿)</span>
-          </button>
-          <button class="opt-btn with-img" onclick="selectOption('delicious', this, 'Milk', 10)">
-            <img src="./Milk.png" alt="Milk">
-            <span>Milk (+10฿)</span>
-          </button>
-          <button class="opt-btn with-img" onclick="selectOption('delicious', this, 'Coffee', 10)">
-            <img src="./Coffee.png" alt="Coffee">
-            <span>Coffee (+10฿)</span>
-          </button>
-        </div>
-      </div>
-
-      <div id="icePackSection" style="display: none;">
-        <div class="option-group-title">การบรรจุน้ำแข็ง</div>
-        <div class="option-selector-grid" id="icePackGrid">
-          <button class="opt-btn active" onclick="selectOption('icePack', this, 'ไม่แยกน้ำแข็ง', 0)">ไม่แยกน้ำแข็ง</button>
-          <button class="opt-btn" onclick="selectOption('icePack', this, 'แยกน้ำแข็ง', 0)">แยกน้ำแข็ง</button>
-        </div>
-      </div>
-
     </div>
     <div class="sheet-footer">
       <button class="confirm-btn" id="addCartBtn" onclick="confirmAddToCart()">ใส่ตะกร้า</button>
@@ -817,22 +763,22 @@
   <!-- Javascript ด้านล่างนี้คือของเดิม 100% ไม่ได้แตะต้องครับ -->
   <script src="./balenrista-customer-adapter.js"></script>
   <script>
-    // Legacy anon key for public read-only Customer Website menu catalog access.
+    // Public read-only key for the Customer Website menu catalog.
     // Do not configure the order API with a publishable key: order submission
     // requires its separately provisioned API credential and remains unchanged.
     const CUSTOMER_ORDERS_API_URL = 'https://iftsmcgvperrhjjfnhqa.supabase.co';
-    const SUPABASE_MENU_PUBLIC_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmdHNtY2d2cGVycmhqamZuaHFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDM0ODksImV4cCI6MjEwNTQxOTQ4OX0.bWs1Vg2tICRWvHghEAJNFRVVxnhAJNy8ShWYhSj5tMg';
+    const SUPABASE_MENU_PUBLIC_KEY = 'sb_publishable_AezycpnUmhgvMWJlUsg2qA_S3JbiR0';
     let checkoutSubmitting = false;
     let checkoutIdempotencyKey = null;
     try {
       if (!window.BalenristaCustomerAdapter) throw new Error('ไม่พบ balenrista-customer-adapter.js');
-      BalenristaCustomerAdapter.configureMenuRead({
+      BalenristaCustomerAdapter.configure({
         apiUrl: CUSTOMER_ORDERS_API_URL,
         anonKey: SUPABASE_MENU_PUBLIC_KEY
       });
-      console.info('Balenrista menu catalog configured for Supabase read');
+      console.info('Balenrista Customer API configured');
     } catch (e) {
-      console.error('Customer menu catalog config error:', e);
+      console.error('Customer API config error:', e);
     }
 
         // 🌟 คลังเก็บ SVG ของคุณ (เอาโค้ด SVG ของคุณมาแปะในเครื่องหมาย ` ` ได้เลย)
@@ -902,20 +848,11 @@
     let shopIsOpen = false; // Fail closed until the Admin schedule is confirmed.
     let storeSchedule = null;
     let storeScheduleStatus = null;
-    const STORE_SCHEDULE_ENDPOINT = `${CUSTOMER_ORDERS_API_URL}/functions/v1/admin-ai?public=store-hours`;
-
     async function loadStoreScheduleStatus() {
-      // This Admin AI endpoint is explicitly public (public=store-hours).
-      // Do not attach the browser Publishable Key here; the direct public
-      // endpoint test succeeds without it. Keep the key for Supabase REST reads.
-      const response = await fetch(STORE_SCHEDULE_ENDPOINT, {
-        method: 'GET',
-        headers: { Accept: 'application/json' },
-        cache: 'no-store'
-      });
-      const result = await response.json().catch(() => ({}));
-      if (!response.ok || result.success !== true || !result.schedule) {
-        throw new Error(result.message || result.error || `อ่านเวลาเปิดร้านไม่สำเร็จ (HTTP ${response.status})`);
+      if (!window.BalenristaCustomerAdapter) throw new Error('ไม่พบ Customer API Adapter');
+      const result = await BalenristaCustomerAdapter.loadStoreStatus();
+      if (result.success !== true || !result.schedule) {
+        throw new Error(result.message || result.error || 'อ่านเวลาเปิดร้านไม่สำเร็จ');
       }
       storeSchedule = result.schedule;
       storeScheduleStatus = result;
@@ -974,7 +911,16 @@
     let lineDisplayName = "ลูกค้าออนไลน์";
     
     let selectedMenu = null;
-    let currentOptions = { sweetness: "", topLayer: "", topLayerPrice: 0, delicious: "", deliciousPrice: 0, icePack: "ไม่แยกน้ำแข็ง" };
+    let currentOptions = { selections: [] };
+    let customerCatalog = { menus: [], categories: [], modifiers: { lists: [], options: [], rules: [] } };
+    const MODIFIER_GROUP_CONFIG = {
+      "4da89f14-4ff0-4ad0-ba32-335a80d1d6a7": { key: "ingredient", multi: true },
+      "8a07a2e0-1910-47e2-8061-3201ecb34949": { key: "ice", multi: false },
+      "3168e4ba-9342-4d72-90c6-5d595dd3d3d0": { key: "top_layer", multi: false },
+      "d5f8f0e6-0e80-4be7-83cc-1cd0c6a43f9d": { key: "sweetness", multi: false },
+      "ed38b38e-5abd-40ce-8065-2eec4d5ce8ec": { key: "extraction", multi: false },
+      "55932bef-cb7d-4396-9755-31e942d9e80b": { key: "additional", multi: true }
+    };
 
     function showStartupDiagnostic(message) {
       let panel = document.getElementById('startupDiagnostic');
@@ -1002,46 +948,61 @@
           }
         }).catch(err => console.log("LIFF ทำงานนอกแอป LINE ข้อมูลจะใช้โหมดทดสอบภายนอก"));
 
-      // Load menu and Admin hours independently so the page reveals the exact failing service.
+      // Load the public catalog and store status through the dedicated Customer API.
       Promise.allSettled([
         BalenristaCustomerAdapter.loadMenuCatalog(),
         loadStoreScheduleStatus()
       ]).then(([menuResult, scheduleResult]) => {
         const diagnostics = [];
-
         if (menuResult.status === 'fulfilled') {
           initializeStore(menuResult.value);
         } else {
-          console.error('Menu catalog load error:', menuResult.reason);
-          diagnostics.push(`โหลดเมนูจาก Supabase ไม่สำเร็จ: ${menuResult.reason?.message || menuResult.reason}`);
+          console.error('Customer catalog load error:', menuResult.reason);
+          diagnostics.push(`โหลดเมนูจาก Customer API ไม่สำเร็จ: ${menuResult.reason?.message || menuResult.reason}`);
         }
-
         if (scheduleResult.status === 'rejected') {
           console.error('Store schedule load error:', scheduleResult.reason);
-          shopIsOpen = false; // Fail closed: never accept orders without confirmed Admin hours.
+          shopIsOpen = false;
           storeSchedule = null;
           storeScheduleStatus = null;
           updateCartStatus();
           updateStoreHoursDisplay({ is_open: false, reason: 'schedule_unavailable' });
-          diagnostics.push(`อ่านเวลาเปิดร้านจาก Admin ไม่สำเร็จ: ${scheduleResult.reason?.message || scheduleResult.reason}`);
+          diagnostics.push(`อ่านเวลาเปิดร้านจาก Customer API ไม่สำเร็จ: ${scheduleResult.reason?.message || scheduleResult.reason}`);
         }
+        if (diagnostics.length) showStartupDiagnostic(diagnostics.join('\\n'));
 
-        if (diagnostics.length) showStartupDiagnostic(diagnostics.join('\n'));
-
-        // Keep checking Admin hours even if the first request failed.
-        window.setInterval(() => {
-          loadStoreScheduleStatus().then(() => {
+        // Refresh catalog and schedule so Admin changes reach the storefront.
+        window.setInterval(async () => {
+          try {
+            const freshCatalog = await BalenristaCustomerAdapter.loadMenuCatalog();
+            const activeCategory = currentCategory;
+            customerCatalog = freshCatalog;
+            allMenus = freshCatalog.menus || [];
+            renderCategories(freshCatalog.categories || []);
+            if (activeCategory && freshCatalog.categories.some(x => x.name === activeCategory)) {
+              filterMenu(activeCategory);
+            } else if (freshCatalog.categories?.length) {
+              filterMenu(freshCatalog.categories[0].name);
+            } else {
+              renderMenus(allMenus);
+            }
             const panel = document.getElementById('startupDiagnostic');
-            if (panel && menuResult.status === 'fulfilled') panel.style.display = 'none';
-          }).catch(err => {
+            if (panel) panel.style.display = 'none';
+          } catch (err) {
+            console.error('Catalog refresh error:', err);
+            showStartupDiagnostic(`อัปเดตเมนูจาก Customer API ไม่สำเร็จ: ${err?.message || err}`);
+          }
+          try {
+            await loadStoreScheduleStatus();
+          } catch (err) {
             console.error('Store schedule refresh error:', err);
             shopIsOpen = false;
             storeSchedule = null;
             storeScheduleStatus = null;
             updateCartStatus();
             updateStoreHoursDisplay({ is_open: false, reason: 'schedule_unavailable' });
-            showStartupDiagnostic(`อ่านเวลาเปิดร้านจาก Admin ไม่สำเร็จ: ${err?.message || err}`);
-          });
+            showStartupDiagnostic(`อ่านเวลาเปิดร้านจาก Customer API ไม่สำเร็จ: ${err?.message || err}`);
+          }
         }, 60000);
       });
     };
@@ -1053,8 +1014,9 @@
       document.getElementById('menuGrid').style.display = 'grid';
       document.getElementById('cartBar').style.display = 'flex'; 
 
-      allMenus = data.menus;
-      renderCategories(data.categories);
+      customerCatalog = data || { menus: [], categories: [], modifiers: { lists: [], options: [], rules: [] } };
+      allMenus = Array.isArray(data.menus) ? data.menus : [];
+      renderCategories(data.categories || []);
       
       if (data.categories && data.categories.length > 0) {
         filterMenu(data.categories[0].name);
@@ -1219,12 +1181,108 @@ else {
     }
 
 
+    function escapeHtml(value) {
+      return String(value ?? '').replace(/[&<>"']/g, ch => ({
+        '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+      }[ch]));
+    }
+
+    function modifierRuleApplies(listId, menu) {
+      const master = customerCatalog.modifiers || {};
+      const rules = (master.rules || []).filter(r =>
+        String(r.modifier_list_id) === String(listId) && r.is_active !== false
+      );
+      const norm = value => String(value ?? '').trim().toLocaleLowerCase();
+      const category = String(menu.category || '').trim();
+      return rules.some(rule => {
+        if (rule.scope_type === 'menu_name') return norm(rule.scope_value) === norm(menu.name);
+        if (rule.scope_type === 'menu_category') return norm(rule.scope_value) === norm(category);
+        if (rule.scope_type === 'all_except_category') return norm(rule.scope_value) !== norm(category);
+        if (rule.scope_type === 'menu_id') return String(rule.scope_value) === String(menu.id);
+        return false;
+      });
+    }
+
+    function getApplicableModifierLists(menu) {
+      const master = customerCatalog.modifiers || {};
+      return (master.lists || [])
+        .filter(list => list.is_active !== false && modifierRuleApplies(list.id, menu))
+        .map(list => ({
+          ...list,
+          config: MODIFIER_GROUP_CONFIG[list.id] || { key: String(list.name || list.id), multi: false },
+          options: (master.options || []).filter(option =>
+            String(option.modifier_list_id) === String(list.id) && option.is_active !== false
+          )
+        }))
+        .filter(list => list.options.length > 0);
+    }
+
+    function renderModifierGroups() {
+      const host = document.getElementById('modifierGroupsContainer');
+      if (!host || !selectedMenu) return;
+      const lists = getApplicableModifierLists(selectedMenu);
+      if (!lists.length) {
+        host.innerHTML = '<div style="padding:14px;color:var(--text-muted);text-align:center;">เมนูนี้ไม่มีตัวเลือกเพิ่มเติม</div>';
+        return;
+      }
+      host.innerHTML = lists.map(list => {
+        const required = list.config.key === 'sweetness';
+        const hint = list.config.multi ? 'เลือกได้หลายรายการ' : 'เลือกได้ 1 รายการ';
+        return `<section class="catalog-modifier-section" data-list-id="${escapeHtml(list.id)}" style="margin-bottom:18px;">
+          <div class="option-group-title">${escapeHtml(list.name)}
+            <span style="color:var(--text-muted);font-weight:400;text-transform:none;">(${hint}${required ? ' · บังคับเลือก' : ''})</span>
+          </div>
+          <div class="option-selector-grid">
+            ${list.options.map(option => {
+              const price = Number(option.price || 0);
+              const label = `${option.name}${price > 0 ? ` (+${price}฿)` : ''}`;
+              return `<button type="button" class="opt-btn" data-list-id="${escapeHtml(list.id)}" data-option-id="${escapeHtml(option.id)}" onclick="toggleCatalogModifier('${escapeHtml(list.id)}','${escapeHtml(option.id)}',this)">${escapeHtml(label)}</button>`;
+            }).join('')}
+          </div>
+        </section>`;
+      }).join('');
+      (currentOptions.selections || []).forEach(selection => {
+        const button = host.querySelector(`[data-option-id="${CSS.escape(String(selection.option_id))}"]`);
+        if (button) button.classList.add('active');
+      });
+    }
+
+    function toggleCatalogModifier(listId, optionId, element) {
+      const master = customerCatalog.modifiers || {};
+      const list = (master.lists || []).find(x => String(x.id) === String(listId));
+      const option = (master.options || []).find(x =>
+        String(x.id) === String(optionId) && String(x.modifier_list_id) === String(listId)
+      );
+      if (!list || !option || !element) return;
+      const config = MODIFIER_GROUP_CONFIG[listId] || { key: String(list.name || listId), multi: false };
+      const selected = currentOptions.selections || [];
+      const exists = selected.some(x => String(x.option_id) === String(optionId));
+      let next;
+      if (exists) {
+        next = selected.filter(x => String(x.option_id) !== String(optionId));
+      } else {
+        next = config.multi
+          ? [...selected, { group: config.key, modifier_list_id: listId, option_id: optionId, name: option.name, price: Number(option.price || 0) }]
+          : [
+              ...selected.filter(x => String(x.modifier_list_id) !== String(listId)),
+              { group: config.key, modifier_list_id: listId, option_id: optionId, name: option.name, price: Number(option.price || 0) }
+            ];
+      }
+      currentOptions.selections = next;
+      renderModifierGroups();
+      updateModalPrice();
+    }
+
     function updateModalPrice() {
       if (!selectedMenu) return;
-      let total = selectedMenu.price + currentOptions.topLayerPrice + currentOptions.deliciousPrice;
+      const modifierTotal = (currentOptions.selections || []).reduce((sum, item) => sum + Number(item.price || 0), 0);
+      const total = Number(selectedMenu.price || 0) + modifierTotal;
+      const lists = getApplicableModifierLists(selectedMenu);
+      const requiresSweetness = lists.some(list => list.config.key === 'sweetness');
+      const sweetnessSelected = (currentOptions.selections || []).some(item => item.group === 'sweetness');
       const addBtn = document.getElementById('addCartBtn');
-      addBtn.disabled = !currentOptions.sweetness;
-      addBtn.innerText = currentOptions.sweetness ? `ใส่ตะกร้า - ฿${total}` : 'กรุณาเลือกระดับความหวาน';
+      addBtn.disabled = requiresSweetness && !sweetnessSelected;
+      addBtn.innerText = addBtn.disabled ? 'กรุณาเลือกระดับความหวาน' : `ใส่ตะกร้า - ฿${total}`;
     }
 
     function openOptionsSheet(menuName) {
@@ -1232,38 +1290,12 @@ else {
         alert("ขออภัย ขณะนี้ร้านปิดทำการ");
         return;
       }
-      selectedMenu = allMenus.find(m => m.loyverseName === menuName);
+      selectedMenu = allMenus.find(m => m.loyverseName === menuName || m.name === menuName);
       if (!selectedMenu) return;
 
-      document.getElementById('optionsModalTitle').innerText = selectedMenu.loyverseName;
-      currentOptions = { sweetness: "หวานปกติ (100%)", topLayer: "", topLayerPrice: 0, delicious: "", deliciousPrice: 0, icePack: "ไม่แยกน้ำแข็ง" };
-      
-      document.querySelectorAll('.bottom-sheet .opt-btn').forEach(b => b.classList.remove('active'));
-      document.querySelector('#icePackGrid button:nth-child(1)').classList.add('active');
-      const addBtn = document.getElementById('addCartBtn');
-      addBtn.disabled = true;
-      addBtn.innerText = 'กรุณาเลือกระดับความหวาน'; 
-
-      if (selectedMenu.loyverseName === 'Strawberry Milk Fantasy' || selectedMenu.thaiName === 'สตรอว์เบอร์รีนมแฟนตาซี') {
-        document.getElementById('topLayerSection').style.display = 'block';
-      } else {
-        document.getElementById('topLayerSection').style.display = 'none';
-      }
-
-      const coffeeMatchaMenus = ['Matcha Pure', 'Matcha Latte', 'Houjicha Latte', 'Latte', 'Cappuccino', 'Espresso', 'Mocha', 'Yorklo'];
-      if (coffeeMatchaMenus.includes(selectedMenu.loyverseName)) {
-        document.getElementById('deliciousSection').style.display = 'block';
-      } else {
-        document.getElementById('deliciousSection').style.display = 'none';
-      }
-
-      if (selectedMenu.category.toUpperCase().includes('HOT') || selectedMenu.thaiName.includes('ร้อน')) {
-        document.getElementById('icePackSection').style.display = 'none';
-        currentOptions.icePack = ""; 
-      } else {
-        document.getElementById('icePackSection').style.display = 'block';
-      }
-
+      document.getElementById('optionsModalTitle').innerText = selectedMenu.loyverseName || selectedMenu.name;
+      currentOptions = { selections: [] };
+      renderModifierGroups();
       updateModalPrice();
       document.getElementById('optionsOverlay').style.display = 'block';
       const sheet = document.getElementById('optionsSheet');
@@ -1280,58 +1312,43 @@ else {
       }, 300);
     }
 
-    function selectOption(type, element, val, extraPrice) {
-      if (element.classList.contains('active')) {
-        if (type === 'topLayer' || type === 'delicious') {
-          element.classList.remove('active');
-          currentOptions[type] = "";
-          currentOptions[type + 'Price'] = 0;
-          updateModalPrice();
-          return;
-        }
-      }
-      
-      element.parentNode.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('active'));
-      element.classList.add('active');
-      currentOptions[type] = val;
-
-      if (type === 'topLayer' || type === 'delicious') {
-        currentOptions[type + 'Price'] = extraPrice;
-      }
-      updateModalPrice(); 
-    }
-
     function confirmAddToCart() {
-      if (!currentOptions.sweetness) {
+      if (!selectedMenu) return;
+      const selections = currentOptions.selections || [];
+      const lists = getApplicableModifierLists(selectedMenu);
+      const requiresSweetness = lists.some(list => list.config.key === 'sweetness');
+      const sweetness = selections.find(x => x.group === 'sweetness');
+      if (requiresSweetness && !sweetness) {
         alert("กรุณาเลือกระดับความหวานก่อนเพิ่มลงตะกร้า");
         return;
       }
-      if ((selectedMenu.loyverseName.includes("น้ำผึ้ง") || selectedMenu.thaiName.includes("น้ำผึ้ง")) && currentOptions.sweetness === "ไม่หวาน (0%)") {
+      if ((String(selectedMenu.loyverseName || selectedMenu.name).includes("น้ำผึ้ง") ||
+           String(selectedMenu.thaiName || '').includes("น้ำผึ้ง")) &&
+          sweetness && /0\\s*%/.test(sweetness.name)) {
         alert("เมนูน้ำผึ้งไม่สามารถสั่งไม่หวานได้ กรุณาเลือกระดับความหวานอื่น");
         return;
       }
 
-      let existingItem = cart.find(item => 
-        item.loyverseName === selectedMenu.loyverseName && 
-        item.sweetness === currentOptions.sweetness && 
-        item.topLayer === currentOptions.topLayer &&
-        item.delicious === currentOptions.delicious &&
-        item.icePack === currentOptions.icePack
+      const modifierTotal = selections.reduce((sum, item) => sum + Number(item.price || 0), 0);
+      const basePrice = Number(selectedMenu.price || 0);
+      const itemPrice = basePrice + modifierTotal;
+      const signature = selections.map(x => `${x.modifier_list_id}:${x.option_id}`).sort().join('|');
+      const existingItem = cart.find(item =>
+        String(item.menu_id) === String(selectedMenu.id) &&
+        (item.modifier_signature || '') === signature
       );
 
       if (existingItem) {
         existingItem.qty += 1;
       } else {
         cart.push({
-          loyverseName: selectedMenu.loyverseName,
-          basePrice: selectedMenu.price,
-          price: selectedMenu.price + currentOptions.topLayerPrice + currentOptions.deliciousPrice,
-          sweetness: currentOptions.sweetness,
-          topLayer: currentOptions.topLayer,
-          topLayerPrice: currentOptions.topLayerPrice,
-          delicious: currentOptions.delicious,
-          deliciousPrice: currentOptions.deliciousPrice,
-          packaging: currentOptions.icePack,
+          menu_id: selectedMenu.id,
+          loyverseName: selectedMenu.loyverseName || selectedMenu.name,
+          basePrice,
+          price: itemPrice,
+          modifiers: selections.map(x => ({ ...x })),
+          modifier_signature: signature,
+          sweetness: sweetness?.name || '',
           qty: 1
         });
       }
@@ -1380,10 +1397,9 @@ else {
         grandTotal += itemTotal;
         totalGlasses += item.qty;
 
-        let details = `ความหวาน: ${item.sweetness}`;
-        if (item.topLayer) details += `<br>Top Layer: ${item.topLayer} ${item.topLayerPrice > 0 ? '(+'+item.topLayerPrice+'฿)' : ''}`;
-        if (item.delicious) details += `<br>เพิ่มความอร่อย: ${item.delicious} ${item.deliciousPrice > 0 ? '(+'+item.deliciousPrice+'฿)' : ''}`;
-        if (item.packaging) details += `<br>การบรรจุ: ${item.packaging}`;
+        let details = (item.modifiers || []).map(modifier =>
+          `${escapeHtml(modifier.name)}${Number(modifier.price || 0) > 0 ? ` (+${Number(modifier.price)}฿)` : ''}`
+        ).join('<br>') || 'ไม่มีตัวเลือกเพิ่มเติม';
 
         const row = document.createElement('div');
         row.className = 'cart-item-row';
