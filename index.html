@@ -2748,7 +2748,7 @@ function renderAdminAiLine(){
 }
 function adminAiSettingValue(settings,key,fallback=false){const r=(settings||[]).find(x=>x.setting_key===key);if(!r)return fallback;const v=r.setting_value;if(typeof v==='boolean')return v;if(typeof v==='string')return v.toLowerCase()==='true'||v==='1';return !!v;}
 function renderAdminAiSwitch(label,key,checked,help){return `<label class="bal-ai-control"><span class="bal-ai-control-copy"><b>${esc(label)}</b><small>${esc(help||'')}</small></span><span class="bal-switch-wrap"><span class="bal-switch"><input type="checkbox" ${checked?'checked':''} aria-label="${esc(label)}" onchange="saveAdminAiToggle('${key}',this.checked)"><i></i></span><span class="bal-switch-state">${checked?'เปิด':'ปิด'}</span></span></label>`;}
-async function saveAdminAiToggle(key,value){try{await adminAiRequest('POST',{action:'settings_update',setting_key:key,setting_value:!!value,description:'Managed from Balenrista Dashboard AI & LINE'});showToast('บันทึกการตั้งค่าสำเร็จ');}catch(e){showToast('บันทึกไม่สำเร็จ: '+e.message);renderAdminAiLine();}}
+async function saveAdminAiToggle(key,value){try{await adminAiRequest('POST',{action:'settings_update',setting_key:key,setting_value:!!value,description:'Managed from Balenrista Dashboard AI & LINE'});toast('บันทึกการตั้งค่าสำเร็จ');}catch(e){toast('บันทึกไม่สำเร็จ: '+e.message);renderAdminAiLine();}}
 let lineDraftEditorState = { draftId:null, items:[], menus:[] };
 // Modifier catalog is loaded from Supabase master tables; no hard-coded option prices.
 const LINE_MODIFIER_GROUPS={
@@ -2905,7 +2905,7 @@ async function saveAndCreateLineOrder(){
  }catch(e){alert('บันทึก/สร้าง Order Draft ไม่สำเร็จ: '+e.message);}
 }
 async function confirmLineDraftOrder(id){if(!confirm('ยืนยันออเดอร์นี้และส่งสรุปยอดไป LINE พร้อมขอชื่อ เบอร์โทร และที่อยู่หรือไม่?'))return;try{const r=await adminAiRequest('POST',{action:'draft_confirm_order',draft_id:id});if(r.success!==true)throw new Error(r.error||'ยืนยันออเดอร์ไม่สำเร็จ');alert(r.already_sent?'ออเดอร์นี้ส่ง LINE ไปแล้ว':'ยืนยันออเดอร์และส่ง LINE สำเร็จ');await loadAdminAiLineData();}catch(e){alert('ยืนยันไม่สำเร็จ: '+e.message);}}
-async function deleteLineDraft(id){if(!confirm('ลบข้อความนี้ออกจากกล่อง AI & LINE ใช่ไหม?\nรายการจะไม่ถูกตอบกลับ และจะไม่แสดงในกล่องรอตรวจสอบอีก'))return;try{const r=await adminAiRequest('POST',{action:'draft_delete',draft_id:id});if(r.success!==true)throw new Error(r.error||'ลบข้อความไม่สำเร็จ');showToast('นำข้อความออกจากกล่องแล้ว');await loadAdminAiLineData();}catch(e){alert('ลบข้อความไม่สำเร็จ: '+e.message);}}
+async function deleteLineDraft(id){if(!confirm('ลบข้อความนี้ออกจากกล่อง AI & LINE ใช่ไหม?\nรายการจะไม่ถูกตอบกลับ และจะไม่แสดงในกล่องรอตรวจสอบอีก'))return;try{const r=await adminAiRequest('POST',{action:'draft_delete',draft_id:id});if(r.success!==true)throw new Error(r.error||'ลบข้อความไม่สำเร็จ');toast('นำข้อความออกจากกล่องแล้ว');await loadAdminAiLineData();}catch(e){alert('ลบข้อความไม่สำเร็จ: '+e.message);}}
 // FAQ and Reward Links are managed on their own pages; AI & LINE is the workflow control center.
 async function renderAdminFaqPage(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
@@ -2965,7 +2965,7 @@ async function renderAdminAiSettingsPage(){
  const st=document.getElementById('adminAiSettingsStatus');if(st)st.textContent='โหลดการตั้งค่าจาก Supabase สำเร็จ';
  }catch(e){const st=document.getElementById('adminAiSettingsStatus');if(st)st.textContent='โหลดไม่สำเร็จ: '+e.message;}
 }
-async function saveAdminStoreSchedule(){try{const weekly={};for(const [k] of [['mon'],['tue'],['wed'],['thu'],['fri'],['sat'],['sun']])weekly[k]={enabled:!!document.getElementById(`sched_${k}_enabled`)?.checked,open:document.getElementById(`sched_${k}_open`)?.value||'06:00',close:document.getElementById(`sched_${k}_close`)?.value||'13:30'};await adminAiRequest('POST',{action:'store_schedule_update',schedule:{timezone:'Asia/Bangkok',weekly,holidays:[],special_hours:[]}});showToast('บันทึกเวลาเปิดร้านสำเร็จ');}catch(e){alert('บันทึกเวลาไม่สำเร็จ: '+e.message);}}
+async function saveAdminStoreSchedule(){try{const weekly={};for(const [k] of [['mon'],['tue'],['wed'],['thu'],['fri'],['sat'],['sun']])weekly[k]={enabled:!!document.getElementById(`sched_${k}_enabled`)?.checked,open:document.getElementById(`sched_${k}_open`)?.value||'06:00',close:document.getElementById(`sched_${k}_close`)?.value||'13:30'};await adminAiRequest('POST',{action:'store_schedule_update',schedule:{timezone:'Asia/Bangkok',weekly,holidays:[],special_hours:[]}});toast('บันทึกเวลาเปิดร้านสำเร็จ');}catch(e){alert('บันทึกเวลาไม่สำเร็จ: '+e.message);}}
 
 // Admin Order Online > Menu — isolated read-only catalog view.
 // Price is sourced only from public.menus.sale_price; no duplicate price writes.
@@ -2984,7 +2984,7 @@ async function toggleAdminOnlineMenuStatus(menuId, nextValue){
   const previous=!!row.is_active;
   if(previous===!!nextValue)return;
   if(!currentUser?.session_token){
-    showToast('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');
+    toast('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');
     renderAdminOnlineMenu();
     return;
   }
@@ -3004,7 +3004,7 @@ async function toggleAdminOnlineMenuStatus(menuId, nextValue){
   }catch(err){
     row.is_active=previous;
     if(msg)msg.textContent='บันทึกสถานะไม่สำเร็จ: '+(err.message||err);
-    showToast('บันทึกไม่สำเร็จ: '+(err.message||err));
+    toast('บันทึกไม่สำเร็จ: '+(err.message||err));
   }finally{
     adminOnlineMenuSavingIds.delete(menuId);
     filterAdminOnlineMenu();
@@ -3055,10 +3055,10 @@ function adminMenuSafeFileName(name){
 async function uploadAdminMenuImage(menuId){
   const row=adminOnlineMenuRows.find(x=>x.id===menuId);if(!row)return;
   const input=document.getElementById('adminMenuImageFile');
-  const file=input?.files?.[0];if(!file){showToast('กรุณาเลือกรูปภาพก่อน');return;}
-  if(!['image/jpeg','image/png','image/webp','image/gif'].includes(file.type)){showToast('รองรับเฉพาะ JPG, PNG, WEBP และ GIF');return;}
-  if(file.size>ADMIN_MENU_IMAGE_MAX_BYTES){showToast('รูปภาพต้องมีขนาดไม่เกิน 8 MB');return;}
-  if(!currentUser?.session_token){showToast('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');return;}
+  const file=input?.files?.[0];if(!file){toast('กรุณาเลือกรูปภาพก่อน');return;}
+  if(!['image/jpeg','image/png','image/webp','image/gif'].includes(file.type)){toast('รองรับเฉพาะ JPG, PNG, WEBP และ GIF');return;}
+  if(file.size>ADMIN_MENU_IMAGE_MAX_BYTES){toast('รูปภาพต้องมีขนาดไม่เกิน 8 MB');return;}
+  if(!currentUser?.session_token){toast('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');return;}
   const button=document.getElementById('adminMenuImageUpload');
   if(button){button.disabled=true;button.textContent='กำลังอัปโหลด…';}
   const msg=document.getElementById('adminMenuMessage');
@@ -3085,14 +3085,14 @@ async function uploadAdminMenuImage(menuId){
     }
     if(msg)msg.textContent=`อัปโหลดรูป “${row.name}” สำเร็จ`;
     openAdminMenuEditor(menuId);
-    showToast('อัปโหลดรูปภาพสำเร็จ');
+    toast('อัปโหลดรูปภาพสำเร็จ');
   }catch(e){
     if(uploaded){
       // Best-effort cleanup of the uploaded object if metadata insert failed.
       await db.storage.from(ADMIN_MENU_IMAGE_BUCKET).remove([path]);
     }
     if(msg)msg.textContent='อัปโหลดรูปไม่สำเร็จ: '+(e.message||e);
-    showToast('อัปโหลดรูปไม่สำเร็จ: '+(e.message||e));
+    toast('อัปโหลดรูปไม่สำเร็จ: '+(e.message||e));
     if(button){button.disabled=false;button.textContent='อัปโหลด / เปลี่ยนรูป';}
   }
 }
@@ -3108,10 +3108,10 @@ async function deleteAdminMenuImage(menuId,imageId){
     if(metaError)throw metaError;
     row.menu_images=row.menu_images.filter(x=>x.image_id!==imageId);
     if(msg)msg.textContent=`ลบรูป “${row.name}” สำเร็จ`;
-    openAdminMenuEditor(menuId);showToast('ลบรูปภาพสำเร็จ');
+    openAdminMenuEditor(menuId);toast('ลบรูปภาพสำเร็จ');
   }catch(e){
     if(msg)msg.textContent='ลบรูปไม่สำเร็จ: '+(e.message||e);
-    showToast('ลบรูปไม่สำเร็จ: '+(e.message||e));
+    toast('ลบรูปไม่สำเร็จ: '+(e.message||e));
   }
 }
 
@@ -3144,7 +3144,7 @@ async function saveAdminMenuDetails(menuId){
     filterAdminOnlineMenu();
   }catch(e){
     if(msg)msg.textContent='บันทึกไม่สำเร็จ: '+(e.message||e);
-    showToast('บันทึกไม่สำเร็จ: '+(e.message||e));
+    toast('บันทึกไม่สำเร็จ: '+(e.message||e));
     if(button){button.disabled=false;button.textContent='บันทึกข้อมูล';}
   }
 }
