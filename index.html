@@ -636,6 +636,75 @@
   .bill-master-modal .bill-editor-body{max-height:calc(88dvh - 70px)!important}
 }
 </style>
+
+<style id="balenrista-ui-polish-v1">
+/* Balenrista: consistent mobile-first surfaces */
+#adminOrderOnlineSection .admin-online-panel,
+#adminOnlinePanel { color:var(--white); }
+#adminOnlinePanel .admin-orders-headline { margin-bottom:18px; }
+#adminOnlinePanel .admin-orders-headline h3 { font-size:clamp(19px,2.4vw,23px); letter-spacing:-.02em; }
+#adminOnlinePanel .admin-online-note { line-height:1.65; }
+#adminOnlinePanel section { min-width:0; }
+#adminOnlinePanel section > h3 { font-size:17px; letter-spacing:-.015em; margin:0 0 10px; }
+.bal-ai-control-section,.bal-settings-section {
+  margin-top:24px; padding:18px; border:1px solid rgba(255,255,255,.09);
+  border-radius:20px; background:linear-gradient(145deg,rgba(255,255,255,.035),rgba(255,255,255,.012));
+}
+.bal-section-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:12px; margin-bottom:15px; }
+.bal-section-heading h3 { margin:0; font-size:18px; line-height:1.35; }
+.bal-section-heading p { margin:5px 0 0; color:var(--muted); font-size:12px; line-height:1.5; }
+.bal-section-heading > span { flex:0 0 auto; color:#b99582; font-size:9px; font-weight:800; letter-spacing:.13em; padding:6px 8px; border:1px solid rgba(185,149,130,.22); border-radius:30px; }
+.bal-ai-control-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.bal-ai-control {
+  box-sizing:border-box; display:flex; align-items:center; justify-content:space-between; gap:14px;
+  min-width:0; min-height:92px; margin:0; padding:16px;
+  border:1px solid rgba(255,255,255,.085); border-radius:16px;
+  background:rgba(10,9,9,.34); cursor:pointer; transition:border-color .18s,background .18s;
+}
+.bal-ai-control:has(input:checked) { border-color:rgba(158,53,31,.48); background:rgba(158,53,31,.075); }
+.bal-ai-control-copy { display:block; min-width:0; }
+.bal-ai-control-copy b { display:block; color:var(--white); font-size:14px; line-height:1.4; }
+.bal-ai-control-copy small { display:block; margin-top:5px; color:var(--muted); font-size:11px; line-height:1.5; }
+.bal-switch-wrap { display:inline-flex; align-items:center; gap:14px; flex:0 0 auto; }
+.bal-switch { position:relative; display:inline-block; flex:0 0 132px; width:132px; height:76px; }
+.bal-switch input { position:absolute; opacity:0; width:1px; height:1px; }
+.bal-switch i { position:absolute; inset:0; border-radius:50px; background:#302a28; border:3px solid rgba(255,255,255,.13); box-sizing:border-box; transition:background .2s,border-color .2s; }
+.bal-switch i:before { content:""; position:absolute; width:56px; height:56px; left:7px; top:7px; border-radius:50%; background:#eee; box-shadow:0 2px 7px rgba(0,0,0,.22); transition:transform .22s ease,background .22s ease; }
+.bal-switch input:checked+i { background:#862122; border-color:#a94a4b; }
+.bal-switch input:checked+i:before { transform:translateX(56px); background:#f4f0ef; }
+.bal-switch input:focus-visible+i { outline:2px solid #c7a18d; outline-offset:4px; }
+.bal-switch-state { min-width:34px; color:var(--muted); font-size:16px; font-weight:700; }
+.bal-switch-wrap:has(input:checked) .bal-switch-state { color:#c9a99b; }
+.bal-schedule-row {
+  display:grid; grid-template-columns:minmax(110px,1fr) minmax(0,1fr) minmax(0,1fr);
+  gap:10px; align-items:center; padding:12px; border:1px solid rgba(255,255,255,.08);
+  border-radius:15px; background:rgba(10,9,9,.28);
+}
+.bal-schedule-day { display:flex; align-items:center; gap:10px; min-width:0; }
+.bal-schedule-day b { font-size:13px; }
+.bal-schedule-day input { width:18px; height:18px; accent-color:#862122; flex:0 0 auto; }
+.bal-time-field { display:grid; gap:5px; min-width:0; color:var(--muted); font-size:10px; }
+.bal-time-field input { box-sizing:border-box; width:100%; min-width:0; height:43px; padding:7px 8px; text-align:center; border:1px solid rgba(255,255,255,.11); border-radius:11px; background:rgba(255,255,255,.025); color:var(--white); }
+.bal-settings-section .admin-online-note { margin-bottom:14px; }
+.bal-settings-section button,.bal-ai-control-section button { min-height:42px; border-radius:12px; }
+@media(max-width:700px) {
+ .bal-ai-control-section,.bal-settings-section { padding:14px; border-radius:17px; margin-top:18px; }
+ .bal-ai-control-grid { grid-template-columns:1fr; gap:8px; }
+ .bal-ai-control { min-height:104px; padding:14px; border-radius:14px; gap:10px; }
+ .bal-switch-wrap { gap:8px; }
+ .bal-switch { flex-basis:104px; width:104px; height:60px; }
+ .bal-switch i:before { width:42px; height:42px; left:6px; top:6px; }
+ .bal-switch input:checked+i:before { transform:translateX(44px); }
+ .bal-switch-state { min-width:26px; font-size:13px; }
+ .bal-ai-control-copy b { font-size:13px; }
+ .bal-section-heading h3 { font-size:16px; }
+ .bal-section-heading > span { font-size:8px; }
+ .bal-schedule-row { grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:9px; padding:10px; }
+ .bal-schedule-day { grid-column:1/-1; justify-content:space-between; }
+ .bal-time-field input { height:44px; font-size:14px; }
+}
+</style>
+
 </head>
 <body>
 <div id="authOverlay" class="auth-overlay hidden">
@@ -2674,11 +2743,11 @@ function renderAdminAiLine(){
   <div id="adminAiLineStatus" class="admin-menu-status">กำลังโหลดข้อมูล…</div>
   <section class="admin-online-kpis" id="adminAiKpis"></section>
   <section style="margin-top:18px"><h3>ออเดอร์จาก LINE ที่รอตรวจสอบ</h3><div class="admin-online-note">ชื่อ LINE ลูกค้าจะแสดงเป็นหัวรายการ หาก LINE ไม่ส่งชื่อโปรไฟล์จะแสดงว่าไม่ทราบชื่อ</div><div id="adminLineDraftList" class="admin-online-placeholder">กำลังโหลดออเดอร์…</div></section>
-  <section style="margin-top:22px"><h3>สถานะออเดอร์ LINE และข้อมูลลูกค้า</h3><div id="adminLineOrderStatus" class="admin-online-placeholder">กำลังโหลดสถานะ…</div></section><section style="margin-top:22px"><h3>ควบคุมระบบ AI &amp; LINE</h3><div id="adminAiToggles" class="admin-online-placeholder">กำลังโหลดการตั้งค่า…</div></section>`;
+  <section style="margin-top:22px"><h3>สถานะออเดอร์ LINE และข้อมูลลูกค้า</h3><div id="adminLineOrderStatus" class="admin-online-placeholder">กำลังโหลดสถานะ…</div></section><section class="bal-ai-control-section"><div class="bal-section-heading"><div><h3>ควบคุมระบบ AI &amp; LINE</h3><p>จัดการการทำงานของระบบจากจุดเดียว</p></div><span>CONTROL CENTER</span></div><div id="adminAiToggles" class="bal-ai-control-grid admin-online-placeholder">กำลังโหลดการตั้งค่า…</div></section>`;
   loadAdminAiLineData();
 }
 function adminAiSettingValue(settings,key,fallback=false){const r=(settings||[]).find(x=>x.setting_key===key);if(!r)return fallback;const v=r.setting_value;if(typeof v==='boolean')return v;if(typeof v==='string')return v.toLowerCase()==='true'||v==='1';return !!v;}
-function renderAdminAiSwitch(label,key,checked,help){return `<label style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:13px 15px;border:1px solid var(--line);border-radius:12px;margin:8px 0;background:var(--card)"><span><b>${esc(label)}</b><small style="display:block;color:var(--muted);margin-top:3px">${esc(help||'')}</small></span><input type="checkbox" style="width:22px;height:22px;accent-color:var(--accent)" ${checked?'checked':''} onchange="saveAdminAiToggle('${key}',this.checked)"></label>`;}
+function renderAdminAiSwitch(label,key,checked,help){return `<label class="bal-ai-control"><span class="bal-ai-control-copy"><b>${esc(label)}</b><small>${esc(help||'')}</small></span><span class="bal-switch-wrap"><span class="bal-switch"><input type="checkbox" ${checked?'checked':''} aria-label="${esc(label)}" onchange="saveAdminAiToggle('${key}',this.checked)"><i></i></span><span class="bal-switch-state">${checked?'เปิด':'ปิด'}</span></span></label>`;}
 async function saveAdminAiToggle(key,value){try{await adminAiRequest('POST',{action:'settings_update',setting_key:key,setting_value:!!value,description:'Managed from Balenrista Dashboard AI & LINE'});showToast('บันทึกการตั้งค่าสำเร็จ');}catch(e){showToast('บันทึกไม่สำเร็จ: '+e.message);renderAdminAiLine();}}
 let lineDraftEditorState = { draftId:null, items:[], menus:[] };
 // Modifier catalog is loaded from Supabase master tables; no hard-coded option prices.
@@ -2714,7 +2783,7 @@ async function loadLineModifierCatalog(menus){
 }
 function lineSelected(item,listId){return (item.modifiers||[]).filter(m=>m.modifier_list_id===listId||m.list_id===listId);}
 function lineModifierCost(item){return (item.modifiers||[]).reduce((n,m)=>n+Number(m.price||0),0);}
-function lineItemPrice(item){const m=lineDraftEditorState.menus.find(x=>x.name===item.menu_name);return Number(m?.sale_price||0)+lineModifierCost(item);}
+function lineItemPrice(item){const m=lineDraftEditorState.menus.find(x=>String(x.id)===String(item.menu_id))||lineDraftEditorState.menus.find(x=>lineNorm(x.name)===lineNorm(item.menu_name));return Number(m?.sale_price||0)+lineModifierCost(item);}
 function lineDraftTotal(){return lineDraftEditorState.items.reduce((s,i)=>s+lineItemPrice(i)*(Number(i.quantity)||0),0);}
 function lineModifierGroupKey(list){return LINE_MODIFIER_GROUPS[list?.id]?.key||String(list?.name||'');}
 function lineResolveModifier(itemModifier, menu){
@@ -2742,9 +2811,17 @@ function lineResolveModifier(itemModifier, menu){
 }
 function lineSetModifierOption(item,list,option,checked){
  const cfg=LINE_MODIFIER_GROUPS[list.id]||{key:list.name,multi:false};
- let selected=(item.modifiers||[]).filter(m=>String(m.modifier_list_id||m.list_id||'')!==list.id);
+ // Normalize legacy AI modifiers first. Old entries without IDs (including
+ // placeholder names such as 'ไม่ทราบชื่อ') must not survive beside a new
+ // Master selection and later block draft saving.
+ const menu=lineDraftEditorState.menus.find(m=>String(m.id)===String(item.menu_id))||lineDraftEditorState.menus.find(m=>lineNorm(m.name)===lineNorm(item.menu_name));
+ let selected=(item.modifiers||[])
+  .map(m=>lineResolveModifier(m,menu))
+  .filter(Boolean)
+  .filter(m=>String(m.modifier_list_id)!==String(list.id));
  if(checked){
   if(!cfg.multi)selected=selected.filter(m=>m.group!==cfg.key);
+  if(!option?.id||!option?.name)throw new Error('ไม่พบข้อมูล Modifier Master กรุณาโหลดรายการใหม่');
   selected.push({group:cfg.key,name:option.name,modifier_list_id:list.id,list_id:list.id,option_id:option.id,price:Number(option.price)||0});
  }
  item.modifiers=selected;
@@ -2779,9 +2856,9 @@ async function openLineDraftEditor(id){
   if(d.draft_order_id){alert('รายการนี้สร้าง Order Draft แล้ว สามารถกดยืนยันและส่ง LINE ได้');return;}
   const catalog=await loadLineModifierCatalog(mc.menus||[]);
   lineDraftEditorState={draftId:id,menus:catalog.menus,modifierLists:catalog.lists,modifierOptions:catalog.options,rules:catalog.rules,items:[]};
-  const normalizedItems=(d.matched_items||[]).map(i=>{const menu=catalog.menus.find(x=>x.name===i.menu_name);const raw=Array.isArray(i.modifiers)?i.modifiers:[];const resolved=raw.map(m=>lineResolveModifier(m,menu)).filter(Boolean);return {...i,modifiers:resolved};});
+  const normalizedItems=(d.matched_items||[]).map(i=>{const menu=catalog.menus.find(x=>String(x.id)===String(i.menu_id))||catalog.menus.find(x=>lineNorm(x.name)===lineNorm(i.menu_name));const raw=Array.isArray(i.modifiers)?i.modifiers:[];const resolved=raw.map(m=>lineResolveModifier(m,menu)).filter(Boolean);return {...i,menu_id:menu?.id||i.menu_id||null,menu_name:menu?.name||i.menu_name||'',modifiers:resolved};});
   lineDraftEditorState.items=normalizedItems;
-  if(!lineDraftEditorState.items.length)lineDraftEditorState.items=[{menu_name:'',quantity:1,temperature:'เย็น',sweetness:'หวานปกติ 100%',modifiers:[],note:''}];
+  if(!lineDraftEditorState.items.length)lineDraftEditorState.items=[{menu_id:null,menu_name:'',quantity:1,temperature:'เย็น',sweetness:'หวานปกติ 100%',modifiers:[],note:''}];
   renderLineDraftEditor();
  }catch(e){alert('เปิดตัวแก้ไขไม่สำเร็จ: '+e.message);}
 }
@@ -2789,10 +2866,10 @@ function renderLineDraftEditor(){
  let modal=document.getElementById('lineDraftEditorModal');if(!modal){modal=document.createElement('div');modal.id='lineDraftEditorModal';document.body.appendChild(modal);}
  modal.style.cssText='position:fixed;inset:0;z-index:2147483000;background:rgba(0,0,0,.86);display:flex;align-items:flex-start;justify-content:center;padding: max(10px, env(safe-area-inset-top)) 10px max(10px, env(safe-area-inset-bottom));overflow:hidden;overscroll-behavior:contain;';
  document.body.dataset.lineEditorPrevOverflow=document.body.style.overflow||'';document.body.style.overflow='hidden';
- const optsFor=(current)=>`<option value="">เลือกเมนู</option>`+lineDraftEditorState.menus.map(m=>`<option ${current===m.name?'selected':''} value="${esc(m.name)}">${esc(m.name)} · ฿${Number(m.sale_price||0)}</option>`).join('');
+ const optsFor=(currentId)=>`<option value="">เลือกเมนู</option>`+lineDraftEditorState.menus.map(m=>`<option ${String(currentId||'')===String(m.id)?'selected':''} value="${esc(m.id)}">${esc(m.name)}</option>`).join('');
  const renderList=(item,list,idx)=>{
   const cfg=LINE_MODIFIER_GROUPS[list.id]||{key:list.name,multi:false};
-  const menu=lineDraftEditorState.menus.find(x=>x.name===item.menu_name);
+  const menu=lineDraftEditorState.menus.find(x=>String(x.id)===String(item.menu_id))||lineDraftEditorState.menus.find(x=>lineNorm(x.name)===lineNorm(item.menu_name));
   if(!menu||!lineListApplies(list,menu))return '';
   const options=lineDraftEditorState.modifierOptions.filter(o=>o.modifier_list_id===list.id&&o.is_active!==false);
   if(!options.length)return '';
@@ -2804,22 +2881,23 @@ function renderLineDraftEditor(){
   return `<label style="display:block;font-size:12px;margin-top:8px">${label}<select onchange="chooseLineModifier(${idx},'${list.id}',this.value)" style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)"><option value="">ไม่เลือก</option>${options.map(o=>`<option value="${o.id}" ${selected.includes(o.id)?'selected':''}>${esc(o.name)}${Number(o.price||0)?` (+฿${Number(o.price).toLocaleString('th-TH')})`:' (ฟรี)'}</option>`).join('')}</select></label>`;
  };
  modal.innerHTML=`<div style="background:#171717!important;color:#f5f5f5;width:min(850px,100%);max-height:calc(100dvh - max(20px, env(safe-area-inset-top)) - max(20px, env(safe-area-inset-bottom)));overflow:auto;overscroll-behavior:contain;border:1px solid #454545;box-shadow:0 18px 60px rgba(0,0,0,.65);border-radius:16px;padding:16px;box-sizing:border-box;margin:auto"><div style="display:flex;position:sticky;top:-16px;z-index:5;background:#171717;padding:6px 0 12px;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #333"><h2 style="margin:0;font-size:clamp(18px,4vw,24px)">ตรวจสอบและแก้ไขออเดอร์ LINE</h2><button class="admin-orders-refresh" onclick="closeLineDraftEditor()">ปิด ✕</button></div><p class="admin-online-note">ตัวเลือกและราคาโหลดจาก Modifier Master ใน Supabase โดยใช้ Category จาก customer_menu_details</p><div id="lineDraftEditorItems">${lineDraftEditorState.items.map((it,idx)=>{
-  const m=lineDraftEditorState.menus.find(x=>x.name===it.menu_name);const hot=lineIsHot(m);const mods=it.modifiers||[];
+  const m=lineDraftEditorState.menus.find(x=>String(x.id)===String(it.menu_id))||lineDraftEditorState.menus.find(x=>lineNorm(x.name)===lineNorm(it.menu_name));const hot=lineIsHot(m);const mods=it.modifiers||[];
   const tempOptions=hot?['ร้อน']:['เย็น','ร้อน'];
-  return `<section style="border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0"><div style="display:flex;justify-content:space-between;gap:8px"><b>รายการ ${idx+1}</b><button class="admin-orders-refresh" onclick="removeLineDraftItem(${idx})">ลบรายการ</button></div><label style="display:block;font-size:12px;margin-top:8px">เมนู<select value="${esc(it.menu_name||'')}" onchange="setLineDraftField(${idx},'menu_name',this.value)" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)">${optsFor(it.menu_name||'')}</select></label><label style="display:block;font-size:12px;margin-top:8px">จำนวน<input type="number" min="1" max="999" value="${Number(it.quantity)||1}" onchange="setLineDraftField(${idx},'quantity',this.value)" style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)"></label>${m?`<div class="admin-online-note">Category: ${esc(m.category||'ไม่ระบุ')}</div>`:''}<label style="display:block;font-size:12px;margin-top:8px">อุณหภูมิ<select onchange="setLineDraftField(${idx},'temperature',this.value)" ${hot?'disabled':''} style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)">${tempOptions.map(v=>`<option ${((hot?'ร้อน':(it.temperature||'เย็น'))===v)?'selected':''}>${v}</option>`).join('')}</select></label>${m?lineDraftEditorState.modifierLists.map(list=>renderList(it,list,idx)).join(''):''}<label style="display:block;font-size:12px;margin-top:8px">หมายเหตุ<input value="${esc(it.note||'')}" onchange="setLineDraftField(${idx},'note',this.value)" style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)"></label><div style="text-align:right;font-weight:700;margin-top:8px">฿${(lineItemPrice(it)*(Number(it.quantity)||0)).toLocaleString('th-TH')}</div></section>`;
+  return `<section style="border:1px solid var(--line);border-radius:12px;padding:12px;margin:12px 0"><div style="display:flex;justify-content:space-between;gap:8px"><b>รายการ ${idx+1}</b><button class="admin-orders-refresh" onclick="removeLineDraftItem(${idx})">ลบรายการ</button></div><label style="display:block;font-size:12px;margin-top:8px">เมนู<select value="${esc(it.menu_id||'')}" onchange="setLineDraftMenu(${idx},this.value)" style="width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)">${optsFor(it.menu_id||'')}</select></label><label style="display:block;font-size:12px;margin-top:8px">จำนวน<input type="number" min="1" max="999" value="${Number(it.quantity)||1}" onchange="setLineDraftField(${idx},'quantity',this.value)" style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)"></label>${m?`<div class="admin-online-note">Category: ${esc(m.category||'ไม่ระบุ')}</div>`:''}<label style="display:block;font-size:12px;margin-top:8px">อุณหภูมิ<select onchange="setLineDraftField(${idx},'temperature',this.value)" ${hot?'disabled':''} style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)">${tempOptions.map(v=>`<option ${((hot?'ร้อน':(it.temperature||'เย็น'))===v)?'selected':''}>${v}</option>`).join('')}</select></label>${m?lineDraftEditorState.modifierLists.map(list=>renderList(it,list,idx)).join(''):''}<label style="display:block;font-size:12px;margin-top:8px">หมายเหตุ<input value="${esc(it.note||'')}" onchange="setLineDraftField(${idx},'note',this.value)" style="width:100%;padding:9px;border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--text)"></label><div style="text-align:right;font-weight:700;margin-top:8px">฿${(lineItemPrice(it)*(Number(it.quantity)||0)).toLocaleString('th-TH')}</div></section>`;
  }).join('')}</div><button class="admin-orders-refresh" onclick="addLineDraftItem()">＋ เพิ่มรายการ</button><div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);padding-top:14px;margin-top:14px;gap:10px;flex-wrap:wrap"><b style="font-size:18px">ยอดรวม ฿${lineDraftTotal().toLocaleString('th-TH')}</b><button class="admin-orders-refresh" onclick="saveAndCreateLineOrder()">บันทึกและสร้าง Order Draft</button></div><p class="admin-online-note">Backend ต้องตรวจสอบ Modifier IDs และคำนวณราคาซ้ำจาก Supabase ก่อนบันทึก Order</p></div>`;
  modal.style.display='flex';
 }
 function closeLineDraftEditor(){document.getElementById('lineDraftEditorModal')?.remove();document.body.style.overflow=document.body.dataset.lineEditorPrevOverflow||'';delete document.body.dataset.lineEditorPrevOverflow;}
-function setLineDraftField(i,k,v){const it=lineDraftEditorState.items[i];if(!it)return;it[k]=k==='quantity'?Math.max(1,Math.min(999,Number(v)||1)):v;if(k==='menu_name'){it.modifiers=[];it.temperature='เย็น';it.sweetness='';}renderLineDraftEditor();}
+function setLineDraftField(i,k,v){const it=lineDraftEditorState.items[i];if(!it)return;it[k]=k==='quantity'?Math.max(1,Math.min(999,Number(v)||1)):v;renderLineDraftEditor();}
+function setLineDraftMenu(i,menuId){const it=lineDraftEditorState.items[i];if(!it)return;const menu=lineDraftEditorState.menus.find(m=>String(m.id)===String(menuId));it.menu_id=menu?.id||null;it.menu_name=menu?.name||'';it.modifiers=[];it.temperature='เย็น';it.sweetness='';renderLineDraftEditor();}
 function chooseLineModifier(i,listId,optionId){const it=lineDraftEditorState.items[i];const list=lineDraftEditorState.modifierLists.find(x=>x.id===listId);if(!it||!list)return;const option=lineDraftEditorState.modifierOptions.find(x=>x.id===optionId);lineSetModifierOption(it,list,option||{},!!optionId);renderLineDraftEditor();}
 function toggleLineModifier(i,listId,optionId,checked){const it=lineDraftEditorState.items[i];const list=lineDraftEditorState.modifierLists.find(x=>x.id===listId);const option=lineDraftEditorState.modifierOptions.find(x=>x.id===optionId);if(!it||!list||!option)return;lineSetModifierOption(it,list,option,checked);renderLineDraftEditor();}
-function addLineDraftItem(){lineDraftEditorState.items.push({menu_name:'',quantity:1,temperature:'เย็น',sweetness:'หวานปกติ 100%',modifiers:[],note:''});renderLineDraftEditor();}
+function addLineDraftItem(){lineDraftEditorState.items.push({menu_id:null,menu_name:'',quantity:1,temperature:'เย็น',sweetness:'หวานปกติ 100%',modifiers:[],note:''});renderLineDraftEditor();}
 function removeLineDraftItem(i){lineDraftEditorState.items.splice(i,1);if(!lineDraftEditorState.items.length)addLineDraftItem();else renderLineDraftEditor();}
 async function saveAndCreateLineOrder(){
- const items=lineDraftEditorState.items;if(!items.length||items.some(i=>!i.menu_name||!Number.isInteger(Number(i.quantity))||Number(i.quantity)<1)){alert('กรุณาเลือกเมนูและจำนวนให้ครบ');return;}
+ const items=lineDraftEditorState.items;if(!items.length||items.some(i=>(!i.menu_id&&!i.menu_name)||!Number.isInteger(Number(i.quantity))||Number(i.quantity)<1)){alert('กรุณาเลือกเมนูและจำนวนให้ครบ');return;}
  try{
-  const payloadItems=items.map(i=>{const menu=lineDraftEditorState.menus.find(m=>m.name===i.menu_name);const resolved=(i.modifiers||[]).map(m=>lineResolveModifier(m,menu));const invalid=(i.modifiers||[]).filter((m,n)=>!resolved[n]);if(invalid.length)throw new Error(`ไม่พบรหัส Modifier ของเมนู ${i.menu_name}: ${invalid.map(x=>x.name||x.group||'ไม่ทราบชื่อ').join(', ')} กรุณาเอาตัวเลือกนั้นออกแล้วเลือกใหม่`);return {...i,temperature:lineIsHot(menu)?'ร้อน':(i.temperature||'เย็น'),sweetness:resolved.find(m=>m.group==='sweetness')?.name||'',modifiers:resolved.map(m=>({group:m.group,name:m.name,modifier_list_id:m.modifier_list_id,option_id:m.option_id,price:m.price}))};});
+  const payloadItems=items.map(i=>{const menu=lineDraftEditorState.menus.find(m=>String(m.id)===String(i.menu_id))||lineDraftEditorState.menus.find(m=>lineNorm(m.name)===lineNorm(i.menu_name));if(!menu)throw new Error(`ไม่พบเมนูใน Menu Master: ${i.menu_name||'ไม่ระบุชื่อ'}`);const resolved=(i.modifiers||[]).map(m=>lineResolveModifier(m,menu));const invalid=(i.modifiers||[]).filter((m,n)=>!resolved[n]);if(invalid.length)throw new Error(`พบ Modifier เก่าที่ไม่มีรหัสของเมนู ${i.menu_name}: ${invalid.map(x=>x?.name||x?.group||'ไม่ทราบชื่อ').join(', ')} กรุณาเอาตัวเลือกเดิมออก แล้วเลือกจากรายการ Modifier Master อีกครั้ง`);return {...i,menu_id:menu.id,menu_name:menu.name,temperature:lineIsHot(menu)?'ร้อน':(i.temperature||'เย็น'),sweetness:resolved.find(m=>m.group==='sweetness')?.name||'',modifiers:resolved.map(m=>({group:m.group,name:m.name,modifier_list_id:m.modifier_list_id,option_id:m.option_id,price:m.price}))};});
   const saved=await adminAiRequest('POST',{action:'draft_update_items',draft_id:lineDraftEditorState.draftId,matched_items:payloadItems});if(saved.success!==true)throw new Error(saved.error||'บันทึก Draft ไม่สำเร็จ');
   const created=await adminAiRequest('POST',{action:'draft_create_order',draft_id:lineDraftEditorState.draftId,order_type:'pickup'});if(created.success!==true)throw new Error(created.error||'สร้าง Order Draft ไม่สำเร็จ');
   closeLineDraftEditor();alert(`สร้าง Order Draft สำเร็จ\nเลขออเดอร์: ${created.order?.order_number||'-'}\nยอดรวม: ฿${Number(created.order?.total_amount||0).toLocaleString('th-TH')}\n\nตรวจสอบแล้วกดยืนยันเพื่อส่งสรุปไป LINE`);await loadAdminAiLineData();
@@ -2877,11 +2955,10 @@ function switchAdminOnlineTab(tab,scroll=true){
 // AI & LINE settings page: settings are persisted through the authenticated admin-ai Edge Function.
 async function renderAdminAiSettingsPage(){
  const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
- panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Settings · AI &amp; LINE</h3><div class="admin-online-note">ตั้งค่าการทำงานแยกส่วนและบันทึกลง Supabase</div></div><button class="admin-orders-refresh" onclick="renderAdminAiSettingsPage()">↻ Refresh</button></div><div id="adminAiSettingsStatus" class="admin-menu-status">กำลังโหลดการตั้งค่า…</div><div id="adminAiSettingsBody"></div>`;
+ panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Settings</h3><div class="admin-online-note">ตั้งค่าเวลาเปิดร้านและข้อมูลการให้บริการ</div></div><button class="admin-orders-refresh" onclick="renderAdminAiSettingsPage()">↻ Refresh</button></div><div id="adminAiSettingsStatus" class="admin-menu-status">กำลังโหลดการตั้งค่า…</div><div id="adminAiSettingsBody"></div>`;
  try{const d=await adminAiRequest('GET');if(!d.success)throw new Error('โหลดการตั้งค่าไม่สำเร็จ');const host=document.getElementById('adminAiSettingsBody');if(!host)return;
  const schedule=d.store_schedule||{};const days=[['mon','จันทร์'],['tue','อังคาร'],['wed','พุธ'],['thu','พฤหัสบดี'],['fri','ศุกร์'],['sat','เสาร์'],['sun','อาทิตย์']];
- host.innerHTML=`<section style="margin-top:16px"><h3>การทำงานของระบบ</h3>${renderAdminAiSwitch('เปิดใช้ AI Processor','ai_enabled',adminAiSettingValue(d.settings,'ai_enabled',true),'เปิด/ปิดการวิเคราะห์ข้อความและรูปภาพ')}${renderAdminAiSwitch('ตอบกลับ LINE อัตโนมัติ','line_auto_reply_enabled',adminAiSettingValue(d.settings,'line_auto_reply_enabled',true),'เปิด/ปิดการตอบกลับอัตโนมัติ')}${renderAdminAiSwitch('รับออเดอร์จาก LINE','line_order_intake_enabled',adminAiSettingValue(d.settings,'line_order_intake_enabled',true),'เปิด/ปิดการแยกรายการสั่งซื้อ')}${renderAdminAiSwitch('ระบบสะสมแต้ม','loyalty_enabled',adminAiSettingValue(d.settings,'loyalty_enabled',true),'เปิด/ปิดระบบ Reward แยกจาก AI')}</section>
- <section style="margin-top:22px"><h3>เวลาเปิดร้าน</h3><div class="admin-online-note">เขตเวลา Asia/Bangkok · ตั้งค่าเวลารายวันและวันหยุด</div><div style="display:grid;gap:8px;margin-top:12px">${days.map(([k,label])=>{const x=schedule.weekly?.[k]||{enabled:true,open:'06:00',close:'13:30'};return `<div style="display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(78px,1fr) minmax(78px,1fr);gap:8px;align-items:center;padding:10px;border:1px solid var(--line);border-radius:10px"><b>${label}</b><input id="sched_${k}_enabled" type="checkbox" ${x.enabled?'checked':''} aria-label="เปิด ${label}"><input id="sched_${k}_open" type="time" value="${esc(x.open)}" class="field"><input id="sched_${k}_close" type="time" value="${esc(x.close)}" class="field"></div>`}).join('')}</div><button class="admin-orders-refresh" style="margin-top:12px" onclick="saveAdminStoreSchedule()">บันทึกเวลาเปิดร้าน</button></section>
+ host.innerHTML=`<section class="bal-settings-section"><div class="bal-section-heading"><h3>เวลาเปิดร้าน</h3><span>STORE HOURS</span></div><div class="admin-online-note">เขตเวลา Asia/Bangkok · ตั้งค่าเวลารายวันและวันหยุด</div><div style="display:grid;gap:8px;margin-top:12px">${days.map(([k,label])=>{const x=schedule.weekly?.[k]||{enabled:true,open:'06:00',close:'13:30'};return `<div class="bal-schedule-row"><div class="bal-schedule-day"><b>${label}</b><input id="sched_${k}_enabled" type="checkbox" ${x.enabled?'checked':''} aria-label="เปิด ${label}"></div><label class="bal-time-field"><small>เปิด</small><input id="sched_${k}_open" type="time" value="${esc(x.open)}" class="field"></label><label class="bal-time-field"><small>ปิด</small><input id="sched_${k}_close" type="time" value="${esc(x.close)}" class="field"></label></div>`}).join('')}</div><button class="admin-orders-refresh" style="margin-top:12px" onclick="saveAdminStoreSchedule()">บันทึกเวลาเปิดร้าน</button></section>
  <section style="margin-top:22px"><h3>การตั้งค่าที่จัดการอยู่</h3><div class="admin-online-note">FAQ และ Reward Links จัดการในแท็บของตัวเอง โดยใช้ตารางเดิม</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="admin-orders-refresh" onclick="switchAdminOnlineTab('faq')">จัดการ FAQ</button><button class="admin-orders-refresh" onclick="switchAdminOnlineTab('rewards')">จัดการ Reward Links</button></div></section>`;
  const st=document.getElementById('adminAiSettingsStatus');if(st)st.textContent='โหลดการตั้งค่าจาก Supabase สำเร็จ';
  }catch(e){const st=document.getElementById('adminAiSettingsStatus');if(st)st.textContent='โหลดไม่สำเร็จ: '+e.message;}
