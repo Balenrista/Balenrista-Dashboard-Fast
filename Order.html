@@ -905,9 +905,12 @@
     const STORE_SCHEDULE_ENDPOINT = `${CUSTOMER_ORDERS_API_URL}/functions/v1/admin-ai?public=store-hours`;
 
     async function loadStoreScheduleStatus() {
+      // This Admin AI endpoint is explicitly public (public=store-hours).
+      // Do not attach the browser Publishable Key here; the direct public
+      // endpoint test succeeds without it. Keep the key for Supabase REST reads.
       const response = await fetch(STORE_SCHEDULE_ENDPOINT, {
         method: 'GET',
-        headers: { apikey: SUPABASE_MENU_PUBLIC_KEY, Accept: 'application/json' },
+        headers: { Accept: 'application/json' },
         cache: 'no-store'
       });
       const result = await response.json().catch(() => ({}));
