@@ -811,8 +811,7 @@
     <button class="admin-online-group" type="button" aria-expanded="true" data-admin-group="system" onclick="toggleAdminGroup('system')">ตั้งค่าระบบ<svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
   </div>
   <div class="admin-online-tabs" id="adminOnlineTabs" role="tablist" aria-label="Admin Order Online tabs">
-    <button class="admin-online-tab active" data-admin-tab="overview" onclick="switchAdminOnlineTab('overview')">Overview</button>
-    <button class="admin-online-tab" data-admin-tab="orders" onclick="switchAdminOnlineTab('orders')">Orders</button>
+    <button class="admin-online-tab active" data-admin-tab="orders" onclick="switchAdminOnlineTab('orders')">Orders</button>
     <button class="admin-online-tab" data-admin-tab="menu" onclick="switchAdminOnlineTab('menu')">Menu</button>
     <button class="admin-online-tab" data-admin-tab="customers" onclick="switchAdminOnlineTab('customers')">Customers</button>
     <button class="admin-online-tab" data-admin-tab="payments" onclick="switchAdminOnlineTab('payments')">Payments</button>
@@ -820,14 +819,8 @@
     <button class="admin-online-tab" data-admin-tab="settings" onclick="switchAdminOnlineTab('settings')">Settings</button>
     <button class="admin-online-tab" data-admin-tab="ai-line" onclick="switchAdminOnlineTab('ai-line')">AI &amp; LINE</button>
     <button class="admin-online-tab" data-admin-tab="faq" onclick="switchAdminOnlineTab('faq')">FAQ</button>
-    <button class="admin-online-tab" data-admin-tab="broadcast" onclick="switchAdminOnlineTab('broadcast')">Broadcast</button>
-    <button class="admin-online-tab" data-admin-tab="logs" onclick="switchAdminOnlineTab('logs')">Logs</button>
   </div>
-  <div id="adminOnlinePanel" class="admin-online-panel" role="tabpanel">
-    <div class="admin-online-kpis"><div class="admin-online-kpi"><span>ออเดอร์วันนี้</span><b>—</b></div><div class="admin-online-kpi"><span>ยอดขายออนไลน์</span><b>—</b></div><div class="admin-online-kpi"><span>รอตรวจสอบ</span><b>—</b></div><div class="admin-online-kpi"><span>ยกเลิก</span><b>—</b></div></div>
-    <div class="admin-online-placeholder">กราฟและข้อมูลจริงจะแสดงหลังเชื่อม API และตารางออเดอร์ใน Supabase</div>
-    <div class="admin-online-note">หน้านี้เป็นโครงหน้า UI เท่านั้น ยังไม่อ่านหรือเขียนข้อมูลจริง</div>
-  </div>
+  <div id="adminOnlinePanel" class="admin-online-panel" role="tabpanel"></div>
 </div>
 
 <div id="billsSection" class="section bills-section">
@@ -2786,7 +2779,7 @@ function adminIconSvg(name){
  return `<svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${paths[name]||paths.layers}</svg>`;
 }
 const adminOnlineTabMeta={
-  overview:{title:'Overview',desc:'ภาพรวมยอดขายและสถานะออเดอร์'},orders:{title:'Orders',desc:'รายการออเดอร์ รายละเอียดสินค้า รูปสลิป และประวัติ'},menu:{title:'Menu',desc:'จัดการเมนู ราคา หมวดหมู่ และ Modifier'},customers:{title:'Customers',desc:'ฐานข้อมูลลูกค้าจาก Website และ LINE พร้อมประวัติออเดอร์'},payments:{title:'Payments',desc:'ช่องทางชำระเงินและตรวจสอบสลิป'},rewards:{title:'Rewards',desc:'คะแนนสะสม Reward Links และประวัติแต้ม'},settings:{title:'Settings',desc:'ตั้งค่าระบบ AI, LINE, สะสมแต้ม และเวลาเปิดร้าน'},'ai-line':{title:'AI & LINE',desc:'ตั้งค่าการอ่านออเดอร์และระบบตอบกลับ LINE'},faq:{title:'FAQ',desc:'คำถามที่พบบ่อยและข้อมูลร้าน'},broadcast:{title:'Broadcast',desc:'จัดการข้อความ Broadcast'},logs:{title:'Logs',desc:'ประวัติการเชื่อมต่อและข้อผิดพลาด'}
+orders:{title:'Orders',desc:'รายการออเดอร์ รายละเอียดสินค้า รูปสลิป และประวัติ'},menu:{title:'Menu',desc:'จัดการเมนู ราคา หมวดหมู่ และ Modifier'},customers:{title:'Customers',desc:'ฐานข้อมูลลูกค้าจาก Website และ LINE พร้อมประวัติออเดอร์'},payments:{title:'Payments',desc:'ช่องทางชำระเงินและตรวจสอบสลิป'},rewards:{title:'Rewards',desc:'คะแนนสะสม Reward Links และประวัติแต้ม'},settings:{title:'Settings',desc:'ตั้งค่าระบบ AI, LINE, สะสมแต้ม และเวลาเปิดร้าน'},'ai-line':{title:'AI & LINE',desc:'ตั้งค่าการอ่านออเดอร์และระบบตอบกลับ LINE'},faq:{title:'FAQ',desc:'คำถามที่พบบ่อยและข้อมูลร้าน'}
 };
 function openAdminOrderOnline(){
   if(!currentUser){showLogin();return false}
@@ -2795,7 +2788,7 @@ function openAdminOrderOnline(){
   document.getElementById('managementSection')?.classList.remove('active','management-mobile-mode');
   document.getElementById('billsSection')?.classList.remove('active');
   document.getElementById('adminOrderOnlineSection')?.classList.add('active');
-  switchAdminOnlineTab('overview',false);
+  switchAdminOnlineTab('orders',false);
   window.scrollTo({top:0,behavior:'auto'});
   return false;
 }
@@ -3090,8 +3083,6 @@ function switchAdminOnlineTab(tab,scroll=true){
     renderAdminRewardLinksPage();
   }else if(tab==='settings'){
     renderAdminAiSettingsPage();
-  }else if(tab==='overview'){
-    panel.innerHTML='<div class="admin-online-kpis"><div class="admin-online-kpi"><span>ออเดอร์วันนี้</span><b>—</b></div><div class="admin-online-kpi"><span>ยอดขายออนไลน์</span><b>—</b></div><div class="admin-online-kpi"><span>รอตรวจสอบ</span><b>—</b></div><div class="admin-online-kpi"><span>ยกเลิก</span><b>—</b></div></div><div class="admin-online-placeholder">กราฟยอดขายจะแสดงเมื่อเชื่อม Backend และฐานข้อมูลออเดอร์</div><div class="admin-online-note">ยังไม่มีการอ่านข้อมูลออเดอร์จริง</div>';
   }else{
     panel.innerHTML='<div style="font-size:18px;font-weight:800;margin-bottom:6px">'+meta.title+'</div><div class="admin-online-placeholder">'+meta.desc+'<br><br>เตรียมพื้นที่สำหรับเชื่อมข้อมูลจริงในขั้นถัดไป</div><div class="admin-online-note">ไม่มีการเปลี่ยนแปลงข้อมูลจริงในขั้นนี้</div>';
   }
@@ -3578,7 +3569,7 @@ async function openAdminOrderDetail(orderId){
 function closeAdminOrderDetail(){const box=document.getElementById('adminOrderDetail');if(box){box.classList.remove('open');box.innerHTML='';}}
 
 function toggleAdminGroup(group){
-  const map={sales:['overview','orders'],catalog:['menu','customers'],finance:['payments','rewards'],system:['settings','ai-line','faq','broadcast','logs']};
+  const map={sales:['orders'],catalog:['menu','customers'],finance:['payments','rewards'],system:['settings','ai-line','faq']};
   const btn=document.querySelector('[data-admin-group="'+group+'"]');if(!btn)return;
   const expanded=btn.getAttribute('aria-expanded')==='true';btn.setAttribute('aria-expanded',String(!expanded));
   btn.innerHTML=({sales:'การขาย',catalog:'ข้อมูลร้าน',finance:'การเงินและสมาชิก',system:'ตั้งค่าระบบ'})[group]+adminIconSvg('chevron');btn.classList.toggle('is-collapsed',expanded);
