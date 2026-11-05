@@ -973,6 +973,20 @@
     let selectedMenu = null;
     let currentOptions = { sweetness: "", topLayer: "", topLayerPrice: 0, delicious: "", deliciousPrice: 0, icePack: "ไม่แยกน้ำแข็ง" };
 
+    function showStartupDiagnostic(message) {
+      let panel = document.getElementById('startupDiagnostic');
+      if (!panel) {
+        panel = document.createElement('div');
+        panel.id = 'startupDiagnostic';
+        panel.style.cssText = 'margin:12px 16px;padding:12px 14px;border:1px solid #c98b42;border-radius:10px;background:#fff8ed;color:#633d16;font-size:13px;line-height:1.5;white-space:pre-wrap;';
+        const loading = document.getElementById('loading');
+        if (loading?.parentNode) loading.parentNode.insertBefore(panel, loading.nextSibling);
+        else document.body.prepend(panel);
+      }
+      panel.textContent = message;
+      panel.style.display = 'block';
+    }
+
     window.onload = function() {
       liff.init({ liffId: "2010475919-EKZVGpBS" })
         .then(() => {
@@ -985,28 +999,48 @@
           }
         }).catch(err => console.log("LIFF ทำงานนอกแอป LINE ข้อมูลจะใช้โหมดทดสอบภายนอก"));
 
-      Promise.all([
+      // Load menu and Admin hours independently so the page reveals the exact failing service.
+      Promise.allSettled([
         BalenristaCustomerAdapter.loadMenuCatalog(),
         loadStoreScheduleStatus()
-      ])
-        .then(([supabaseCatalog]) => {
-          initializeStore(supabaseCatalog);
-          // Keep the storefront synchronized with Admin changes and opening/closing time.
-          window.setInterval(() => {
-            loadStoreScheduleStatus().catch(err => {
-              console.error('Store schedule refresh error:', err);
-              shopIsOpen = false;
-              updateCartStatus();
-              updateStoreHoursDisplay({ is_open: false, reason: 'schedule_unavailable' });
-            });
-          }, 60000);
-        })
-        .catch(err => {
-          console.error('Customer Supabase load error:', err);
-          shopIsOpen = false;
-          const loading = document.getElementById('loading');
-          if (loading) loading.innerText = 'โหลดเมนูหรือเวลาเปิดร้านจาก Supabase ไม่สำเร็จ จึงปิดรับคำสั่งซื้อชั่วคราว กรุณาลองใหม่';
-        });
+      ]).then(([menuResult, scheduleResult]) => {
+        const diagnostics = [];
+
+        if (menuResult.status === 'fulfilled') {
+          initializeStore(menuResult.value);
+        } else {
+          console.error('Menu catalog load error:', menuResult.reason);
+          diagnostics.push(`โหลดเมนูจาก Supabase ไม่สำเร็จ: ${menuResult.reason?.message || menuResult.reason}`);
+        }
+
+        if (scheduleResult.status === 'rejected') {
+          console.error('Store schedule load error:', scheduleResult.reason);
+          shopIsOpen = false; // Fail closed: never accept orders without confirmed Admin hours.
+          storeSchedule = null;
+          storeScheduleStatus = null;
+          updateCartStatus();
+          updateStoreHoursDisplay({ is_open: false, reason: 'schedule_unavailable' });
+          diagnostics.push(`อ่านเวลาเปิดร้านจาก Admin ไม่สำเร็จ: ${scheduleResult.reason?.message || scheduleResult.reason}`);
+        }
+
+        if (diagnostics.length) showStartupDiagnostic(diagnostics.join('\n'));
+
+        // Keep checking Admin hours even if the first request failed.
+        window.setInterval(() => {
+          loadStoreScheduleStatus().then(() => {
+            const panel = document.getElementById('startupDiagnostic');
+            if (panel && menuResult.status === 'fulfilled') panel.style.display = 'none';
+          }).catch(err => {
+            console.error('Store schedule refresh error:', err);
+            shopIsOpen = false;
+            storeSchedule = null;
+            storeScheduleStatus = null;
+            updateCartStatus();
+            updateStoreHoursDisplay({ is_open: false, reason: 'schedule_unavailable' });
+            showStartupDiagnostic(`อ่านเวลาเปิดร้านจาก Admin ไม่สำเร็จ: ${err?.message || err}`);
+          });
+        }, 60000);
+      });
     };
 
     function initializeStore(data) {
