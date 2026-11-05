@@ -2720,21 +2720,24 @@ function lineModifierGroupKey(list){return LINE_MODIFIER_GROUPS[list?.id]?.key||
 function lineResolveModifier(itemModifier, menu){
  const mods=lineDraftEditorState.modifierOptions||[];
  const lists=lineDraftEditorState.modifierLists||[];
- const rawGroup=lineNorm(itemModifier?.group);
+ // Support both the current payload and legacy AI modifier field names.
+ const rawName=itemModifier?.name??itemModifier?.option_name??itemModifier?.modifier_name??itemModifier?.value??itemModifier?.label??'';
+ const rawGroup=lineNorm(itemModifier?.group??itemModifier?.group_name??itemModifier?.modifier_group??'');
  const rawListId=String(itemModifier?.modifier_list_id||itemModifier?.list_id||'');
- let list=lists.find(l=>l.id===rawListId);
+ const rawOptionId=String(itemModifier?.option_id||itemModifier?.modifier_option_id||'');
+ let list=lists.find(l=>String(l.id)===rawListId);
+ let option=mods.find(o=>String(o.id)===rawOptionId);
+ if(option)list=lists.find(l=>String(l.id)===String(option.modifier_list_id))||list;
  if(!list&&rawGroup)list=lists.find(l=>lineNorm(lineModifierGroupKey(l))===rawGroup||lineNorm(l.name)===rawGroup);
- let option=null;
- if(list){
-  option=mods.find(o=>o.id===itemModifier?.option_id&&o.modifier_list_id===list.id)
-    ||mods.find(o=>o.modifier_list_id===list.id&&lineNorm(o.name)===lineNorm(itemModifier?.name));
+ if(!option&&list&&rawName){
+  option=mods.find(o=>String(o.modifier_list_id)===String(list.id)&&lineNorm(o.name)===lineNorm(rawName));
  }
- if(!option){
-  const candidates=mods.filter(o=>lineNorm(o.name)===lineNorm(itemModifier?.name));
-  const allowed=candidates.filter(o=>{const l=lists.find(x=>x.id===o.modifier_list_id);return l&&(!menu||lineListApplies(l,menu));});
-  if(allowed.length===1){option=allowed[0];list=lists.find(l=>l.id===option.modifier_list_id);}
+ if(!option&&rawName){
+  const candidates=mods.filter(o=>lineNorm(o.name)===lineNorm(rawName));
+  const allowed=candidates.filter(o=>{const l=lists.find(x=>String(x.id)===String(o.modifier_list_id));return l&&(!menu||lineListApplies(l,menu));});
+  if(allowed.length===1){option=allowed[0];list=lists.find(l=>String(l.id)===String(option.modifier_list_id));}
  }
- if(!option||!list)return null;
+ if(!option||!list||String(option.modifier_list_id)!==String(list.id))return null;
  return {group:lineModifierGroupKey(list),name:option.name,modifier_list_id:list.id,list_id:list.id,option_id:option.id,price:Number(option.price)||0};
 }
 function lineSetModifierOption(item,list,option,checked){
@@ -2776,7 +2779,7 @@ async function openLineDraftEditor(id){
   if(d.draft_order_id){alert('รายการนี้สร้าง Order Draft แล้ว สามารถกดยืนยันและส่ง LINE ได้');return;}
   const catalog=await loadLineModifierCatalog(mc.menus||[]);
   lineDraftEditorState={draftId:id,menus:catalog.menus,modifierLists:catalog.lists,modifierOptions:catalog.options,rules:catalog.rules,items:[]};
-  const normalizedItems=(d.matched_items||[]).map(i=>{const menu=catalog.menus.find(x=>x.name===i.menu_name);return {...i,modifiers:(Array.isArray(i.modifiers)?i.modifiers:[]).map(m=>lineResolveModifier(m,menu)||{...m})};});
+  const normalizedItems=(d.matched_items||[]).map(i=>{const menu=catalog.menus.find(x=>x.name===i.menu_name);const raw=Array.isArray(i.modifiers)?i.modifiers:[];const resolved=raw.map(m=>lineResolveModifier(m,menu)).filter(Boolean);return {...i,modifiers:resolved};});
   lineDraftEditorState.items=normalizedItems;
   if(!lineDraftEditorState.items.length)lineDraftEditorState.items=[{menu_name:'',quantity:1,temperature:'เย็น',sweetness:'หวานปกติ 100%',modifiers:[],note:''}];
   renderLineDraftEditor();
