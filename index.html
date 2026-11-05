@@ -1649,7 +1649,7 @@ async function openCrud(type=managementType){
 let materialCart=[], expenseCart=[], salesCart=[];
 
 async function openSalesCart(){
-  const menus=await getMenus();
+  const menus=await getMenus(iso(today),true);
   window.__saleMenus=menus;
   salesCart=[];
   document.getElementById('modalTitle').textContent='Add Sale';
@@ -1684,7 +1684,7 @@ function bindSalesCartInputs(){
   };
   sel.onchange=update;qty.oninput=update;
   const dateEl=document.getElementById('cart_sale_date');
-  if(dateEl)dateEl.onchange=async()=>{try{window.__saleMenus=await getMenus(dateEl.value||iso(today));update()}catch(err){toast('โหลดราคาตามวันที่ไม่สำเร็จ: '+err.message)}};
+  if(dateEl)dateEl.onchange=async()=>{try{window.__saleMenus=await getMenus(dateEl.value||iso(today),true);update()}catch(err){toast('โหลดราคาตามวันที่ไม่สำเร็จ: '+err.message)}};
   update();
 }
 function stepSalesCartQty(delta){
@@ -1867,8 +1867,10 @@ function effectivePriceFromHistory(menu,history,date){
   for(const h of rows){if(String(h.effective_date||'')<=d)price=Number(h.new_price||0);else break;}
   return price;
 }
-async function getMenus(forDate=iso(today)){
-  const r=await db.from('menus').select('id,name,sale_price,avg_ingredient_cost,is_active').order('name');
+async function getMenus(forDate=iso(today),includeInactive=false){
+  let query=db.from('menus').select('id,name,sale_price,avg_ingredient_cost,is_active');
+  if(!includeInactive)query=query.eq('is_active',true);
+  const r=await query.order('name');
   if(r.error)throw r.error;
   const menus=r.data||[];
   if(!menus.length)return menus;
