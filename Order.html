@@ -817,11 +817,11 @@
   <!-- Javascript ด้านล่างนี้คือของเดิม 100% ไม่ได้แตะต้องครับ -->
   <script src="./balenrista-customer-adapter.js"></script>
   <script>
-    // Public read-only key for the Customer Website menu catalog.
+    // Legacy anon key for public read-only Customer Website menu catalog access.
     // Do not configure the order API with a publishable key: order submission
     // requires its separately provisioned API credential and remains unchanged.
     const CUSTOMER_ORDERS_API_URL = 'https://iftsmcgvperrhjjfnhqa.supabase.co';
-    const SUPABASE_MENU_PUBLIC_KEY = 'sb_publishable_AezycpnUmhgvMWJlUsg2qA_S3JbiR0';
+    const SUPABASE_MENU_PUBLIC_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmdHNtY2d2cGVycmhqamZuaHFhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODk4NDM0ODksImV4cCI6MjEwNTQxOTQ4OX0.bWs1Vg2tICRWvHghEAJNFRVVxnhAJNy8ShWYhSj5tMg';
     let checkoutSubmitting = false;
     let checkoutIdempotencyKey = null;
     try {
