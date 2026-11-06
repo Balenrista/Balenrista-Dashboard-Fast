@@ -82,6 +82,21 @@
       return request("/store-status");
     },
 
+    // Order history is private: customer-api verifies the LINE ID Token
+    // and returns only orders belonging to the authenticated Website customer.
+    async loadOrderHistory(idToken) {
+      const token = String(idToken || "").trim();
+      if (!token) {
+        throw new Error("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบ LINE ใหม่");
+      }
+      return request("/history", {
+        method: "GET",
+        headers: {
+          "X-Line-ID-Token": token
+        }
+      });
+    },
+
     // Submit uses a dedicated server function. Website phone is requested once only if the Website profile has no saved phone.
     async submitOrder(input) {
       input = input || {};
