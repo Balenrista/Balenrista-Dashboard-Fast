@@ -584,6 +584,36 @@
     /* Balenrista Checkout v2 */
     .checkout-choice{display:flex;gap:10px;margin:12px 0}.checkout-choice button{flex:1;padding:12px;border:1px solid var(--text-muted);border-radius:12px;background:var(--bg-main);color:var(--text-main);font-weight:700}.checkout-choice button.active{border-color:var(--col-active);background:var(--col-active);color:#111}.checkout-hint{font-size:12px;color:var(--text-muted);line-height:1.5;margin:6px 0 12px}.checkout-field[hidden]{display:none!important}
 
+
+    /* UI refinement: cart swipe, history cards and mobile checkout */
+    .cart-swipe-wrap{position:relative;overflow:hidden;border-bottom:1px solid rgba(255,255,255,.07);border-radius:14px;margin:8px 0}
+    .cart-swipe-delete{position:absolute;right:0;top:0;bottom:0;width:84px;border:0;background:#a83232;color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font:600 12px 'Prompt',sans-serif}
+    .cart-swipe-delete i{font-size:21px}
+    .cart-swipe-card{position:relative;z-index:1;background:var(--bg-main);padding:16px 4px;border:0;gap:12px;min-height:94px;will-change:transform;touch-action:pan-y}
+    .cart-item-copy{min-width:0;flex:1}
+    .cart-item-name{overflow-wrap:anywhere}
+    .cart-item-price{font-size:14px;font-weight:700;color:#d8b58b;margin-top:7px}
+    .history-content{width:min(94vw,480px);max-height:88dvh;padding:20px 16px 24px;border:1px solid rgba(255,255,255,.07)}
+    #historyList article{background:#302d2a!important;box-shadow:0 5px 18px rgba(0,0,0,.22)!important;border:1px solid rgba(255,255,255,.07);border-radius:18px!important;padding:16px!important;margin:12px 0!important}
+    #historyList article b{overflow-wrap:anywhere}
+    #historyList article>div:first-child{padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.09)}
+    #historyList article>div:nth-child(2){display:inline-flex;background:rgba(216,181,137,.12);padding:5px 10px;border-radius:20px;margin:12px 0!important;color:#e3bd91!important}
+    .delivery-modal{align-items:flex-start;overflow-y:auto;overscroll-behavior:contain;padding: max(16px,env(safe-area-inset-top)) 14px max(20px,env(safe-area-inset-bottom))}
+    .delivery-modal-content{width:100%;max-width:440px;max-height:calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;margin:auto;padding:24px 20px}
+    .modal-group{min-width:0}
+    .modal-input{display:block;min-height:48px;line-height:1.45;color-scheme:dark;max-width:100%}
+    input.modal-input[type="datetime-local"]{width:100%;min-width:0;min-height:54px;padding:12px 10px;font-size:14px;display:block;appearance:auto;-webkit-appearance:auto}
+    textarea.modal-input{resize:vertical;min-height:90px}
+    .modal-btn-group{position:sticky;bottom:-24px;padding:12px 0 max(4px,env(safe-area-inset-bottom));background:var(--bg-main);z-index:2}
+    body.modal-open{overflow:hidden}
+    @media(max-width:380px){
+      .delivery-modal{padding-left:10px;padding-right:10px}
+      .delivery-modal-content{padding:20px 15px}
+      .modal-btn-group{gap:10px}
+      .modal-btn{font-size:12px;padding:13px 8px}
+      .quantity-control{width:102px;flex:0 0 102px}
+    }
+
   </style>
 </head>
 <body>
@@ -1400,32 +1430,54 @@ else {
       let totalGlasses = 0;
 
       cart.forEach((item, index) => {
-        let itemTotal = item.price * item.qty;
+        const itemTotal = item.price * item.qty;
         grandTotal += itemTotal;
         totalGlasses += item.qty;
-
-        let details = (item.modifiers || []).map(modifier =>
+        const details = (item.modifiers || []).map(modifier =>
           `${escapeHtml(modifier.name)}${Number(modifier.price || 0) > 0 ? ` (+${Number(modifier.price)}฿)` : ''}`
         ).join('<br>') || 'ไม่มีตัวเลือกเพิ่มเติม';
 
-        const row = document.createElement('div');
-        row.className = 'cart-item-row';
-        row.innerHTML = `
-          <div>
-            <div class="cart-item-name">${item.loyverseName}</div>
-            <div class="cart-item-details">${details}</div>
-            <div style="font-size:14px; font-weight:700; margin-top:6px; color:#4CAF50;">฿${itemTotal}</div>
-          </div>
-          <div class="quantity-control">
-            <button class="qty-btn" onclick="changeCartQty(${index}, -1)">-</button>
-            <span class="qty-num">${item.qty}</span>
-            <button class="qty-btn" onclick="changeCartQty(${index}, 1)">+</button>
-          </div>
-        `;
-        list.appendChild(row);
+        const wrap = document.createElement('div');
+        wrap.className = 'cart-swipe-wrap';
+        wrap.innerHTML = `
+          <button class="cart-swipe-delete" type="button" aria-label="ลบรายการนี้">
+            <i class="ph-bold ph-trash"></i><span>ลบ</span>
+          </button>
+          <div class="cart-item-row cart-swipe-card">
+            <div class="cart-item-copy">
+              <div class="cart-item-name">${escapeHtml(item.loyverseName)}</div>
+              <div class="cart-item-details">${details}</div>
+              <div class="cart-item-price">฿${itemTotal.toLocaleString('th-TH')}</div>
+            </div>
+            <div class="quantity-control">
+              <button class="qty-btn" onclick="changeCartQty(${index}, -1)">−</button>
+              <span class="qty-num">${item.qty}</span>
+              <button class="qty-btn" onclick="changeCartQty(${index}, 1)">+</button>
+            </div>
+          </div>`;
+        const card = wrap.querySelector('.cart-swipe-card');
+        const deleteItem = () => { cart.splice(index, 1); renderCartSheetItems(); updateCartStatus(); if (!cart.length) closeCartSheet(); };
+        wrap.querySelector('.cart-swipe-delete').addEventListener('click', deleteItem);
+        let touchStartX = 0, touchStartY = 0, deltaX = 0;
+        card.addEventListener('touchstart', e => {
+          touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; deltaX = 0;
+          card.style.transition = 'none';
+        }, {passive:true});
+        card.addEventListener('touchmove', e => {
+          const dx = e.touches[0].clientX - touchStartX;
+          const dy = e.touches[0].clientY - touchStartY;
+          if (Math.abs(dx) > Math.abs(dy) && dx < 0) {
+            deltaX = Math.max(-92, dx); card.style.transform = `translateX(${deltaX}px)`;
+          }
+        }, {passive:true});
+        card.addEventListener('touchend', () => {
+          card.style.transition = 'transform .2s ease';
+          card.style.transform = deltaX < -45 ? 'translateX(-84px)' : 'translateX(0)';
+          wrap.classList.toggle('is-swiped', deltaX < -45);
+        });
+        list.appendChild(wrap);
       });
-      
-      document.getElementById('cartTotalPrice').innerText = `฿${grandTotal}`;
+      document.getElementById('cartTotalPrice').innerText = `฿${grandTotal.toLocaleString('th-TH')}`;
       document.getElementById('cartTotalPoints').innerText = `${totalGlasses} แต้ม`;
     }
 
@@ -1507,10 +1559,12 @@ else {
       const profile = window.balenristaLineProfile || {};
       document.getElementById('checkoutLineName').textContent = profile.displayName || lineDisplayName || 'ลูกค้า LINE';
       document.getElementById('deliveryModal').style.display = 'flex';
+      document.body.classList.add('modal-open');
     }
 
     function closeDeliveryModal() {
       document.getElementById('deliveryModal').style.display = 'none';
+      document.body.classList.remove('modal-open');
     }
 
     function confirmFinalOrder() {
