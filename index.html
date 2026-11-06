@@ -3008,7 +3008,50 @@ function renderLineDraftEditor(){
  #lineDraftEditorModal .bal-simple-option small{color:#d8a18a}
  #lineDraftEditorModal .bal-item-price{text-align:right;font-weight:800;font-size:21px;margin-top:18px;color:#f2d8c6}
  #lineDraftEditorModal .bal-total-bar{position:sticky;bottom:-18px;background:#171514;padding:14px 0 max(8px,env(safe-area-inset-bottom));border-top:1px solid #403633;display:flex;justify-content:space-between;align-items:center;gap:10px}
- @media(max-width:430px){#lineDraftEditorModal .bal-editor-shell{padding:14px;border-radius:18px}#lineDraftEditorModal .bal-addon-grid{grid-template-columns:1fr}#lineDraftEditorModal .bal-sweetness-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}#lineDraftEditorModal .bal-sweetness-option{min-height:78px}#lineDraftEditorModal .bal-sweetness-name{font-size:10px}}
+ @media(max-width:600px){
+  #lineDraftEditorModal .bal-editor-shell{
+    width:100%;max-width:560px;max-height:calc(100dvh - max(16px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom)));
+    padding:12px;border-radius:18px
+  }
+  #lineDraftEditorModal .bal-editor-head{top:-12px;padding:5px 0 10px}
+  #lineDraftEditorModal .bal-editor-head h2{font-size:18px!important}
+  #lineDraftEditorModal .bal-editor-item{padding:12px;margin:10px 0;border-radius:16px}
+  #lineDraftEditorModal .bal-field-label{font-size:12px;margin-top:10px}
+  #lineDraftEditorModal .bal-menu-select{padding:10px 12px;font-size:14px;margin-top:5px;border-radius:11px}
+  #lineDraftEditorModal .bal-qty{gap:12px;margin-top:5px}
+  #lineDraftEditorModal .bal-qty button{width:38px;height:38px;font-size:20px}
+  #lineDraftEditorModal .bal-qty strong{font-size:18px}
+  #lineDraftEditorModal .bal-choice-section{margin-top:14px}
+  #lineDraftEditorModal .bal-choice-title{font-size:13px;margin-bottom:7px}
+  #lineDraftEditorModal .bal-addon-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+  #lineDraftEditorModal .bal-addon-option,#lineDraftEditorModal .bal-simple-option{
+    min-height:48px;padding:8px;border-radius:12px;gap:7px
+  }
+  #lineDraftEditorModal .bal-addon-icon{font-size:18px}
+  #lineDraftEditorModal .bal-addon-copy{font-size:12px;gap:1px}
+  #lineDraftEditorModal .bal-addon-copy b{font-size:10px}
+  #lineDraftEditorModal .bal-addon-mark{font-size:15px}
+  #lineDraftEditorModal .bal-ice-grid{gap:7px}
+  #lineDraftEditorModal .bal-ice-option{min-height:48px;padding:8px;font-size:13px;gap:7px}
+  #lineDraftEditorModal .bal-ice-icon{font-size:19px}
+  #lineDraftEditorModal .bal-simple-grid{gap:7px}
+  #lineDraftEditorModal .bal-simple-option{font-size:12px}
+  #lineDraftEditorModal .bal-simple-option span{font-size:18px}
+  #lineDraftEditorModal .bal-sweetness-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  #lineDraftEditorModal .bal-sweetness-option{min-height:66px;padding:6px 2px;gap:2px;border-radius:10px}
+  #lineDraftEditorModal .bal-sweetness-icon{font-size:19px}
+  #lineDraftEditorModal .bal-sweetness-name{font-size:9px;white-space:normal;line-height:1.25}
+  #lineDraftEditorModal .bal-sweetness-option small{font-size:9px}
+  #lineDraftEditorModal .bal-item-price{font-size:18px;margin-top:12px}
+  #lineDraftEditorModal .bal-total-bar{bottom:-12px;padding:10px 0 max(7px,env(safe-area-inset-bottom));gap:8px}
+  #lineDraftEditorModal .bal-total-bar b{font-size:15px!important}
+  #lineDraftEditorModal .bal-total-bar button{font-size:11px;padding:8px 10px;white-space:normal}
+ }
+ @media(max-width:380px){
+  #lineDraftEditorModal .bal-addon-grid{grid-template-columns:1fr}
+  #lineDraftEditorModal .bal-total-bar{align-items:flex-start;flex-direction:column}
+  #lineDraftEditorModal .bal-total-bar button{width:100%;justify-content:center}
+ }
  </style>
  <div class="bal-editor-shell"><div class="bal-editor-head"><h2 style="margin:0;font-size:clamp(18px,4vw,24px)">ปรับแต่งออเดอร์</h2><button class="admin-orders-refresh" onclick="closeLineDraftEditor()">ปิด ${adminIconSvg('close')}</button></div>
  <p class="admin-online-note">ตัวเลือกและราคาอ้างอิงจาก Modifier Master ใน Supabase</p>
