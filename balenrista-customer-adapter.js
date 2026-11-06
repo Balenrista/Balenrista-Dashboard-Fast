@@ -22,6 +22,7 @@
     if (!config.apiUrl || !config.anonKey) {
       throw new Error("Customer API ยังไม่ได้ตั้งค่า");
     }
+
     const response = await fetch(
       `${config.apiUrl}/functions/v1/customer-api/${path.replace(/^\/+/, "")}`,
       {
@@ -36,13 +37,20 @@
         body: options.body,
       }
     );
+
     const raw = await response.text();
     let data = {};
-    try { data = raw ? JSON.parse(raw) : {}; }
-    catch { throw new Error(`Customer API ส่งข้อมูลไม่ใช่ JSON (HTTP ${response.status})`); }
+
+    try {
+      data = raw ? JSON.parse(raw) : {};
+    } catch {
+      throw new Error(`Customer API ส่งข้อมูลไม่ใช่ JSON (HTTP ${response.status})`);
+    }
+
     if (!response.ok || data.success === false) {
       throw new Error(data.message || data.error || `Customer API HTTP ${response.status}`);
     }
+
     return data;
   }
 
@@ -52,9 +60,11 @@
 
     async loadMenuCatalog() {
       const data = await request("/catalog");
+
       if (!Array.isArray(data.menus) || !data.modifiers) {
         throw new Error("รูปแบบ Catalog จาก Customer API ไม่ครบ");
       }
+
       const menus = data.menus.map((row) => ({
         id: row.id,
         name: row.name,
@@ -68,6 +78,7 @@
         menu_images: Array.isArray(row.menu_images) ? row.menu_images : [],
         is_active: row.is_active === true,
       }));
+
       return {
         source: "customer-api",
         updated: true,
@@ -82,52 +93,99 @@
       return request("/store-status");
     },
 
+    async loadOrderHistory(idToken) {
+      const token = String(idToken || "").trim();
+
+      if (!token) {
+        throw new Error("กรุณาเข้าสู่ระบบ LINE ก่อนดูประวัติคำสั่งซื้อ");
+      }
+
+      return request("/history", {
+        headers: { "X-Line-ID-Token": token }
+      });
+    },
+
     // Keep the previously specified order endpoint isolated from the public catalog API.
     // This does not route orders through customer-api; it preserves the existing
     // customer-orders contract and still requires the server-side function to exist.
     async submitOrder(input) {
       input = input || {};
       const liff = input.liff;
+
       if (!liff || typeof liff.isLoggedIn !== "function" || !liff.isLoggedIn()) {
         throw new Error("กรุณาเข้าสู่ระบบ LINE ก่อนสั่งซื้อ");
       }
+
       if (typeof liff.getIDToken !== "function" || !liff.getIDToken()) {
         throw new Error("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบ LINE ใหม่");
       }
+
       const customer = input.customer || {};
       const cart = Array.isArray(input.cart) ? input.cart : [];
-      if (!customer.name || !customer.phone) throw new Error("กรุณากรอกชื่อและเบอร์โทรศัพท์");
-      if (!["pickup", "delivery"].includes(input.orderType)) throw new Error("ประเภทการรับสินค้าไม่ถูกต้อง");
-      if (!cart.length) throw new Error("ยังไม่มีสินค้าในตะกร้า");
+
+      if (!customer.name || !customer.phone) {
+        throw new Error("กรุณากรอกชื่อและเบอร์โทรศัพท์");
+      }
+
+      if (!["pickup", "delivery"].includes(input.orderType)) {
+        throw new Error("ประเภทการรับสินค้าไม่ถูกต้อง");
+      }
+
+      if (!cart.length) {
+        throw new Error("ยังไม่มีสินค้าในตะกร้า");
+      }
+
       if (input.orderType === "delivery" && !String(input.address || "").trim()) {
         throw new Error("กรุณากรอกที่อยู่จัดส่ง");
       }
-      const idempotencyKey = String(input.idempotencyKey || "").trim();
-      if (!idempotencyKey) throw new Error("ไม่พบรหัสคำสั่งซื้อ กรุณากดสั่งซื้ออีกครั้ง");
 
-      const response = await fetch(`${config.apiUrl}/functions/v1/customer-orders/orders`, {
-        method: "POST",
-        headers: {
-          apikey: config.anonKey,
-          Authorization: `Bearer ${config.anonKey}`,
-          "Content-Type": "application/json",
-          "X-Line-ID-Token": liff.getIDToken(),
-          "X-Idempotency-Key": idempotencyKey
-        },
-        body: JSON.stringify({
-          source: "website",
-          order_type: input.orderType,
-          customer: { name: String(customer.name).trim(), phone: String(customer.phone).trim() },
-          delivery_address: input.orderType === "delivery" ? String(input.address).trim() : null,
-          pickup_at: input.pickupAt || null,
-          cart,
-          idempotency_key: idempotencyKey
-        })
-      });
+      const idempotencyKey = String(input.idempotencyKey || "").trim();
+
+      if (!idempotencyKey) {
+        throw new Error("ไม่พบรหัสคำสั่งซื้อ กรุณากดสั่งซื้ออีกครั้ง");
+      }
+
+      const response = await fetch(
+        `${config.apiUrl}/functions/v1/customer-orders/orders`,
+        {
+          method: "POST",
+          headers: {
+            apikey: config.anonKey,
+            Authorization: `Bearer ${config.anonKey}`,
+            "Content-Type": "application/json",
+            "X-Line-ID-Token": liff.getIDToken(),
+            "X-Idempotency-Key": idempotencyKey
+          },
+          body: JSON.stringify({
+            source: "website",
+            order_type: input.orderType,
+            customer: {
+              name: String(customer.name).trim(),
+              phone: String(customer.phone).trim()
+            },
+            delivery_address: input.orderType === "delivery"
+              ? String(input.address).trim()
+              : null,
+            pickup_at: input.pickupAt || null,
+            cart,
+            idempotency_key: idempotencyKey
+          })
+        }
+      );
+
       const raw = await response.text();
       let body = {};
-      try { body = raw ? JSON.parse(raw) : {}; } catch { body = { error: raw }; }
-      if (!response.ok) throw new Error(body.error || body.message || `Order API HTTP ${response.status}`);
+
+      try {
+        body = raw ? JSON.parse(raw) : {};
+      } catch {
+        body = { error: raw };
+      }
+
+      if (!response.ok) {
+        throw new Error(body.error || body.message || `Order API HTTP ${response.status}`);
+      }
+
       return body;
     },
   };
