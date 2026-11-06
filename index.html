@@ -3416,7 +3416,7 @@ async function loadAdminOnlineCustomers(reset=true){
     if(body){
       body.innerHTML=adminOnlineCustomerRows.length?adminOnlineCustomerRows.map(c=>`
         <tr>
-          <td><strong>${adminCustomerEsc(c.display_name||'ไม่ระบุชื่อ')}</strong></td>
+          <td><strong>${adminCustomerEsc(c.line_display_name||c.display_name||'ไม่ระบุชื่อ')}</strong></td>
           <td><span class="admin-customer-source">${c.source==='line'?'LINE':'Website'}</span></td>
           <td>${adminCustomerEsc(c.phone||'—')}</td>
           <td style="min-width:180px;white-space:normal">${adminCustomerEsc(c.address||'—')}</td>
