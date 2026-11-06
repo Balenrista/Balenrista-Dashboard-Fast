@@ -124,7 +124,10 @@
           pickup_at: input.pickupAt || null,
           cart: Array.isArray(input.cart) ? input.cart : [],
           customer_note: String(input.customerNote || ""),
-          customer_phone: customerPhone
+          customer_phone: customerPhone,
+          // LINE display name shown by the LIFF profile in Order.html.
+          // The server still verifies the LINE ID Token before accepting the order.
+          customer_name: String(input.customer?.name || input.customerName || "").trim()
         })
       });
       const raw = await response.text();
