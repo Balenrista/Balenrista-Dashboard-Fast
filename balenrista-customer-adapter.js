@@ -1,194 +1,123 @@
 /**
  * Balenrista Customer Adapter
- * Public storefront data is served only by the dedicated customer-api Edge Function.
- * Admin AI remains the source of truth; this adapter contains no menu/modifier master data.
+ * เชื่อมหน้า Customer Website กับ Supabase Edge Functions
+ *
+ * หน้าที่:
+ * 1. ส่งคำสั่งซื้อไปยัง customer-order-submit
+ * 2. ส่ง LINE ID Token เพื่อยืนยันตัวตนลูกค้า
+ * 3. สร้าง Idempotency Key ป้องกันคำสั่งซื้อซ้ำ
+ * 4. รับผลการบันทึกคำสั่งซื้อกลับไปแสดงบนหน้าเว็บ
  */
+
 (function (global) {
   "use strict";
 
-  const config = { apiUrl: "", anonKey: "" };
+  const CONFIG = {
+    SUPABASE_URL: "https://iftsmcgvperrhjjfnhqa.supabase.co",
 
-  function configure(options) {
-    options = options || {};
-    config.apiUrl = String(options.apiUrl || "").replace(/\/+$/, "");
-    config.anonKey = String(options.anonKey || "").trim();
-    if (!config.apiUrl || !config.anonKey) {
-      throw new Error("กรุณาตั้งค่า Supabase URL และ Public Publishable Key");
-    }
-    return true;
-  }
+    SUPABASE_ANON_KEY:
+      "sb_publishable_AezycpnUmhgvMWJlUsg2qA_S3JbiR0",
 
-  async function request(path, options = {}) {
-    if (!config.apiUrl || !config.anonKey) {
-      throw new Error("Customer API ยังไม่ได้ตั้งค่า");
-    }
-
-    const response = await fetch(
-      `${config.apiUrl}/functions/v1/customer-api/${path.replace(/^\/+/, "")}`,
-      {
-        method: options.method || "GET",
-        headers: {
-          apikey: config.anonKey,
-          Authorization: `Bearer ${config.anonKey}`,
-          Accept: "application/json",
-          ...(options.headers || {}),
-        },
-        cache: "no-store",
-        body: options.body,
-      }
-    );
-
-    const raw = await response.text();
-    let data = {};
-
-    try {
-      data = raw ? JSON.parse(raw) : {};
-    } catch {
-      throw new Error(`Customer API ส่งข้อมูลไม่ใช่ JSON (HTTP ${response.status})`);
-    }
-
-    if (!response.ok || data.success === false) {
-      throw new Error(data.message || data.error || `Customer API HTTP ${response.status}`);
-    }
-
-    return data;
-  }
-
-  const adapter = {
-    configure,
-    configureMenuRead: configure,
-
-    async loadMenuCatalog() {
-      const data = await request("/catalog");
-
-      if (!Array.isArray(data.menus) || !data.modifiers) {
-        throw new Error("รูปแบบ Catalog จาก Customer API ไม่ครบ");
-      }
-
-      const menus = data.menus.map((row) => ({
-        id: row.id,
-        name: row.name,
-        loyverseName: row.name,
-        thaiName: row.name,
-        price: Number(row.sale_price || 0),
-        sale_price: Number(row.sale_price || 0),
-        category: String(row.category || "อื่นๆ").trim(),
-        ingredients: String(row.ingredients || ""),
-        image: String(row.image || ""),
-        menu_images: Array.isArray(row.menu_images) ? row.menu_images : [],
-        is_active: row.is_active === true,
-      }));
-
-      return {
-        source: "customer-api",
-        updated: true,
-        generated_at: data.generated_at,
-        menus,
-        categories: Array.isArray(data.categories) ? data.categories : [],
-        modifiers: data.modifiers,
-      };
-    },
-
-    async loadStoreStatus() {
-      return request("/store-status");
-    },
-
-    async loadOrderHistory(idToken) {
-      const token = String(idToken || "").trim();
-
-      if (!token) {
-        throw new Error("กรุณาเข้าสู่ระบบ LINE ก่อนดูประวัติคำสั่งซื้อ");
-      }
-
-      return request("/history", {
-        headers: { "X-Line-ID-Token": token }
-      });
-    },
-
-    // Keep the previously specified order endpoint isolated from the public catalog API.
-    // This does not route orders through customer-api; it preserves the existing
-    // customer-orders contract and still requires the server-side function to exist.
-    async submitOrder(input) {
-      input = input || {};
-      const liff = input.liff;
-
-      if (!liff || typeof liff.isLoggedIn !== "function" || !liff.isLoggedIn()) {
-        throw new Error("กรุณาเข้าสู่ระบบ LINE ก่อนสั่งซื้อ");
-      }
-
-      if (typeof liff.getIDToken !== "function" || !liff.getIDToken()) {
-        throw new Error("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบ LINE ใหม่");
-      }
-
-      const customer = input.customer || {};
-      const cart = Array.isArray(input.cart) ? input.cart : [];
-
-      if (!customer.name || !customer.phone) {
-        throw new Error("กรุณากรอกชื่อและเบอร์โทรศัพท์");
-      }
-
-      if (!["pickup", "delivery"].includes(input.orderType)) {
-        throw new Error("ประเภทการรับสินค้าไม่ถูกต้อง");
-      }
-
-      if (!cart.length) {
-        throw new Error("ยังไม่มีสินค้าในตะกร้า");
-      }
-
-      if (input.orderType === "delivery" && !String(input.address || "").trim()) {
-        throw new Error("กรุณากรอกที่อยู่จัดส่ง");
-      }
-
-      const idempotencyKey = String(input.idempotencyKey || "").trim();
-
-      if (!idempotencyKey) {
-        throw new Error("ไม่พบรหัสคำสั่งซื้อ กรุณากดสั่งซื้ออีกครั้ง");
-      }
-
-      const response = await fetch(
-        `${config.apiUrl}/functions/v1/customer-orders/orders`,
-        {
-          method: "POST",
-          headers: {
-            apikey: config.anonKey,
-            Authorization: `Bearer ${config.anonKey}`,
-            "Content-Type": "application/json",
-            "X-Line-ID-Token": liff.getIDToken(),
-            "X-Idempotency-Key": idempotencyKey
-          },
-          body: JSON.stringify({
-            source: "website",
-            order_type: input.orderType,
-            customer: {
-              name: String(customer.name).trim(),
-              phone: String(customer.phone).trim()
-            },
-            delivery_address: input.orderType === "delivery"
-              ? String(input.address).trim()
-              : null,
-            pickup_at: input.pickupAt || null,
-            cart,
-            idempotency_key: idempotencyKey
-          })
-        }
-      );
-
-      const raw = await response.text();
-      let body = {};
-
-      try {
-        body = raw ? JSON.parse(raw) : {};
-      } catch {
-        body = { error: raw };
-      }
-
-      if (!response.ok) {
-        throw new Error(body.error || body.message || `Order API HTTP ${response.status}`);
-      }
-
-      return body;
-    },
+    SUBMIT_ENDPOINT:
+      "https://iftsmcgvperrhjjfnhqa.supabase.co/functions/v1/customer-order-submit",
   };
 
-  global.BalenristaCustomerAdapter = adapter;
+  /**
+   * สร้าง Idempotency Key
+   * ใช้ป้องกันการกดสั่งซื้อซ้ำ
+   */
+  function createIdempotencyKey() {
+    if (global.crypto && typeof global.crypto.randomUUID === "function") {
+      return global.crypto.randomUUID();
+    }
+
+    return (
+      "web-" +
+      Date.now() +
+      "-" +
+      Math.random().toString(36).substring(2, 12)
+    );
+  }
+
+  /**
+   * ดึง LINE ID Token จาก LIFF
+   */
+  async function getLineIdToken() {
+    if (!global.liff || typeof global.liff.getIDToken !== "function") {
+      throw new Error("ไม่พบ LINE LIFF กรุณาเปิดเว็บไซต์ผ่าน LINE");
+    }
+
+    if (!global.liff.isLoggedIn()) {
+      throw new Error("กรุณาเข้าสู่ระบบ LINE ก่อนสั่งซื้อ");
+    }
+
+    const token = global.liff.getIDToken();
+
+    if (!token) {
+      throw new Error("ไม่สามารถตรวจสอบตัวตน LINE ได้");
+    }
+
+    return token;
+  }
+
+  /**
+   * ส่งคำสั่งซื้อไปยัง Supabase
+   */
+  async function submitOrder(orderData) {
+    if (!orderData || typeof orderData !== "object") {
+      throw new Error("ข้อมูลคำสั่งซื้อไม่ถูกต้อง");
+    }
+
+    const lineIdToken = await getLineIdToken();
+
+    const idempotencyKey =
+      orderData.idempotency_key || createIdempotencyKey();
+
+    const response = await fetch(CONFIG.SUBMIT_ENDPOINT, {
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json",
+        apikey: CONFIG.SUPABASE_ANON_KEY,
+        Authorization: "Bearer " + CONFIG.SUPABASE_ANON_KEY,
+        "X-Line-ID-Token": lineIdToken,
+        "Idempotency-Key": idempotencyKey,
+      },
+
+      body: JSON.stringify({
+        ...orderData,
+        idempotency_key: idempotencyKey,
+      }),
+    });
+
+    let result;
+
+    try {
+      result = await response.json();
+    } catch {
+      throw new Error("ระบบไม่สามารถอ่านผลตอบกลับจากเซิร์ฟเวอร์ได้");
+    }
+
+    if (!response.ok || result.success === false) {
+      throw new Error(
+        result.message ||
+        result.error ||
+        "ไม่สามารถบันทึกคำสั่งซื้อได้"
+      );
+    }
+
+    return {
+      success: true,
+      data: result,
+    };
+  }
+
+  /**
+   * เปิดใช้งาน Adapter
+   */
+  global.BalenristaCustomerAdapter = {
+    submitOrder,
+    createIdempotencyKey,
+  };
+
 })(window);
