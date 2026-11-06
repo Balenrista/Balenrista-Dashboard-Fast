@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -730,7 +731,9 @@
   <div id="deliveryModal" class="delivery-modal">
     <div class="delivery-modal-content">
       <div class="modal-title"><i class="ph-bold ph-shopping-bag"></i> ยืนยันคำสั่งซื้อ</div>
-      <div class="checkout-hint" id="checkoutCustomerProfileHint">ใช้ชื่อและเบอร์โทรจากข้อมูลลูกค้าที่ผูกกับ LINE โดยอัตโนมัติ ไม่ต้องกรอกซ้ำ</div>
+      <div class="checkout-hint" id="checkoutCustomerProfileHint">ระบบจะใช้ชื่อโปรไฟล์ LINE ของคุณโดยอัตโนมัติ</div>
+      <div class="modal-group checkout-field" id="checkoutLineNameField"><label>ชื่อ LINE</label><div class="modal-input" id="checkoutLineName" style="display:flex;align-items:center;min-height:44px;opacity:.9">กำลังอ่านชื่อ LINE…</div></div>
+      <div class="modal-group checkout-field" id="checkoutPhoneField" hidden><label for="checkoutPhone">เบอร์โทรศัพท์ <span class="required">* กรอกครั้งแรกครั้งเดียว</span></label><input id="checkoutPhone" class="modal-input" type="tel" inputmode="numeric" autocomplete="tel" maxlength="14" placeholder="08XXXXXXXX" /></div>
       <div class="modal-group checkout-field" id="checkoutAddressField"><label>สถานที่จัดส่ง <span class="required">* กรุณากรอกทุกครั้ง</span></label><textarea id="dev-address" class="modal-input" rows="3" placeholder="ที่อยู่ / อาคาร / ชั้น"></textarea></div>
       <div class="modal-group checkout-field" id="checkoutPickupField"><label>วันและเวลาที่ต้องการรับ <span class="required">* บังคับเลือก</span></label><input type="datetime-local" id="dev-pickup-at" class="modal-input"></div>
       <div class="modal-btn-group"><button class="modal-btn modal-btn-cancel" onclick="closeDeliveryModal()"><i class="ph-bold ph-x"></i> ยกเลิก</button><button class="modal-btn modal-btn-confirm" id="checkoutSubmitBtn" onclick="confirmFinalOrder()"><i class="ph-bold ph-check"></i> ยืนยันคำสั่งซื้อ</button></div>
@@ -745,7 +748,11 @@
           <div class="success-points-display" id="successPointsText">+0 แต้ม</div>
           <div class="success-points-label">คะแนนสะสมที่คุณได้รับ</div>
           
-          <p id="successModalDesc" style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 25px;"></p>
+          <p id="successModalDesc" style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px;"></p>
+          <div id="successRewardLinks" style="display:none;text-align:left;margin:0 0 20px;padding:12px;border:1px solid rgba(255,255,255,.18);border-radius:12px">
+            <div style="font-weight:700;margin-bottom:8px">🎁 ลิงก์สะสมแต้มของคุณ</div>
+            <div id="successRewardLinksList" style="display:grid;gap:8px"></div>
+          </div>
           
           <button class="modal-btn confirm-btn" id="claimRewardBtn" style="width: 100%; padding: 16px; font-size: 14px;">ปิด</button>
       </div>
@@ -761,7 +768,7 @@
   </div>
 
   <!-- Javascript ด้านล่างนี้คือของเดิม 100% ไม่ได้แตะต้องครับ -->
-  <script src="./balenrista-customer-adapter.js?v=20261106-1409-history"></script>
+  <script src="./balenrista-customer-adapter.js"></script>
   <script>
     // Public read-only key for the Customer Website menu catalog.
     // Do not configure the order API with a publishable key: order submission
@@ -936,95 +943,75 @@
       panel.style.display = 'block';
     }
 
-    window.onload = async function() {
-      // LIFF initialization must finish before LINE profile/token operations.
-      // It is intentionally independent from catalog loading so a LIFF delay
-      // cannot keep the storefront menu on the loading screen.
-      const liffReady = (async () => {
-        try {
-          await liff.init({ liffId: "2010475919-EKZVGpBS" });
+    window.onload = function() {
+      liff.init({ liffId: "2010475919-EKZVGpBS" })
+        .then(() => {
           if (liff.isLoggedIn()) {
-            const profile = await liff.getProfile();
-            window.balenristaLineProfile = profile || {};
-            lineUserId = profile?.userId || "";
-            lineDisplayName = profile?.displayName || "";
+            liff.getProfile().then(profile => {
+              window.balenristaLineProfile = profile || {};
+              lineUserId = profile.userId;
+              lineDisplayName = profile.displayName;
+            });
           }
-          return true;
-        } catch (err) {
-          console.warn("LIFF initialization/profile unavailable:", err);
-          return false;
+        }).catch(err => console.log("LIFF ทำงานนอกแอป LINE ข้อมูลจะใช้โหมดทดสอบภายนอก"));
+
+      // Load the public catalog and store status through the dedicated Customer API.
+      Promise.allSettled([
+        BalenristaCustomerAdapter.loadMenuCatalog(),
+        loadStoreScheduleStatus()
+      ]).then(([menuResult, scheduleResult]) => {
+        const diagnostics = [];
+        if (menuResult.status === 'fulfilled') {
+          initializeStore(menuResult.value);
+        } else {
+          console.error('Customer catalog load error:', menuResult.reason);
+          diagnostics.push(`โหลดเมนูจาก Customer API ไม่สำเร็จ: ${menuResult.reason?.message || menuResult.reason}`);
         }
-      })();
-
-      // Render catalog independently. The previous Promise.allSettled waited
-      // for store schedule too, so a slow schedule endpoint left the menu
-      // hidden even when /catalog had already returned successfully.
-      try {
-        const catalog = await Promise.race([
-          BalenristaCustomerAdapter.loadMenuCatalog(),
-          new Promise((_, reject) => window.setTimeout(
-            () => reject(new Error("Customer Catalog timeout (15 seconds)")), 15000
-          ))
-        ]);
-        initializeStore(catalog);
-      } catch (err) {
-        console.error("Customer catalog startup error:", err);
-        const loading = document.getElementById("loading");
-        if (loading) loading.style.display = "none";
-        showStartupDiagnostic(`โหลดเมนูไม่สำเร็จ: ${err?.message || err}\\nกรุณากดรีเฟรชเพื่อลองใหม่`);
-      }
-
-      // Store schedule is a separate dependency; it must not block menu rendering.
-      try {
-        await Promise.race([
-          loadStoreScheduleStatus(),
-          new Promise((_, reject) => window.setTimeout(
-            () => reject(new Error("Store schedule timeout (10 seconds)")), 10000
-          ))
-        ]);
-      } catch (err) {
-        console.error("Store schedule startup error:", err);
-        shopIsOpen = false;
-        storeSchedule = null;
-        storeScheduleStatus = null;
-        updateCartStatus();
-        updateStoreHoursDisplay({ is_open: false, reason: "schedule_unavailable" });
-        showStartupDiagnostic(`อ่านเวลาเปิดร้านไม่สำเร็จ: ${err?.message || err}`);
-      }
-
-      await liffReady;
-
-      // Refresh catalog and schedule periodically without blocking initial render.
-      window.setInterval(async () => {
-        try {
-          const freshCatalog = await BalenristaCustomerAdapter.loadMenuCatalog();
-          const activeCategory = currentCategory;
-          customerCatalog = freshCatalog;
-          allMenus = freshCatalog.menus || [];
-          renderCategories(freshCatalog.categories || []);
-          if (activeCategory && freshCatalog.categories.some(x => x.name === activeCategory)) {
-            filterMenu(activeCategory);
-          } else if (freshCatalog.categories?.length) {
-            filterMenu(freshCatalog.categories[0].name);
-          } else {
-            renderMenus(allMenus);
-          }
-        } catch (err) {
-          console.error("Catalog refresh error:", err);
-          showStartupDiagnostic(`อัปเดตเมนูไม่สำเร็จ: ${err?.message || err}`);
-        }
-        try {
-          await loadStoreScheduleStatus();
-        } catch (err) {
-          console.error("Store schedule refresh error:", err);
+        if (scheduleResult.status === 'rejected') {
+          console.error('Store schedule load error:', scheduleResult.reason);
           shopIsOpen = false;
           storeSchedule = null;
           storeScheduleStatus = null;
           updateCartStatus();
-          updateStoreHoursDisplay({ is_open: false, reason: "schedule_unavailable" });
-          showStartupDiagnostic(`อ่านเวลาเปิดร้านไม่สำเร็จ: ${err?.message || err}`);
+          updateStoreHoursDisplay({ is_open: false, reason: 'schedule_unavailable' });
+          diagnostics.push(`อ่านเวลาเปิดร้านจาก Customer API ไม่สำเร็จ: ${scheduleResult.reason?.message || scheduleResult.reason}`);
         }
-      }, 60000);
+        if (diagnostics.length) showStartupDiagnostic(diagnostics.join('\\n'));
+
+        // Refresh catalog and schedule so Admin changes reach the storefront.
+        window.setInterval(async () => {
+          try {
+            const freshCatalog = await BalenristaCustomerAdapter.loadMenuCatalog();
+            const activeCategory = currentCategory;
+            customerCatalog = freshCatalog;
+            allMenus = freshCatalog.menus || [];
+            renderCategories(freshCatalog.categories || []);
+            if (activeCategory && freshCatalog.categories.some(x => x.name === activeCategory)) {
+              filterMenu(activeCategory);
+            } else if (freshCatalog.categories?.length) {
+              filterMenu(freshCatalog.categories[0].name);
+            } else {
+              renderMenus(allMenus);
+            }
+            const panel = document.getElementById('startupDiagnostic');
+            if (panel) panel.style.display = 'none';
+          } catch (err) {
+            console.error('Catalog refresh error:', err);
+            showStartupDiagnostic(`อัปเดตเมนูจาก Customer API ไม่สำเร็จ: ${err?.message || err}`);
+          }
+          try {
+            await loadStoreScheduleStatus();
+          } catch (err) {
+            console.error('Store schedule refresh error:', err);
+            shopIsOpen = false;
+            storeSchedule = null;
+            storeScheduleStatus = null;
+            updateCartStatus();
+            updateStoreHoursDisplay({ is_open: false, reason: 'schedule_unavailable' });
+            showStartupDiagnostic(`อ่านเวลาเปิดร้านจาก Customer API ไม่สำเร็จ: ${err?.message || err}`);
+          }
+        }, 60000);
+      });
     };
 
     function initializeStore(data) {
@@ -1517,6 +1504,8 @@ else {
       const nowLocal = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0,16);
       pickupInput.min = nowLocal;
       document.querySelector('#deliveryModal .modal-title').innerHTML = isDelivery ? '<i class=\"ph-bold ph-map-pin\"></i> ข้อมูลจัดส่ง' : '<i class=\"ph-bold ph-storefront\"></i> ข้อมูลรับที่ร้าน';
+      const profile = window.balenristaLineProfile || {};
+      document.getElementById('checkoutLineName').textContent = profile.displayName || lineDisplayName || 'ลูกค้า LINE';
       document.getElementById('deliveryModal').style.display = 'flex';
     }
 
@@ -1547,20 +1536,43 @@ else {
       document.body.style.cursor = 'wait';
       checkoutIdempotencyKey = checkoutIdempotencyKey || ((window.crypto && crypto.randomUUID) ? crypto.randomUUID() : `br-${Date.now()}-${Math.random().toString(36).slice(2)}`);
       const profile = window.balenristaLineProfile || {};
+      const lineName = String(profile.displayName || lineDisplayName || 'ลูกค้า LINE').trim();
+      const nameEl = document.getElementById('checkoutLineName');
+      if (nameEl) nameEl.textContent = lineName;
       BalenristaCustomerAdapter.submitOrder({
         liff, orderType:currentOrderType,
-        customer:{name:profile.displayName || null}, cart, address,
+        customer:{name:lineName}, cart, address,
+        customerPhone:document.getElementById('checkoutPhone')?.value || '',
         pickupAt:currentOrderType === 'pickup' ? new Date(pickupAt).toISOString() : null,
         idempotencyKey:checkoutIdempotencyKey
       }).then(data => {
+        if (data.needs_phone) {
+          const phoneField = document.getElementById('checkoutPhoneField');
+          phoneField.hidden = false;
+          document.getElementById('checkoutCustomerProfileHint').textContent = 'ยังไม่มีเบอร์โทรในประวัติลูกค้า กรุณากรอกเบอร์โทรเพื่อบันทึกไว้ใช้ครั้งถัดไป';
+          document.getElementById('checkoutPhone').focus();
+          throw new Error('PHONE_FORM_REQUIRED');
+        }
         cart = []; checkoutIdempotencyKey = null; closeDeliveryModal(); closeCartSheet(); updateCartStatus();
-        const points = Number(data.points_awarded || data.points || 0);
+        const points = Number(data.points_awarded ?? data.cups ?? 0);
         document.getElementById('successPointsText').innerText = `+${points} แต้ม`;
-        document.getElementById('successModalDesc').innerText = `รับคำสั่งซื้อ ${data.order_number || ''} แล้ว ยอดรวม ฿${data.total_amount || 0} สถานะ: ${data.order_status || 'กำลังส่งเข้าระบบร้าน'}`;
+        document.getElementById('successModalDesc').innerText = `รับคำสั่งซื้อ ${data.order?.order_number || data.order_number || ''} แล้ว ยอดรวม ฿${data.order?.total_amount || data.total_amount || 0}`;
+        const links = Array.isArray(data.reward_links) ? data.reward_links : (data.integrations?.loyalty_link?.links || []);
+        const rewardBox = document.getElementById('successRewardLinks');
+        const rewardList = document.getElementById('successRewardLinksList');
+        rewardList.innerHTML = '';
+        if (links.length) {
+          links.forEach((url, i) => {
+            const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+            a.textContent = `เปิดลิงก์สะสมแต้ม ${i + 1}`; a.style.cssText = 'display:block;color:#d8b58b;text-decoration:underline;overflow-wrap:anywhere';
+            rewardList.appendChild(a);
+          });
+          rewardBox.style.display = 'block';
+        } else { rewardBox.style.display = 'none'; }
         const claimBtn = document.getElementById('claimRewardBtn');
         claimBtn.innerText = 'ปิด'; claimBtn.onclick = () => { document.getElementById('successModal').style.display='none'; };
         document.getElementById('successModal').style.display = 'flex';
-      }).catch(err => { alert('ส่งคำสั่งซื้อไม่สำเร็จ: ' + (err.message || 'กรุณาลองใหม่')); })
+      }).catch(err => { if (err.message !== 'PHONE_FORM_REQUIRED') alert('ส่งคำสั่งซื้อไม่สำเร็จ: ' + (err.message || 'กรุณาลองใหม่')); })
       .finally(() => { checkoutSubmitting=false; btn.disabled=false; btn.innerHTML='<i class="ph-bold ph-check"></i> ยืนยันคำสั่งซื้อ'; document.body.style.cursor='default'; });
     }
 
