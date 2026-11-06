@@ -82,22 +82,7 @@
       return request("/store-status");
     },
 
-    // Order history is private: the Customer API verifies this LINE ID Token
-    // and returns only orders belonging to the authenticated LINE customer.
-    async loadOrderHistory(idToken) {
-      const token = String(idToken || "").trim();
-      if (!token) {
-        throw new Error("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบ LINE ใหม่");
-      }
-      return request("/history", {
-        method: "GET",
-        headers: {
-          "X-Line-ID-Token": token
-        }
-      });
-    },
-
-    // Submit uses a dedicated server function. Identity and phone are loaded from the verified LINE member record.
+    // Submit uses a dedicated server function. Website phone is requested once only if the Website profile has no saved phone.
     async submitOrder(input) {
       input = input || {};
       const liff = input.liff;
@@ -108,30 +93,42 @@
       if (!idToken) throw new Error("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบ LINE ใหม่");
       const idempotencyKey = String(input.idempotencyKey || "").trim();
       if (!idempotencyKey) throw new Error("ไม่พบรหัสคำสั่งซื้อ กรุณากดสั่งซื้ออีกครั้ง");
-      const response = await fetch(`${config.apiUrl}/functions/v1/customer-order-submit`, {
-        method: "POST",
-        headers: {
-          apikey: config.anonKey,
-          Authorization: `Bearer ${config.anonKey}`,
-          "Content-Type": "application/json",
-          "X-Line-ID-Token": idToken,
-          "X-Idempotency-Key": idempotencyKey
-        },
-        body: JSON.stringify({
-          order_type: input.orderType,
-          delivery_address: input.orderType === "delivery" ? String(input.address || "").trim() : null,
-          pickup_at: input.pickupAt || null,
-          cart: Array.isArray(input.cart) ? input.cart : [],
-          customer_note: String(input.customerNote || "")
-        })
-      });
-      const raw = await response.text();
-      let body = {};
-      try { body = raw ? JSON.parse(raw) : {}; } catch { body = { error: raw }; }
-      if (!response.ok || body.success === false) {
-        throw new Error(body.error || body.message || `Order API HTTP ${response.status}`);
+      let customerPhone = String(input.customerPhone || "").trim();
+      const send = async () => {
+        const response = await fetch(`${config.apiUrl}/functions/v1/customer-order-submit`, {
+          method: "POST",
+          headers: {
+            apikey: config.anonKey,
+            Authorization: `Bearer ${config.anonKey}`,
+            "Content-Type": "application/json",
+            "X-Line-ID-Token": idToken,
+            "X-Idempotency-Key": idempotencyKey
+          },
+          body: JSON.stringify({
+            order_type: input.orderType,
+            delivery_address: input.orderType === "delivery" ? String(input.address || "").trim() : null,
+            pickup_at: input.pickupAt || null,
+            cart: Array.isArray(input.cart) ? input.cart : [],
+            customer_note: String(input.customerNote || ""),
+            customer_phone: customerPhone
+          })
+        });
+        const raw = await response.text();
+        let body = {};
+        try { body = raw ? JSON.parse(raw) : {}; } catch { body = { error: raw }; }
+        return { response, body };
+      };
+
+      let result = await send();
+      if (result.body.code === "PHONE_REQUIRED") {
+        customerPhone = window.prompt("กรุณากรอกเบอร์โทรศัพท์ (ระบบจะบันทึกไว้สำหรับการสั่งซื้อครั้งต่อไป)", "") || "";
+        if (!customerPhone.trim()) throw new Error("PHONE_INPUT_CANCELLED");
+        result = await send();
       }
-      return body;
+      if (!result.response.ok || result.body.success === false) {
+        throw new Error(result.body.error || result.body.message || `Order API HTTP ${result.response.status}`);
+      }
+      return result.body;
     },
   };
 
