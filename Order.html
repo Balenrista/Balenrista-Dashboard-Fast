@@ -527,7 +527,7 @@
     }
     #welcomeScreen {
       z-index: 1000001;
-      background: #050505 url('https://iftsmcgvperrhjjfnhqa.supabase.co/storage/v1/object/public/balenrista-menu-images/website/welcome-balenrista.webp') center center / 100% 100% no-repeat;
+      background: #050505 url('https://iftsmcgvperrhjjfnhqa.supabase.co/storage/v1/object/public/balenrista-menu-images/website/welcome-balenrista.webp?v=2') center center / 100% 100% no-repeat;
     }
     /* ปุ่มโปร่งใสวางทับพื้นที่ว่างใต้ภาพแมวใน Artwork */
     .welcome-start {
@@ -547,7 +547,7 @@
     }
     #gatewayScreen {
       z-index: 1000000; align-items: center; justify-content: center;
-      background: #050505 url('https://iftsmcgvperrhjjfnhqa.supabase.co/storage/v1/object/public/balenrista-menu-images/website/order-type-background.webp') center center / 100% 100% no-repeat;
+      background: #050505 url('https://iftsmcgvperrhjjfnhqa.supabase.co/storage/v1/object/public/balenrista-menu-images/website/order-type-background.webp?v=2') center center / 100% 100% no-repeat;
     }
     .order-art-cards {
       position: absolute;
@@ -602,22 +602,7 @@
     .delivery-modal-content{width:100%;max-width:440px;max-height:calc(100dvh - 32px - env(safe-area-inset-top) - env(safe-area-inset-bottom));overflow-y:auto;overscroll-behavior:contain;margin:auto;padding:24px 20px}
     .modal-group{min-width:0}
     .modal-input{display:block;min-height:48px;line-height:1.45;color-scheme:dark;max-width:100%}
-    input.modal-input[type="datetime-local"]{
-      width:100%;min-width:0;min-height:44px;height:44px;padding:0 14px;
-      display:block;box-sizing:border-box;
-      appearance:none;-webkit-appearance:none;
-      background-color:var(--bg-main);color:var(--col-active);
-      border:0;border-radius:var(--border-radius-btn);
-      box-shadow:var(--shadow-in);
-      font-family:inherit;font-size:14px;line-height:44px;
-      color-scheme:dark;opacity:1;
-    }
-    input.modal-input[type="datetime-local"]::-webkit-date-and-time-value{
-      text-align:left;min-height:44px;line-height:44px;
-    }
-    input.modal-input[type="datetime-local"]::-webkit-calendar-picker-indicator{
-      opacity:.75;filter:invert(.8);margin:0 2px 0 8px;
-    }
+    input.modal-input[type="datetime-local"]{width:100%;min-width:0;min-height:44px;padding:14px;font-size:14px;display:block;appearance:auto;-webkit-appearance:auto}
     textarea.modal-input{resize:vertical;min-height:90px}
     .modal-btn-group{position:sticky;bottom:-24px;padding:12px 0 max(4px,env(safe-area-inset-bottom));background:var(--bg-main);z-index:2}
     body.modal-open{overflow:hidden}
@@ -641,10 +626,10 @@
   <div id="gatewayScreen" class="gateway-overlay" style="display:none;">
     <div class="order-art-cards">
       <button class="art-card pickup" type="button" onclick="selectOrderType('pickup')" aria-label="รับที่ร้าน">
-        <img src="https://iftsmcgvperrhjjfnhqa.supabase.co/storage/v1/object/public/balenrista-menu-images/website/pickup-balenrista.webp" alt="รับที่ร้าน Pick Up">
+        <img src="https://iftsmcgvperrhjjfnhqa.supabase.co/storage/v1/object/public/balenrista-menu-images/website/pickup-balenrista.webp?v=2" alt="รับที่ร้าน Pick Up">
       </button>
       <button class="art-card delivery" type="button" onclick="selectOrderType('delivery')" aria-label="จัดส่ง Delivery">
-        <img src="https://iftsmcgvperrhjjfnhqa.supabase.co/storage/v1/object/public/balenrista-menu-images/website/delivery-balenrista.webp" alt="จัดส่ง Delivery">
+        <img src="https://iftsmcgvperrhjjfnhqa.supabase.co/storage/v1/object/public/balenrista-menu-images/website/delivery-balenrista.webp?v=2" alt="จัดส่ง Delivery">
       </button>
     </div>
   </div>
