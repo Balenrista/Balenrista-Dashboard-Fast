@@ -2975,154 +2975,99 @@ function renderLineDraftEditor(){
   return `<section class="bal-choice-section"><div class="bal-choice-title">${label}</div><div class="bal-simple-grid">${options.map(o=>{const active=selected.includes(o.id);return `<button type="button" class="bal-simple-option ${active?'is-selected':''}" aria-pressed="${active}" onclick="chooseLineModifier(${idx},'${list.id}','${o.id}')"><span>${lineModifierIcon(group,o)}</span><b>${esc(o.name)}</b>${Number(o.price||0)>0?`<small>+฿${Number(o.price).toLocaleString('th-TH')}</small>`:''}</button>`;}).join('')}</div></section>`;
  };
 
+ const expandedIndex=Number.isInteger(lineDraftEditorState.expandedIndex)?lineDraftEditorState.expandedIndex:0;
+ const itemSummary=(it)=>{
+  const names=(it.modifiers||[]).map(x=>x.name).filter(Boolean);
+  return names.length?names.slice(0,3).map(esc).join(' · '):'ยังไม่ได้เลือกตัวเลือก';
+ };
  modal.innerHTML=`<style>
- #lineDraftEditorModal .bal-editor-shell{background:#171514;color:#f7f0e9;width:min(850px,100%);max-height:calc(100dvh - max(20px,env(safe-area-inset-top)) - max(20px,env(safe-area-inset-bottom)));overflow:auto;overscroll-behavior:contain;border:1px solid #403633;box-shadow:0 18px 60px rgba(0,0,0,.65);border-radius:22px;padding:18px;box-sizing:border-box;margin:auto}
- #lineDraftEditorModal .bal-editor-head{display:flex;position:sticky;top:-18px;z-index:5;background:#171514;padding:8px 0 14px;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #403633}
- #lineDraftEditorModal .bal-editor-item{border:1px solid #403633;border-radius:20px;padding:16px;margin:14px 0;background:linear-gradient(155deg,#211c19,#171514)}
- #lineDraftEditorModal .bal-field-label{display:block;font-size:13px;color:#c8b8ac;margin-top:14px}
- #lineDraftEditorModal .bal-menu-select{width:100%;padding:14px;border:1px solid #51433d;border-radius:13px;background:#211d1a;color:#fff;font:inherit;margin-top:6px}
- #lineDraftEditorModal .bal-qty{display:flex;align-items:center;gap:16px;margin-top:7px}
- #lineDraftEditorModal .bal-qty button{width:44px;height:44px;border-radius:50%;border:1px solid #75403b;background:#2b1b19;color:#f4d9c7;font-size:25px}
- #lineDraftEditorModal .bal-qty strong{min-width:28px;text-align:center;font-size:21px}
- #lineDraftEditorModal .bal-choice-section{margin-top:20px}
- #lineDraftEditorModal .bal-choice-title{font-size:14px;font-weight:700;color:#eadbd0;margin-bottom:10px}
- #lineDraftEditorModal .bal-choice-title small{font-weight:400;color:#a9998f;margin-left:8px}
- #lineDraftEditorModal .bal-addon-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
- #lineDraftEditorModal .bal-addon-option,#lineDraftEditorModal .bal-simple-option{border:1px solid #51433d;background:#211d1a;color:#f7f0e9;border-radius:14px;min-height:58px;padding:10px;display:flex;align-items:center;gap:9px;text-align:left;font:inherit}
- #lineDraftEditorModal .bal-addon-option.is-selected,#lineDraftEditorModal .bal-simple-option.is-selected,#lineDraftEditorModal .bal-ice-option.is-selected,#lineDraftEditorModal .bal-sweetness-option.is-selected{border-color:#b45b50;background:rgba(134,33,34,.24);box-shadow:inset 0 0 0 1px #8d3d37}
- #lineDraftEditorModal .bal-addon-icon{font-size:23px}
- #lineDraftEditorModal .bal-addon-copy{display:flex;flex-direction:column;gap:2px;flex:1;font-size:13px}
- #lineDraftEditorModal .bal-addon-copy b{font-size:12px;color:#d8a18a}
- #lineDraftEditorModal .bal-addon-mark{font-size:18px;color:#d5a18c}
- #lineDraftEditorModal .bal-sweetness-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
- #lineDraftEditorModal .bal-sweetness-option{border:1px solid #51433d;background:#211d1a;color:#f7f0e9;border-radius:13px;min-height:88px;padding:8px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px}
- #lineDraftEditorModal .bal-sweetness-icon{font-size:25px;line-height:1.2}
- #lineDraftEditorModal .bal-sweetness-name{font-size:11px;white-space:nowrap}
- #lineDraftEditorModal .bal-sweetness-option small{font-size:10px;color:#c7a18e}
- #lineDraftEditorModal .bal-ice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
- #lineDraftEditorModal .bal-ice-option{border:1px solid #51433d;background:#211d1a;color:#f7f0e9;border-radius:14px;padding:12px;display:flex;align-items:center;justify-content:center;gap:10px;font:inherit}
- #lineDraftEditorModal .bal-ice-icon{font-size:25px}
- #lineDraftEditorModal .bal-simple-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
- #lineDraftEditorModal .bal-simple-option{justify-content:flex-start;font-size:13px}
- #lineDraftEditorModal .bal-simple-option span{font-size:22px}
- #lineDraftEditorModal .bal-simple-option small{color:#d8a18a}
- #lineDraftEditorModal .bal-item-price{text-align:right;font-weight:800;font-size:21px;margin-top:18px;color:#f2d8c6}
- #lineDraftEditorModal .bal-total-bar{position:sticky;bottom:-18px;background:#171514;padding:14px 0 max(8px,env(safe-area-inset-bottom));border-top:1px solid #403633;display:flex;justify-content:space-between;align-items:center;gap:10px}
- /* Compact order editor — scoped only to this modal */
- #lineDraftEditorModal .bal-editor-shell{width:min(620px,100%);max-height:calc(100dvh - max(16px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom)));padding:13px;border-radius:18px}
- #lineDraftEditorModal .bal-editor-head{top:-13px;padding:5px 0 9px}
- #lineDraftEditorModal .bal-editor-head h2{font-size:17px!important}
- #lineDraftEditorModal .bal-editor-head .admin-orders-refresh{padding:6px 9px;font-size:10px}
- #lineDraftEditorModal .admin-online-note{font-size:10px;margin:7px 0}
- #lineDraftEditorModal .bal-editor-item{padding:11px;border-radius:14px;margin:9px 0}
- #lineDraftEditorModal .bal-editor-item>div:first-child b{font-size:13px!important}
- #lineDraftEditorModal .bal-editor-item .admin-orders-refresh{padding:6px 9px;font-size:10px}
- #lineDraftEditorModal .bal-field-label{font-size:11px;margin-top:9px}
- #lineDraftEditorModal .bal-menu-select{padding:9px 10px;border-radius:10px;font-size:12px;margin-top:4px;min-height:38px}
- #lineDraftEditorModal .bal-qty{gap:10px;margin-top:5px}
- #lineDraftEditorModal .bal-qty button{width:34px;height:34px;font-size:19px}
- #lineDraftEditorModal .bal-qty button svg{width:14px;height:14px}
- #lineDraftEditorModal .bal-qty strong{min-width:22px;font-size:16px}
- #lineDraftEditorModal .bal-choice-section{margin-top:12px}
- #lineDraftEditorModal .bal-choice-title{font-size:12px;margin-bottom:6px}
- #lineDraftEditorModal .bal-choice-title small{font-size:9px;margin-left:6px}
- #lineDraftEditorModal .bal-addon-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
- #lineDraftEditorModal .bal-addon-option,#lineDraftEditorModal .bal-simple-option{min-height:42px;padding:7px 8px;border-radius:10px;gap:6px}
- #lineDraftEditorModal .bal-addon-icon{font-size:16px;line-height:1}
- #lineDraftEditorModal .bal-addon-copy{font-size:11px;gap:1px;line-height:1.25}
- #lineDraftEditorModal .bal-addon-copy b{font-size:10px}
- #lineDraftEditorModal .bal-addon-mark{font-size:13px}
- #lineDraftEditorModal .bal-sweetness-grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
- #lineDraftEditorModal .bal-sweetness-option{min-height:58px;padding:5px 2px;border-radius:9px;gap:1px}
- #lineDraftEditorModal .bal-sweetness-icon{font-size:15px;line-height:1}
- #lineDraftEditorModal .bal-sweetness-name{font-size:9px;white-space:normal;line-height:1.2;text-align:center}
- #lineDraftEditorModal .bal-sweetness-option small{font-size:8px}
- #lineDraftEditorModal .bal-ice-grid,#lineDraftEditorModal .bal-simple-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
- #lineDraftEditorModal .bal-ice-option{min-height:40px;padding:7px 8px;border-radius:10px;gap:6px;font-size:11px}
- #lineDraftEditorModal .bal-ice-icon{font-size:16px}
- #lineDraftEditorModal .bal-simple-option{font-size:11px}
- #lineDraftEditorModal .bal-simple-option span{font-size:16px}
- #lineDraftEditorModal .bal-simple-option small{font-size:9px}
- #lineDraftEditorModal .bal-item-price{font-size:16px;margin-top:10px}
- #lineDraftEditorModal .bal-total-bar{bottom:-13px;padding:9px 0 max(6px,env(safe-area-inset-bottom));gap:7px}
- #lineDraftEditorModal .bal-total-bar b{font-size:14px!important;white-space:nowrap}
- #lineDraftEditorModal .bal-total-bar .admin-orders-refresh{padding:8px 9px;font-size:10px;white-space:nowrap}
- @media(max-width:430px){
-  #lineDraftEditorModal .bal-editor-shell{width:100%;padding:11px;border-radius:15px;max-height:calc(100dvh - max(12px,env(safe-area-inset-top)) - max(12px,env(safe-area-inset-bottom)))}
-  #lineDraftEditorModal .bal-editor-item{padding:9px;margin:7px 0}
-  #lineDraftEditorModal .bal-addon-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
-  #lineDraftEditorModal .bal-addon-option{min-height:40px;padding:6px}
-  #lineDraftEditorModal .bal-addon-copy{font-size:10px}
-  #lineDraftEditorModal .bal-sweetness-grid{gap:4px}
-  #lineDraftEditorModal .bal-sweetness-option{min-height:54px}
-  #lineDraftEditorModal .bal-total-bar b{font-size:12px!important}
-  #lineDraftEditorModal .bal-total-bar .admin-orders-refresh{font-size:9px;padding:7px}
- }
-
- /* Balenrista Draft Editor — compact mobile-first UI only */
- #lineDraftEditorModal .bal-editor-shell{width:min(560px,calc(100vw - 24px))!important;max-height:min(86dvh,760px)!important;padding:12px!important;border-radius:17px!important}
- #lineDraftEditorModal .bal-editor-head{top:-12px!important;padding:5px 0 9px!important}
- #lineDraftEditorModal .bal-editor-head h2{font-size:16px!important}
- #lineDraftEditorModal .admin-online-note{font-size:9px!important;margin:6px 0 8px!important}
- #lineDraftEditorModal .bal-editor-item{padding:10px!important;margin:7px 0!important;border-radius:13px!important}
- #lineDraftEditorModal .bal-editor-item>div:first-child b{font-size:12px!important}
- #lineDraftEditorModal .bal-editor-item .admin-orders-refresh{min-height:29px;padding:5px 8px!important;font-size:9px!important;border-radius:9px!important}
- #lineDraftEditorModal .bal-field-label{margin-top:8px!important;font-size:10px!important;line-height:1.35}
- #lineDraftEditorModal .bal-menu-select{min-height:36px!important;height:36px;padding:6px 10px!important;margin-top:4px!important;border-radius:9px!important;font-size:11px!important}
- #lineDraftEditorModal .bal-qty{gap:9px!important;margin-top:5px!important}
- #lineDraftEditorModal .bal-qty button{width:30px!important;height:30px!important;min-width:30px;font-size:16px!important;display:grid;place-items:center;padding:0}
+ #lineDraftEditorModal{align-items:flex-end!important;padding:0!important;background:rgba(0,0,0,.72)!important}
+ #lineDraftEditorModal .bal-editor-shell{width:min(680px,100%)!important;max-height:min(92dvh,900px)!important;overflow:auto;overscroll-behavior:contain;background:#171514;color:#f7f0e9;border:1px solid #493a34;border-bottom:0;box-shadow:0 -12px 48px rgba(0,0,0,.48);border-radius:22px 22px 0 0;padding:14px 14px max(12px,env(safe-area-inset-bottom))!important;box-sizing:border-box;margin:0 auto 0;}
+ #lineDraftEditorModal .bal-editor-shell:before{content:'';display:block;width:38px;height:4px;border-radius:9px;background:#66534b;margin:0 auto 11px}
+ #lineDraftEditorModal .bal-editor-head{display:flex;position:sticky;top:-14px;z-index:7;background:#171514;padding:4px 0 10px;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid #403633}
+ #lineDraftEditorModal .bal-editor-head h2{font-size:18px!important;margin:0}
+ #lineDraftEditorModal .bal-editor-head .admin-orders-refresh{min-height:34px;padding:6px 11px!important;border-radius:10px;font-size:11px}
+ #lineDraftEditorModal .admin-online-note{font-size:10px;margin:8px 0 10px;color:#b9a69b}
+ #lineDraftEditorModal .bal-editor-item{border:1px solid #403633;border-radius:14px;padding:10px;margin:8px 0;background:linear-gradient(145deg,#211c19,#191615)}
+ #lineDraftEditorModal .bal-item-summary{display:flex;align-items:center;justify-content:space-between;gap:8px;cursor:pointer;min-height:42px}
+ #lineDraftEditorModal .bal-summary-main{min-width:0;display:flex;flex-direction:column;gap:3px}
+ #lineDraftEditorModal .bal-summary-title{font-size:13px;font-weight:750;color:#f4e8df;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #lineDraftEditorModal .bal-summary-sub{font-size:10px;color:#b9a69b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #lineDraftEditorModal .bal-summary-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+ #lineDraftEditorModal .bal-summary-price{font-size:13px;font-weight:800;color:#f2d8c6;white-space:nowrap}
+ #lineDraftEditorModal .bal-expand-btn{width:28px;height:28px;border:1px solid #51433d;border-radius:9px;background:#29221e;color:#e9d9ce;display:grid;place-items:center;font-size:14px}
+ #lineDraftEditorModal .bal-editor-tools{display:flex;align-items:center;gap:6px}
+ #lineDraftEditorModal .bal-editor-tools .admin-orders-refresh{min-height:28px;padding:4px 8px!important;border-radius:8px;font-size:9px}
+ #lineDraftEditorModal .bal-editor-body{border-top:1px solid #403633;margin-top:9px;padding-top:3px}
+ #lineDraftEditorModal .bal-field-label{display:block;font-size:11px;color:#c8b8ac;margin-top:10px}
+ #lineDraftEditorModal .bal-menu-select{width:100%;min-height:38px;padding:8px 10px;border:1px solid #51433d;border-radius:10px;background:#211d1a;color:#fff;font:inherit;font-size:12px;margin-top:4px;box-sizing:border-box}
+ #lineDraftEditorModal .bal-qty{display:flex;align-items:center;gap:9px;margin-top:5px}
+ #lineDraftEditorModal .bal-qty button{width:30px;height:30px;min-width:30px;border-radius:50%;border:1px solid #75403b;background:#2b1b19;color:#f4d9c7;font-size:17px;display:grid;place-items:center;padding:0}
  #lineDraftEditorModal .bal-qty button svg{width:13px;height:13px}
- #lineDraftEditorModal .bal-qty strong{font-size:14px!important;min-width:20px}
- #lineDraftEditorModal .bal-choice-section{margin-top:10px!important}
- #lineDraftEditorModal .bal-choice-title{font-size:11px!important;margin-bottom:5px!important}
- #lineDraftEditorModal .bal-choice-title small{font-size:8px!important}
- #lineDraftEditorModal .bal-sweetness-grid{gap:4px!important}
- #lineDraftEditorModal .bal-sweetness-option{min-height:49px!important;padding:4px 2px!important;border-radius:8px!important;gap:1px!important}
- #lineDraftEditorModal .bal-sweetness-icon{font-size:13px!important}
- #lineDraftEditorModal .bal-sweetness-name{font-size:8px!important;line-height:1.15}
- #lineDraftEditorModal .bal-sweetness-option small{font-size:7px!important}
- #lineDraftEditorModal .bal-addon-grid,#lineDraftEditorModal .bal-simple-grid,#lineDraftEditorModal .bal-ice-grid{gap:5px!important}
- #lineDraftEditorModal .bal-addon-option,#lineDraftEditorModal .bal-simple-option,#lineDraftEditorModal .bal-ice-option{min-height:36px!important;padding:6px 7px!important;border-radius:9px!important;gap:5px!important}
- #lineDraftEditorModal .bal-addon-icon,#lineDraftEditorModal .bal-simple-option span,#lineDraftEditorModal .bal-ice-icon{font-size:14px!important}
- #lineDraftEditorModal .bal-addon-copy{font-size:10px!important;line-height:1.2}
- #lineDraftEditorModal .bal-addon-copy b,#lineDraftEditorModal .bal-simple-option small{font-size:9px!important}
- #lineDraftEditorModal .bal-addon-mark{font-size:12px!important}
- #lineDraftEditorModal .bal-item-price{font-size:14px!important;margin-top:7px!important}
- #lineDraftEditorModal .bal-editor-shell>button.admin-orders-refresh{align-self:flex-start;min-height:34px;padding:7px 11px!important;margin:3px 0 8px;border-radius:10px!important;font-size:10px!important}
- #lineDraftEditorModal .bal-total-bar{position:sticky!important;bottom:-12px!important;z-index:6;margin-top:8px;padding:8px 0 max(5px,env(safe-area-inset-bottom))!important;gap:8px!important}
- #lineDraftEditorModal .bal-total-bar b{font-size:13px!important}
- #lineDraftEditorModal .bal-total-bar .admin-orders-refresh{min-height:34px;padding:7px 9px!important;border-radius:9px!important;font-size:9px!important;white-space:normal!important;line-height:1.25}
- @media(max-width:430px){
-  #lineDraftEditorModal .bal-editor-shell{width:calc(100vw - 20px)!important;max-height:84dvh!important;padding:10px!important;border-radius:14px!important}
-  #lineDraftEditorModal .bal-sweetness-option{min-height:46px!important}
-  #lineDraftEditorModal .bal-total-bar b{font-size:11px!important}
-  #lineDraftEditorModal .bal-total-bar .admin-orders-refresh{font-size:8px!important;padding:6px 7px!important}
- }
+ #lineDraftEditorModal .bal-qty strong{min-width:20px;text-align:center;font-size:14px}
+ #lineDraftEditorModal .bal-choice-section{margin-top:12px}
+ #lineDraftEditorModal .bal-choice-title{font-size:11px;font-weight:750;color:#eadbd0;margin-bottom:6px}
+ #lineDraftEditorModal .bal-choice-title small{font-size:9px;font-weight:400;color:#a9998f;margin-left:6px}
+ #lineDraftEditorModal .bal-addon-grid,#lineDraftEditorModal .bal-simple-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ #lineDraftEditorModal .bal-addon-option,#lineDraftEditorModal .bal-simple-option{border:1px solid #51433d;background:#211d1a;color:#f7f0e9;border-radius:10px;min-height:40px;padding:7px 8px;display:flex;align-items:center;gap:7px;text-align:left;font:inherit}
+ #lineDraftEditorModal .bal-addon-option.is-selected,#lineDraftEditorModal .bal-simple-option.is-selected,#lineDraftEditorModal .bal-ice-option.is-selected,#lineDraftEditorModal .bal-sweetness-option.is-selected{border-color:#b45b50;background:rgba(134,33,34,.24);box-shadow:inset 0 0 0 1px #8d3d37}
+ #lineDraftEditorModal .bal-addon-icon,#lineDraftEditorModal .bal-simple-option span{font-size:15px}
+ #lineDraftEditorModal .bal-addon-copy{display:flex;flex-direction:column;gap:1px;flex:1;font-size:11px;line-height:1.2}
+ #lineDraftEditorModal .bal-addon-copy b,#lineDraftEditorModal .bal-simple-option small{font-size:9px;color:#d8a18a}
+ #lineDraftEditorModal .bal-addon-mark{font-size:12px;color:#d5a18c}
+ #lineDraftEditorModal .bal-sweetness-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px}
+ #lineDraftEditorModal .bal-sweetness-option{border:1px solid #51433d;background:#211d1a;color:#f7f0e9;border-radius:9px;min-height:52px;padding:5px 2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+ #lineDraftEditorModal .bal-sweetness-icon{font-size:14px;line-height:1}
+ #lineDraftEditorModal .bal-sweetness-name{font-size:9px;line-height:1.15;text-align:center}
+ #lineDraftEditorModal .bal-sweetness-option small{font-size:8px;color:#c7a18e}
+ #lineDraftEditorModal .bal-ice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+ #lineDraftEditorModal .bal-ice-option{border:1px solid #51433d;background:#211d1a;color:#f7f0e9;border-radius:10px;min-height:40px;padding:7px;display:flex;align-items:center;justify-content:center;gap:7px;font:inherit;font-size:11px}
+ #lineDraftEditorModal .bal-ice-icon{font-size:15px}
+ #lineDraftEditorModal .bal-simple-option{justify-content:flex-start;font-size:11px}
+ #lineDraftEditorModal .bal-item-price{text-align:right;font-weight:800;font-size:14px;margin-top:9px;color:#f2d8c6}
+ #lineDraftEditorModal .bal-add-item{width:100%;min-height:44px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:8px;margin:10px 0 8px!important;padding:10px 12px!important;border:1px dashed #8d4940!important;border-radius:12px!important;background:rgba(134,33,34,.10)!important;color:#e7b49c!important;font-size:12px!important;font-weight:700}
+ #lineDraftEditorModal .bal-add-item svg{width:16px;height:16px}
+ #lineDraftEditorModal .bal-total-bar{position:sticky!important;bottom:0!important;z-index:8;margin:0 -14px -1px!important;padding:11px 14px max(8px,env(safe-area-inset-bottom))!important;background:rgba(23,21,20,.97);backdrop-filter:blur(12px);border-top:1px solid #403633;display:flex;justify-content:space-between;align-items:center;gap:10px}
+ #lineDraftEditorModal .bal-total-bar b{font-size:15px!important;white-space:nowrap}
+ #lineDraftEditorModal .bal-total-bar .admin-orders-refresh{min-height:38px;padding:8px 12px!important;border:1px solid #8d4940!important;border-radius:10px!important;background:#862122!important;color:#fff!important;font-size:11px!important;white-space:nowrap}
+ @media(min-width:700px){#lineDraftEditorModal{align-items:center!important;padding:18px!important}#lineDraftEditorModal .bal-editor-shell{border-bottom:1px solid #493a34;border-radius:22px;max-height:88dvh!important}}
+ @media(max-width:380px){#lineDraftEditorModal .bal-editor-shell{padding-left:10px!important;padding-right:10px!important}#lineDraftEditorModal .bal-total-bar{margin-left:-10px!important;margin-right:-10px!important;padding-left:10px!important;padding-right:10px!important}#lineDraftEditorModal .bal-total-bar b{font-size:13px!important}#lineDraftEditorModal .bal-total-bar .admin-orders-refresh{font-size:10px!important;padding:7px 9px!important}}
  </style>
- <div class="bal-editor-shell"><div class="bal-editor-head"><h2 style="margin:0;font-size:clamp(18px,4vw,24px)">ปรับแต่งออเดอร์</h2><button class="admin-orders-refresh" onclick="closeLineDraftEditor()">ปิด ${adminIconSvg('close')}</button></div>
+ <div class="bal-editor-shell"><div class="bal-editor-head"><h2>ปรับแต่งออเดอร์</h2><button class="admin-orders-refresh" onclick="closeLineDraftEditor()">ปิด ${adminIconSvg('close')}</button></div>
  <p class="admin-online-note">ตัวเลือกและราคาอ้างอิงจาก Modifier Master ใน Supabase</p>
  <div id="lineDraftEditorItems">${lineDraftEditorState.items.map((it,idx)=>{
   const m=lineDraftEditorState.menus.find(x=>String(x.id)===String(it.menu_id))||lineDraftEditorState.menus.find(x=>lineNorm(x.name)===lineNorm(it.menu_name));
-  return `<section class="bal-editor-item"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><b style="font-size:17px">รายการ ${idx+1}</b><button class="admin-orders-refresh" onclick="removeLineDraftItem(${idx})">ลบรายการ</button></div>
-  <label class="bal-field-label">เมนู<select class="bal-menu-select" value="${esc(it.menu_id||'')}" onchange="setLineDraftMenu(${idx},this.value)">${optsFor(it.menu_id||'')}</select></label>
-  <div class="bal-field-label">จำนวน</div><div class="bal-qty"><button type="button" aria-label="ลดจำนวน" onclick="setLineDraftQuantity(${idx},-1)">−</button><strong>${Number(it.quantity)||1}</strong><button type="button" aria-label="เพิ่มจำนวน" onclick="setLineDraftQuantity(${idx},1)">${adminIconSvg('plus')}</button></div>
-  ${m?lineDraftEditorState.modifierLists.map(list=>renderList(it,list,idx)).join(''):'<p class="admin-online-note">กรุณาเลือกเมนูก่อนเลือกตัวเลือกเสริม</p>'}
-  <label class="bal-field-label">หมายเหตุ<input class="bal-menu-select" value="${esc(it.note||'')}" onchange="setLineDraftField(${idx},'note',this.value)"></label>
-  <div class="bal-item-price">฿${(lineItemPrice(it)*(Number(it.quantity)||0)).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}</div></section>`;
+  const isOpen=idx===expandedIndex;
+  const itemPrice=(lineItemPrice(it)*(Number(it.quantity)||0)).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2});
+  return `<section class="bal-editor-item ${isOpen?'is-expanded':''}">
+   <div class="bal-item-summary" onclick="toggleLineDraftItem(${idx})">
+    <div class="bal-summary-main"><span class="bal-summary-title">${String(idx+1).padStart(2,'0')} · ${esc(it.menu_name||'เลือกรายการเมนู')}</span><span class="bal-summary-sub">${Number(it.quantity)||1} แก้ว · ${itemSummary(it)}</span></div>
+    <div class="bal-summary-right"><span class="bal-summary-price">฿${itemPrice}</span><span class="bal-expand-btn">${isOpen?'−':'+'}</span></div>
+   </div>
+   ${isOpen?`<div class="bal-editor-body">
+    <div class="bal-editor-tools"><span style="font-size:10px;color:#b9a69b;flex:1">รายละเอียดรายการ</span><button class="admin-orders-refresh" onclick="removeLineDraftItem(${idx})">ลบรายการ</button></div>
+    <label class="bal-field-label">เมนู<select class="bal-menu-select" onchange="setLineDraftMenu(${idx},this.value)">${optsFor(it.menu_id||'')}</select></label>
+    <div class="bal-field-label">จำนวน</div><div class="bal-qty"><button type="button" aria-label="ลดจำนวน" onclick="setLineDraftQuantity(${idx},-1)">−</button><strong>${Number(it.quantity)||1}</strong><button type="button" aria-label="เพิ่มจำนวน" onclick="setLineDraftQuantity(${idx},1)">${adminIconSvg('plus')}</button></div>
+    ${m?lineDraftEditorState.modifierLists.map(list=>renderList(it,list,idx)).join(''):'<p class="admin-online-note">กรุณาเลือกเมนูก่อนเลือกตัวเลือกเสริม</p>'}
+    <label class="bal-field-label">หมายเหตุ<input class="bal-menu-select" value="${esc(it.note||'')}" onchange="setLineDraftField(${idx},'note',this.value)"></label>
+    <div class="bal-item-price">฿${itemPrice}</div>
+   </div>`:''}
+  </section>`;
  }).join('')}</div>
- <button class="admin-orders-refresh" onclick="addLineDraftItem()">${adminIconSvg('plus')}<span>เพิ่มรายการเมนู</span></button>
- <div class="bal-total-bar"><b style="font-size:18px">ยอดรวม ฿${lineDraftTotal().toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}</b><button class="admin-orders-refresh" onclick="saveAndCreateLineOrder()">บันทึกและสร้าง Order Draft</button></div>
+ <button type="button" class="admin-orders-refresh bal-add-item" onclick="addLineDraftItem()">${adminIconSvg('plus')}<span>เพิ่มรายการเมนู</span></button>
+ <div class="bal-total-bar"><b>ยอดรวม ฿${lineDraftTotal().toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}</b><button class="admin-orders-refresh" onclick="saveAndCreateLineOrder()">บันทึก Order Draft</button></div>
  </div>`;
  modal.style.display='flex';
 }
+function toggleLineDraftItem(i){lineDraftEditorState.expandedIndex=(lineDraftEditorState.expandedIndex===i?-1:i);renderLineDraftEditor();}
 function closeLineDraftEditor(){document.getElementById('lineDraftEditorModal')?.remove();document.body.style.overflow=document.body.dataset.lineEditorPrevOverflow||'';delete document.body.dataset.lineEditorPrevOverflow;}
 function setLineDraftField(i,k,v){const it=lineDraftEditorState.items[i];if(!it)return;it[k]=k==='quantity'?Math.max(1,Math.min(999,Number(v)||1)):v;renderLineDraftEditor();}
 function setLineDraftQuantity(i,delta){const it=lineDraftEditorState.items[i];if(!it)return;it.quantity=Math.max(1,Math.min(999,(Number(it.quantity)||1)+Number(delta||0)));renderLineDraftEditor();}
 function setLineDraftMenu(i,menuId){const it=lineDraftEditorState.items[i];if(!it)return;const menu=lineDraftEditorState.menus.find(m=>String(m.id)===String(menuId));it.menu_id=menu?.id||null;it.menu_name=menu?.name||'';it.modifiers=[];delete it.temperature;it.sweetness='';renderLineDraftEditor();}
 function chooseLineModifier(i,listId,optionId){const it=lineDraftEditorState.items[i];const list=lineDraftEditorState.modifierLists.find(x=>x.id===listId);if(!it||!list)return;const option=lineDraftEditorState.modifierOptions.find(x=>x.id===optionId);lineSetModifierOption(it,list,option||{},!!optionId);renderLineDraftEditor();}
 function toggleLineModifier(i,listId,optionId,checked){const it=lineDraftEditorState.items[i];const list=lineDraftEditorState.modifierLists.find(x=>x.id===listId);const option=lineDraftEditorState.modifierOptions.find(x=>x.id===optionId);if(!it||!list||!option)return;lineSetModifierOption(it,list,option,checked);renderLineDraftEditor();}
-function addLineDraftItem(){lineDraftEditorState.items.push({menu_id:null,menu_name:'',quantity:1,sweetness:'หวานปกติ 100%',modifiers:[],note:''});renderLineDraftEditor();}
-function removeLineDraftItem(i){lineDraftEditorState.items.splice(i,1);if(!lineDraftEditorState.items.length)addLineDraftItem();else renderLineDraftEditor();}
+function addLineDraftItem(){lineDraftEditorState.items.push({menu_id:null,menu_name:'',quantity:1,sweetness:'หวานปกติ 100%',modifiers:[],note:''});lineDraftEditorState.expandedIndex=lineDraftEditorState.items.length-1;renderLineDraftEditor();}
+function removeLineDraftItem(i){lineDraftEditorState.items.splice(i,1);if(!lineDraftEditorState.items.length){lineDraftEditorState.expandedIndex=0;addLineDraftItem();}else{lineDraftEditorState.expandedIndex=Math.min(i,lineDraftEditorState.items.length-1);renderLineDraftEditor();}}
 async function saveAndCreateLineOrder(){
  const items=lineDraftEditorState.items;if(!items.length||items.some(i=>(!i.menu_id&&!i.menu_name)||!Number.isInteger(Number(i.quantity))||Number(i.quantity)<1)){alert('กรุณาเลือกเมนูและจำนวนให้ครบ');return;}
  try{
