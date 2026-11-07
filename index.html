@@ -3058,6 +3058,46 @@ function renderLineDraftEditor(){
   #lineDraftEditorModal .bal-total-bar b{font-size:12px!important}
   #lineDraftEditorModal .bal-total-bar .admin-orders-refresh{font-size:9px;padding:7px}
  }
+
+ /* Balenrista Draft Editor — compact mobile-first UI only */
+ #lineDraftEditorModal .bal-editor-shell{width:min(560px,calc(100vw - 24px))!important;max-height:min(86dvh,760px)!important;padding:12px!important;border-radius:17px!important}
+ #lineDraftEditorModal .bal-editor-head{top:-12px!important;padding:5px 0 9px!important}
+ #lineDraftEditorModal .bal-editor-head h2{font-size:16px!important}
+ #lineDraftEditorModal .admin-online-note{font-size:9px!important;margin:6px 0 8px!important}
+ #lineDraftEditorModal .bal-editor-item{padding:10px!important;margin:7px 0!important;border-radius:13px!important}
+ #lineDraftEditorModal .bal-editor-item>div:first-child b{font-size:12px!important}
+ #lineDraftEditorModal .bal-editor-item .admin-orders-refresh{min-height:29px;padding:5px 8px!important;font-size:9px!important;border-radius:9px!important}
+ #lineDraftEditorModal .bal-field-label{margin-top:8px!important;font-size:10px!important;line-height:1.35}
+ #lineDraftEditorModal .bal-menu-select{min-height:36px!important;height:36px;padding:6px 10px!important;margin-top:4px!important;border-radius:9px!important;font-size:11px!important}
+ #lineDraftEditorModal .bal-qty{gap:9px!important;margin-top:5px!important}
+ #lineDraftEditorModal .bal-qty button{width:30px!important;height:30px!important;min-width:30px;font-size:16px!important;display:grid;place-items:center;padding:0}
+ #lineDraftEditorModal .bal-qty button svg{width:13px;height:13px}
+ #lineDraftEditorModal .bal-qty strong{font-size:14px!important;min-width:20px}
+ #lineDraftEditorModal .bal-choice-section{margin-top:10px!important}
+ #lineDraftEditorModal .bal-choice-title{font-size:11px!important;margin-bottom:5px!important}
+ #lineDraftEditorModal .bal-choice-title small{font-size:8px!important}
+ #lineDraftEditorModal .bal-sweetness-grid{gap:4px!important}
+ #lineDraftEditorModal .bal-sweetness-option{min-height:49px!important;padding:4px 2px!important;border-radius:8px!important;gap:1px!important}
+ #lineDraftEditorModal .bal-sweetness-icon{font-size:13px!important}
+ #lineDraftEditorModal .bal-sweetness-name{font-size:8px!important;line-height:1.15}
+ #lineDraftEditorModal .bal-sweetness-option small{font-size:7px!important}
+ #lineDraftEditorModal .bal-addon-grid,#lineDraftEditorModal .bal-simple-grid,#lineDraftEditorModal .bal-ice-grid{gap:5px!important}
+ #lineDraftEditorModal .bal-addon-option,#lineDraftEditorModal .bal-simple-option,#lineDraftEditorModal .bal-ice-option{min-height:36px!important;padding:6px 7px!important;border-radius:9px!important;gap:5px!important}
+ #lineDraftEditorModal .bal-addon-icon,#lineDraftEditorModal .bal-simple-option span,#lineDraftEditorModal .bal-ice-icon{font-size:14px!important}
+ #lineDraftEditorModal .bal-addon-copy{font-size:10px!important;line-height:1.2}
+ #lineDraftEditorModal .bal-addon-copy b,#lineDraftEditorModal .bal-simple-option small{font-size:9px!important}
+ #lineDraftEditorModal .bal-addon-mark{font-size:12px!important}
+ #lineDraftEditorModal .bal-item-price{font-size:14px!important;margin-top:7px!important}
+ #lineDraftEditorModal .bal-editor-shell>button.admin-orders-refresh{align-self:flex-start;min-height:34px;padding:7px 11px!important;margin:3px 0 8px;border-radius:10px!important;font-size:10px!important}
+ #lineDraftEditorModal .bal-total-bar{position:sticky!important;bottom:-12px!important;z-index:6;margin-top:8px;padding:8px 0 max(5px,env(safe-area-inset-bottom))!important;gap:8px!important}
+ #lineDraftEditorModal .bal-total-bar b{font-size:13px!important}
+ #lineDraftEditorModal .bal-total-bar .admin-orders-refresh{min-height:34px;padding:7px 9px!important;border-radius:9px!important;font-size:9px!important;white-space:normal!important;line-height:1.25}
+ @media(max-width:430px){
+  #lineDraftEditorModal .bal-editor-shell{width:calc(100vw - 20px)!important;max-height:84dvh!important;padding:10px!important;border-radius:14px!important}
+  #lineDraftEditorModal .bal-sweetness-option{min-height:46px!important}
+  #lineDraftEditorModal .bal-total-bar b{font-size:11px!important}
+  #lineDraftEditorModal .bal-total-bar .admin-orders-refresh{font-size:8px!important;padding:6px 7px!important}
+ }
  </style>
  <div class="bal-editor-shell"><div class="bal-editor-head"><h2 style="margin:0;font-size:clamp(18px,4vw,24px)">ปรับแต่งออเดอร์</h2><button class="admin-orders-refresh" onclick="closeLineDraftEditor()">ปิด ${adminIconSvg('close')}</button></div>
  <p class="admin-online-note">ตัวเลือกและราคาอ้างอิงจาก Modifier Master ใน Supabase</p>
