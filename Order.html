@@ -1252,6 +1252,38 @@ else {
       }[ch]));
     }
 
+    // Customer Website only: menu-specific sweetness visibility rules.
+    // These rules do not modify Supabase, Loyverse, Admin, or shared modifier data.
+    const SWEETNESS_HIDDEN_MENU_NAMES = new Set([
+      'americano coco flowers',
+      'pickled orange coffee'
+    ]);
+    const SWEETNESS_NO_ZERO_MENU_NAMES = new Set([
+      'americano honey',
+      'caramel macchiato',
+      'thai tea honey lemon',
+      'caramel milk',
+      'matcha honey lemon'
+    ]);
+
+    function normalizeCustomerMenuName(value) {
+      return String(value ?? '').trim().toLocaleLowerCase().replace(/\\s+/g, ' ');
+    }
+
+    function getCustomerMenuSweetnessRule(menu) {
+      const names = [menu?.name, menu?.loyverseName, menu?.thaiName]
+        .map(normalizeCustomerMenuName)
+        .filter(Boolean);
+      if (names.some(name => SWEETNESS_HIDDEN_MENU_NAMES.has(name))) return 'hidden';
+      if (names.some(name => SWEETNESS_NO_ZERO_MENU_NAMES.has(name))) return 'no-zero';
+      return 'default';
+    }
+
+    function isZeroSweetnessOption(option) {
+      const name = String(option?.name ?? '').trim();
+      return /(?:^|\\s)0\\s*%|ไม่หวาน/i.test(name);
+    }
+
     function modifierRuleApplies(listId, menu) {
       const master = customerCatalog.modifiers || {};
       const rules = (master.rules || []).filter(r =>
@@ -1270,15 +1302,25 @@ else {
 
     function getApplicableModifierLists(menu) {
       const master = customerCatalog.modifiers || {};
+      const sweetnessRule = getCustomerMenuSweetnessRule(menu);
       return (master.lists || [])
-        .filter(list => list.is_active !== false && modifierRuleApplies(list.id, menu))
-        .map(list => ({
-          ...list,
-          config: MODIFIER_GROUP_CONFIG[list.id] || { key: String(list.name || list.id), multi: false },
-          options: (master.options || []).filter(option =>
+        .filter(list => {
+          if (list.is_active === false || !modifierRuleApplies(list.id, menu)) return false;
+          const config = MODIFIER_GROUP_CONFIG[list.id] || { key: String(list.name || list.id), multi: false };
+          // Hide the entire sweetness group for the two specified drinks.
+          return !(config.key === 'sweetness' && sweetnessRule === 'hidden');
+        })
+        .map(list => {
+          const config = MODIFIER_GROUP_CONFIG[list.id] || { key: String(list.name || list.id), multi: false };
+          let options = (master.options || []).filter(option =>
             String(option.modifier_list_id) === String(list.id) && option.is_active !== false
-          )
-        }))
+          );
+          // Hide only the 0% / no-sweetness option for the specified drinks.
+          if (config.key === 'sweetness' && sweetnessRule === 'no-zero') {
+            options = options.filter(option => !isZeroSweetnessOption(option));
+          }
+          return { ...list, config, options };
+        })
         .filter(list => list.options.length > 0);
     }
 
@@ -1320,6 +1362,9 @@ else {
       );
       if (!list || !option || !element) return;
       const config = MODIFIER_GROUP_CONFIG[listId] || { key: String(list.name || listId), multi: false };
+      if (config.key === 'sweetness' &&
+          getCustomerMenuSweetnessRule(selectedMenu) === 'no-zero' &&
+          isZeroSweetnessOption(option)) return;
       const selected = currentOptions.selections || [];
       const exists = selected.some(x => String(x.option_id) === String(optionId));
       let next;
@@ -1383,6 +1428,12 @@ else {
       const lists = getApplicableModifierLists(selectedMenu);
       const requiresSweetness = lists.some(list => list.config.key === 'sweetness');
       const sweetness = selections.find(x => x.group === 'sweetness');
+      if (sweetness &&
+          getCustomerMenuSweetnessRule(selectedMenu) === 'no-zero' &&
+          /(?:^|\\s)0\\s*%|ไม่หวาน/i.test(String(sweetness.name || ''))) {
+        alert("เมนูนี้ไม่สามารถเลือกระดับ 0% ได้ กรุณาเลือกระดับความหวานอื่น");
+        return;
+      }
       if (requiresSweetness && !sweetness) {
         alert("กรุณาเลือกระดับความหวานก่อนเพิ่มลงตะกร้า");
         return;
