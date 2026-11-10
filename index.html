@@ -482,7 +482,7 @@
 .bills-master-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .bill-master-add{height:30px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:rgba(181,151,133,.08);color:var(--paper);display:inline-flex;align-items:center;gap:5px;font-size:8px;font-weight:900;white-space:nowrap}
 .bill-master-add svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8}
-@media(max-width:600px){.bill-master-modal{width:100%;border-radius:18px 18px 0 0}.bills-master-title-row{align-items:center}.bill-master-add{height:28px;padding:0 8px;font-size:8px}}
+@media(max-width:600px){.bills-section{transform:none;margin-top:-185px!important;padding-top:0!important}.bill-master-modal{width:100%;border-radius:18px 18px 0 0}.bills-master-title-row{align-items:center}.bill-master-add{height:28px;padding:0 8px;font-size:8px}}
 </style><style id="bills-final-fix">
 /* ===== Bills final mobile/form fixes ===== */
 .bills-section.active{margin-top:0!important;padding-top:0!important;transform:none!important}
@@ -786,37 +786,17 @@
 </style>
 
 
-<style id="targeted-section-header-flow-fix">
-/* Keep the shared dashboard header in normal document flow.
-   Only adjust the two requested sections on mobile. */
-@media (max-width: 800px) {
-  #capture-area > header.topbar {
-    position: relative !important;
-    inset: auto !important;
-    transform: none !important;
-    display: flex !important;
-    width: 100% !important;
-    height: auto !important;
-    min-height: 0 !important;
-    margin: 0 0 18px !important;
-    padding-top: 8px !important;
-    padding-bottom: 16px !important;
-  }
-  #capture-area > #adminOrderOnlineSection,
-  #capture-area > #billsSection {
-    position: relative !important;
-    inset: auto !important;
-    top: auto !important;
-    transform: none !important;
-    clear: both !important;
-    margin-top: 0 !important;
+<style id="targeted-admin-bills-mobile-spacing">
+/* Mobile spacing correction: Admin Order Online + Bills only */
+@media (max-width: 700px) {
+  #adminOrderOnlineSection.active,
+  #billsSection.active {
+    margin-top: -48px !important;
     padding-top: 0 !important;
-  }
-  #capture-area > #adminOrderOnlineSection .admin-online-head,
-  #capture-area > #billsSection .bills-head {
-    position: relative !important;
-    inset: auto !important;
     transform: none !important;
+  }
+  #adminOrderOnlineSection.active .admin-online-head,
+  #billsSection.active .bills-head {
     margin-top: 0 !important;
   }
 }
