@@ -803,8 +803,8 @@
           <div class="success-icon-box"><i class="ph-fill ph-check-circle"></i></div>
           <h3 style="font-size: 18px; color: var(--col-active); font-weight: 700;">สั่งซื้อสำเร็จเรียบร้อยค่ะ!</h3>
           
-          <div class="success-points-display" id="successPointsText">0 แก้ว</div>
-          <div class="success-points-label">จำนวนแก้วที่ใช้รับสิทธิ์สะสมแต้ม</div>
+          <div class="success-points-display" id="successPointsText">+0 แต้ม</div>
+          <div class="success-points-label">คะแนนสะสมที่คุณได้รับ</div>
           
           <p id="successModalDesc" style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px;"></p>
           <div id="successRewardLinks" style="display:none;text-align:left;margin:0 0 20px;padding:12px;border:1px solid rgba(255,255,255,.18);border-radius:12px">
@@ -1655,8 +1655,13 @@ else {
         modal.style.cssText = 'position:fixed;inset:0;z-index:10050;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:18px';
         modal.innerHTML = `<div style="width:min(440px,100%);max-height:92vh;overflow:auto;background:#202020;border:1px solid #555;border-radius:16px;padding:20px;color:#eee;box-shadow:0 18px 50px rgba(0,0,0,.5)">
           <h3 style="margin:0 0 8px;font-size:20px">เลือกวิธีชำระเงิน</h3>
-          <p id="paymentOrderSummary" style="color:#bbb;font-size:13px;line-height:1.6;margin-bottom:12px"></p>
-          <button id="payCashBtn" type="button" style="width:100%;padding:13px;margin:6px 0;background:#862122;color:white;border:0;border-radius:9px;font-weight:700">เงินสด (Cash)</button>
+          <p id="paymentOrderSummary" style="color:#bbb;font-size:12px;line-height:1.5;margin:0 0 12px"></p>
+          <div id="paymentDueCard" style="margin:0 0 16px;padding:17px 16px 18px;border:1px solid rgba(216,181,139,.58);border-radius:14px;background:linear-gradient(145deg,rgba(134,33,34,.28),rgba(35,29,26,.98));text-align:center;box-shadow:0 8px 24px rgba(0,0,0,.2)">
+            <div style="font-size:12px;font-weight:700;letter-spacing:.5px;color:#e2c6a5">ยอดที่ต้องชำระ</div>
+            <div id="paymentDueAmount" style="font-size:clamp(38px,10vw,48px);font-weight:900;line-height:1.18;letter-spacing:-1px;color:#fff;margin:5px 0 2px;font-variant-numeric:tabular-nums">฿0.00</div>
+            <div style="font-size:11px;color:#d8c9bd">กรุณาชำระตามยอดนี้</div>
+          </div>
+          <button id="payCashBtn" type="button" style="width:100%;padding:14px;margin:6px 0;background:#862122;color:white;border:0;border-radius:9px;font-weight:800;font-size:15px">เงินสด (Cash)</button>
           <button id="payQrBtn" type="button" style="width:100%;padding:13px;margin:6px 0;background:#333;color:white;border:1px solid #777;border-radius:9px;font-weight:700">โอนผ่าน QR Payment</button>
           <div id="paymentQrPanel" hidden style="margin-top:14px;padding:14px;background:#f1eee4;color:#242321;border-radius:12px;text-align:center">
             <div style="font-weight:800;font-size:15px;margin-bottom:4px">Balenrista coffee street</div>
@@ -1680,8 +1685,10 @@ else {
         document.getElementById('paymentSlipFile').onchange = (e) => { const file=e.target.files?.[0]; if(file) { document.getElementById('paymentSlipName').textContent = `ไฟล์ที่เลือก: ${file.name}`; submitSelectedPayment('qr',file); } };
       }
       const amount = Number(orderData.order?.total_amount || 0);
-      document.getElementById('paymentOrderSummary').textContent = `คำสั่งซื้อ ${orderData.order?.order_number || ''} · ยอดชำระ ฿${amount.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})} · สร้าง Receipt ใน Loyverse แล้ว`;
-      document.getElementById('paymentQrAmount').textContent = `฿${amount.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+      const formattedAmount = `฿${amount.toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+      document.getElementById('paymentOrderSummary').textContent = `คำสั่งซื้อ ${orderData.order?.order_number || ''} · สร้าง Receipt ใน Loyverse แล้ว`;
+      document.getElementById('paymentDueAmount').textContent = formattedAmount;
+      document.getElementById('paymentQrAmount').textContent = formattedAmount;
       document.getElementById('paymentQrPanel').hidden = true;
       document.getElementById('paymentSlipName').textContent = '';
       document.getElementById('paymentSlipFile').value = '';
@@ -1701,15 +1708,14 @@ else {
           throw new Error(result?.error || 'ระบบยังไม่ยืนยันการชำระเงิน กรุณาตรวจสอบสถานะกับร้าน');
         }
         document.getElementById('balenristaPaymentModal').style.display = 'none';
-        const cupsEligible = Number(result.cups_eligible ?? result.points_awarded ?? 0);
-        document.getElementById('successPointsText').innerText = `${cupsEligible} แก้ว`;
-        document.getElementById('successModalDesc').innerText = `ยืนยันการชำระเงินสำหรับคำสั่งซื้อ ${pendingPaymentOrder.order.order_number} เรียบร้อยแล้ว กดลิงก์ด้านล่างเพื่อเข้าไปรับแต้มด้วยตัวเอง`;
+        const points = Number(result.points_awarded || 0);
+        document.getElementById('successPointsText').innerText = `+${points} แต้ม`;
+        document.getElementById('successModalDesc').innerText = `ยืนยันการชำระเงินสำหรับคำสั่งซื้อ ${pendingPaymentOrder.order.order_number} เรียบร้อยแล้ว${result.loyalty_delivery_status && result.loyalty_delivery_status !== 'sent' ? ' ระบบจะดำเนินการส่งลิงก์สะสมแต้มต่อไป' : ''}`;
         const links = Array.isArray(result.reward_links) ? result.reward_links : [];
         const rewardBox = document.getElementById('successRewardLinks'), rewardList = document.getElementById('successRewardLinksList');
         rewardList.innerHTML = '';
         links.forEach((url,i)=>{ const a=document.createElement('a'); a.href=url; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent=`เปิดลิงก์สะสมแต้ม ${i+1}`; a.style.cssText='display:block;color:#d8b58b;text-decoration:underline;overflow-wrap:anywhere'; rewardList.appendChild(a); });
         rewardBox.style.display = links.length ? 'block' : 'none';
-        if (!links.length) document.getElementById('successModalDesc').innerText += ' (ขณะนี้ยังไม่พบลิงก์รับแต้ม กรุณาติดต่อร้าน โดยสถานะชำระเงินยังสำเร็จแล้ว)';
         const claimBtn=document.getElementById('claimRewardBtn'); claimBtn.innerText='ปิด'; claimBtn.onclick=()=>{document.getElementById('successModal').style.display='none';};
         document.getElementById('successModal').style.display='flex'; pendingPaymentOrder=null;
       } catch (err) {
