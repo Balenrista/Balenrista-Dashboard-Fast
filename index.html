@@ -1905,9 +1905,10 @@ function effectivePriceFromHistory(menu,history,date){
   for(const h of rows){if(String(h.effective_date||'')<=d)price=Number(h.new_price||0);else break;}
   return price;
 }
-async function getMenus(forDate=iso(today),includeInactive=false){
-  let query=db.from('menus').select('id,name,sale_price,avg_ingredient_cost,is_active');
-  if(!includeInactive)query=query.eq('is_active',true);
+async function getMenus(forDate=iso(today),includeInactive=true){
+  // Dashboard: load all menus regardless of website visibility status.
+  // The is_active flag remains available for website display; it does not filter Dashboard menus.
+  const query=db.from('menus').select('id,name,sale_price,avg_ingredient_cost,is_active');
   const r=await query.order('name');
   if(r.error)throw r.error;
   const menus=r.data||[];
