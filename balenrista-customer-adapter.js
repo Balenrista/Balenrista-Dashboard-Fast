@@ -139,6 +139,30 @@
       }
       return body;
     },
+
+    // Confirm Cash or upload a QR-transfer slip after the Loyverse receipt exists.
+    async confirmPayment(input) {
+      input = input || {};
+      const liff = input.liff;
+      if (!liff || typeof liff.isLoggedIn !== "function" || !liff.isLoggedIn()) throw new Error("กรุณาเข้าสู่ระบบ LINE ก่อนชำระเงิน");
+      const idToken = typeof liff.getIDToken === "function" ? liff.getIDToken() : "";
+      if (!idToken) throw new Error("ไม่พบ LINE ID Token กรุณาเข้าสู่ระบบ LINE ใหม่");
+      if (!input.orderId || !["cash", "qr"].includes(input.paymentMethod)) throw new Error("ข้อมูลการชำระเงินไม่ครบ");
+      if (input.paymentMethod === "qr" && !(input.file instanceof Blob)) throw new Error("กรุณาเลือกรูปสลิป");
+      const form = new FormData();
+      form.append("order_id", String(input.orderId));
+      form.append("payment_method", input.paymentMethod);
+      if (input.paymentMethod === "qr") form.append("file", input.file, input.file.name || "slip.jpg");
+      const response = await fetch(`${config.apiUrl}/functions/v1/customer-payment-verify`, {
+        method: "POST",
+        headers: { apikey: config.anonKey, Authorization: `Bearer ${config.anonKey}`, "X-Line-ID-Token": idToken },
+        body: form,
+      });
+      const raw = await response.text();
+      let body = {}; try { body = raw ? JSON.parse(raw) : {}; } catch { body = { error: raw }; }
+      if (!response.ok || body.success === false) throw new Error(body.error || body.message || `Payment API HTTP ${response.status}`);
+      return body;
+    },
   };
 
   global.BalenristaCustomerAdapter = adapter;
