@@ -803,8 +803,8 @@
           <div class="success-icon-box"><i class="ph-fill ph-check-circle"></i></div>
           <h3 style="font-size: 18px; color: var(--col-active); font-weight: 700;">สั่งซื้อสำเร็จเรียบร้อยค่ะ!</h3>
           
-          <div class="success-points-display" id="successPointsText">+0 แต้ม</div>
-          <div class="success-points-label">คะแนนสะสมที่คุณได้รับ</div>
+          <div class="success-points-display" id="successPointsText">0 แก้ว</div>
+          <div class="success-points-label">จำนวนแก้วที่ใช้รับสิทธิ์สะสมแต้ม</div>
           
           <p id="successModalDesc" style="font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 15px;"></p>
           <div id="successRewardLinks" style="display:none;text-align:left;margin:0 0 20px;padding:12px;border:1px solid rgba(255,255,255,.18);border-radius:12px">
@@ -1701,14 +1701,15 @@ else {
           throw new Error(result?.error || 'ระบบยังไม่ยืนยันการชำระเงิน กรุณาตรวจสอบสถานะกับร้าน');
         }
         document.getElementById('balenristaPaymentModal').style.display = 'none';
-        const points = Number(result.points_awarded || 0);
-        document.getElementById('successPointsText').innerText = `+${points} แต้ม`;
-        document.getElementById('successModalDesc').innerText = `ยืนยันการชำระเงินสำหรับคำสั่งซื้อ ${pendingPaymentOrder.order.order_number} เรียบร้อยแล้ว${result.loyalty_delivery_status && result.loyalty_delivery_status !== 'sent' ? ' ระบบจะดำเนินการส่งลิงก์สะสมแต้มต่อไป' : ''}`;
+        const cupsEligible = Number(result.cups_eligible ?? result.points_awarded ?? 0);
+        document.getElementById('successPointsText').innerText = `${cupsEligible} แก้ว`;
+        document.getElementById('successModalDesc').innerText = `ยืนยันการชำระเงินสำหรับคำสั่งซื้อ ${pendingPaymentOrder.order.order_number} เรียบร้อยแล้ว กดลิงก์ด้านล่างเพื่อเข้าไปรับแต้มด้วยตัวเอง`;
         const links = Array.isArray(result.reward_links) ? result.reward_links : [];
         const rewardBox = document.getElementById('successRewardLinks'), rewardList = document.getElementById('successRewardLinksList');
         rewardList.innerHTML = '';
         links.forEach((url,i)=>{ const a=document.createElement('a'); a.href=url; a.target='_blank'; a.rel='noopener noreferrer'; a.textContent=`เปิดลิงก์สะสมแต้ม ${i+1}`; a.style.cssText='display:block;color:#d8b58b;text-decoration:underline;overflow-wrap:anywhere'; rewardList.appendChild(a); });
         rewardBox.style.display = links.length ? 'block' : 'none';
+        if (!links.length) document.getElementById('successModalDesc').innerText += ' (ขณะนี้ยังไม่พบลิงก์รับแต้ม กรุณาติดต่อร้าน โดยสถานะชำระเงินยังสำเร็จแล้ว)';
         const claimBtn=document.getElementById('claimRewardBtn'); claimBtn.innerText='ปิด'; claimBtn.onclick=()=>{document.getElementById('successModal').style.display='none';};
         document.getElementById('successModal').style.display='flex'; pendingPaymentOrder=null;
       } catch (err) {
