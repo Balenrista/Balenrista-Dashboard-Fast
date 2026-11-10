@@ -1696,6 +1696,10 @@ else {
       msg.textContent = method === 'qr' ? 'กำลังตรวจสอบสลิปกับ SlipOK...' : 'กำลังยืนยันการชำระเงิน...';
       try {
         const result = await BalenristaCustomerAdapter.confirmPayment({ liff, orderId: pendingPaymentOrder.order.id, paymentMethod: method, file });
+        // Do not show the success/loyalty screen unless the backend confirms paid.
+        if (!result || result.payment_status !== 'paid') {
+          throw new Error(result?.error || 'ระบบยังไม่ยืนยันการชำระเงิน กรุณาตรวจสอบสถานะกับร้าน');
+        }
         document.getElementById('balenristaPaymentModal').style.display = 'none';
         const points = Number(result.points_awarded || 0);
         document.getElementById('successPointsText').innerText = `+${points} แต้ม`;
@@ -1708,6 +1712,10 @@ else {
         const claimBtn=document.getElementById('claimRewardBtn'); claimBtn.innerText='ปิด'; claimBtn.onclick=()=>{document.getElementById('successModal').style.display='none';};
         document.getElementById('successModal').style.display='flex'; pendingPaymentOrder=null;
       } catch (err) {
+        if (method === 'qr') {
+          const slipInput = document.getElementById('paymentSlipFile');
+          if (slipInput) slipInput.value = ''; // allow selecting the same slip again after a rejected attempt
+        }
         msg.textContent = `ยังยืนยันไม่ได้: ${err.message || 'กรุณาลองใหม่'} · ออเดอร์เดิมยังอยู่ ไม่ต้องสั่งซ้ำ`;
       } finally {
         cashBtn.disabled = qrBtn.disabled = false;
