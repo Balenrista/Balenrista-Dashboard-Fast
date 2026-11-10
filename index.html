@@ -785,6 +785,23 @@
 }
 </style>
 
+
+<style id="targeted-admin-bills-top-gap-fix">
+/* Reduce the oversized blank area above these two management sections on mobile only.
+   Keep the global header, Dashboard home, and all other sections unchanged. */
+@media (max-width: 700px) {
+  #adminOrderOnlineSection.active,
+  #billsSection.active {
+    margin-top: -155px !important;
+    padding-top: 0 !important;
+  }
+  #adminOrderOnlineSection.active .admin-online-head,
+  #billsSection.active .bills-head {
+    margin-top: 0 !important;
+  }
+}
+</style>
+
 </head>
 <body>
 <div id="authOverlay" class="auth-overlay hidden">
