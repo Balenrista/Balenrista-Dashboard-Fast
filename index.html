@@ -482,7 +482,7 @@
 .bills-master-title-row{display:flex;align-items:center;justify-content:space-between;gap:10px}
 .bill-master-add{height:30px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:rgba(181,151,133,.08);color:var(--paper);display:inline-flex;align-items:center;gap:5px;font-size:8px;font-weight:900;white-space:nowrap}
 .bill-master-add svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:1.8}
-@media(max-width:600px){.bills-section{transform:none;margin-top:-185px!important;padding-top:0!important}.bill-master-modal{width:100%;border-radius:18px 18px 0 0}.bills-master-title-row{align-items:center}.bill-master-add{height:28px;padding:0 8px;font-size:8px}}
+@media(max-width:600px){.bills-section{transform:none;padding-top:0!important}.bill-master-modal{width:100%;border-radius:18px 18px 0 0}.bills-master-title-row{align-items:center}.bill-master-add{height:28px;padding:0 8px;font-size:8px}}
 </style><style id="bills-final-fix">
 /* ===== Bills final mobile/form fixes ===== */
 .bills-section.active{margin-top:0!important;padding-top:0!important;transform:none!important}
@@ -783,22 +783,12 @@
  #adminOrderOnlineSection .admin-online-kpi,#adminOrderOnlineSection .admin-orders-stat,#adminOrderOnlineSection .admin-customer-kpi{padding:11px}
  #adminOrderOnlineSection .admin-online-kpi b,#adminOrderOnlineSection .admin-orders-stat b,#adminOrderOnlineSection .admin-customer-kpi b{font-size:19px}
 }
-</style>
-
-
-<style id="targeted-admin-bills-top-gap-fix">
-/* Reduce the oversized blank area above these two management sections on mobile only.
-   Keep the global header, Dashboard home, and all other sections unchanged. */
-@media (max-width: 700px) {
-  #adminOrderOnlineSection.active,
-  #billsSection.active {
-    margin-top: -155px !important;
-    padding-top: 0 !important;
-  }
-  #adminOrderOnlineSection.active .admin-online-head,
-  #billsSection.active .bills-head {
-    margin-top: 0 !important;
-  }
+/* Targeted mobile section spacing: preserve the shared topbar and prevent title/header overlap. */
+@media(max-width:700px){
+  #adminOrderOnlineSection.active{margin-top:0!important;padding-top:0!important;transform:none!important}
+  #adminOrderOnlineSection.active .admin-online-head{margin-top:10px!important}
+  #billsSection.active{margin-top:0!important;padding-top:0!important;transform:none!important}
+  #billsSection.active .bills-head{margin-top:0!important}
 }
 </style>
 
