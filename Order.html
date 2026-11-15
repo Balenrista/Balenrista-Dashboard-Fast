@@ -668,6 +668,65 @@
     #historyPopup .history-content > button.opt-btn { min-height:46px; margin-top:20px !important; border-radius:var(--border-radius-btn); background:var(--bg-main) !important; color:var(--col-active) !important; box-shadow:var(--shadow-out) !important; }
     #historyPopup .history-content > button.opt-btn:active { box-shadow:var(--shadow-in) !important; transform:scale(.98); }
   </style>
+
+<style id="payment-neumorphism-refinement">
+/* Payment chooser: preserve Balenrista red / charcoal / warm-gold palette */
+#balenristaPaymentModal {
+  padding: max(14px,env(safe-area-inset-top)) 14px max(14px,env(safe-area-inset-bottom)) !important;
+  background: rgba(5,5,5,.84) !important;
+  backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+}
+#balenristaPaymentModal > div {
+  width: min(440px,100%) !important; max-height: min(90dvh,820px) !important;
+  overflow-y: auto !important; overscroll-behavior: contain;
+  background: #262422 !important; color: #d3d0c9 !important;
+  border: 1px solid rgba(211,208,201,.16) !important;
+  border-radius: 24px !important; padding: 22px 20px 20px !important;
+  box-shadow: 12px 12px 28px #090808, -7px -7px 20px rgba(75,70,64,.18), inset 1px 1px 0 rgba(255,255,255,.035) !important;
+}
+#balenristaPaymentModal h3 { color:#e4e0d8 !important; font-size:20px !important; letter-spacing:.1px; margin-bottom:10px !important; }
+#paymentOrderSummary { color:#aaa59d !important; font-size:12px !important; line-height:1.65 !important; margin-bottom:18px !important; overflow-wrap:anywhere; }
+#paymentDueCard {
+  position:relative; overflow:hidden; margin:0 0 20px !important; padding:20px 14px 18px !important;
+  border:0 !important; border-radius:18px !important;
+  background:linear-gradient(145deg,#302321 0%,#292321 48%,#242220 100%) !important;
+  box-shadow:inset 6px 6px 13px rgba(8,7,7,.72), inset -5px -5px 12px rgba(86,64,55,.20), 0 1px 0 rgba(255,255,255,.035) !important;
+  text-align:center !important;
+}
+#paymentDueCard > div:first-child { color:#d8b58b !important; font-size:12px !important; letter-spacing:1.1px !important; text-transform:uppercase; }
+#paymentDueAmount { color:#f4eee6 !important; font-size:clamp(42px,11vw,54px) !important; font-weight:800 !important; line-height:1.12 !important; letter-spacing:-1.8px !important; margin:9px 0 6px !important; text-shadow:0 2px 8px rgba(0,0,0,.35); }
+#paymentDueCard > div:last-child { color:#b8aaa0 !important; font-size:11px !important; letter-spacing:.15px; }
+#payCashBtn, #payQrBtn, #choosePaymentSlipBtn {
+  display:flex !important; align-items:center; justify-content:center; min-height:56px !important;
+  width:100% !important; padding:14px 16px !important; margin:10px 0 !important;
+  border:1px solid rgba(255,255,255,.07) !important; border-radius:15px !important;
+  font-family:'Prompt',sans-serif !important; font-size:15px !important; font-weight:700 !important;
+  letter-spacing:.1px; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  transition:box-shadow .18s ease, transform .18s ease, filter .18s ease !important;
+}
+#payCashBtn {
+  color:#fff2ed !important; background:linear-gradient(145deg,#96292a,#761b1d) !important;
+  border-color:rgba(206,112,105,.22) !important;
+  box-shadow:6px 6px 13px rgba(9,7,7,.72), -4px -4px 10px rgba(94,53,48,.20), inset 1px 1px 0 rgba(255,255,255,.13) !important;
+}
+#payQrBtn {
+  color:#e0dcd5 !important; background:#262422 !important;
+  border-color:rgba(211,208,201,.08) !important;
+  box-shadow:6px 6px 13px #11100f, -5px -5px 11px #373430, inset 1px 1px 0 rgba(255,255,255,.025) !important;
+}
+#payCashBtn:active, #payQrBtn:active, #choosePaymentSlipBtn:active {
+  transform:translateY(1px) scale(.985) !important;
+  box-shadow:inset 5px 5px 10px rgba(7,6,6,.68), inset -3px -3px 8px rgba(255,255,255,.045) !important;
+}
+#payQrBtn.is-selected { box-shadow:inset 5px 5px 10px #11100f, inset -4px -4px 9px #373430 !important; border-color:rgba(216,181,139,.28) !important; color:#e5c49d !important; }
+#paymentQrPanel { margin-top:16px !important; padding:16px !important; border-radius:18px !important; box-shadow:inset 4px 4px 9px rgba(0,0,0,.14), inset -3px -3px 8px rgba(255,255,255,.65) !important; }
+#paymentQrPanel img { box-shadow:0 5px 16px rgba(0,0,0,.16); }
+#paymentQrAmount { color:#862122 !important; }
+#choosePaymentSlipBtn { background:linear-gradient(145deg,#96292a,#761b1d) !important; color:#fff2ed !important; border:1px solid rgba(206,112,105,.22) !important; box-shadow:5px 5px 11px rgba(0,0,0,.25), -3px -3px 8px rgba(255,255,255,.12), inset 1px 1px 0 rgba(255,255,255,.12) !important; }
+#paymentFlowMessage { color:#d8b58b !important; line-height:1.7 !important; margin-top:16px !important; }
+@media(max-width:380px){ #balenristaPaymentModal > div{padding:19px 16px 17px !important;border-radius:21px !important} #paymentDueCard{padding:18px 10px 16px !important} #payCashBtn,#payQrBtn{min-height:52px !important;font-size:14px !important} }
+</style>
+
 </head>
 <body>
   <!-- Welcome artwork: ข้อความอยู่ในภาพแล้ว เหลือปุ่มจริงเพียงปุ่มเดียว -->
@@ -1703,6 +1762,7 @@ else {
         document.body.appendChild(modal);
         document.getElementById('payCashBtn').onclick = () => submitSelectedPayment('cash');
         document.getElementById('payQrBtn').onclick = () => {
+          document.getElementById('payQrBtn').classList.add('is-selected');
           document.getElementById('paymentQrPanel').hidden = false;
           document.getElementById('paymentFlowMessage').textContent = 'สแกน QR และโอนตามยอดที่แสดง จากนั้นแนบสลิป';
         };
