@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="th">
 <head>
@@ -642,6 +641,32 @@
       .quantity-control{width:102px;flex:0 0 102px}
     }
 
+
+    /* Cart + Order History: match the raised dark neumorphic buttons in IMG_5353 */
+    #cartSheet .sheet-header, #cartSheet .sheet-footer, #historyPopup .history-content { background: var(--bg-main); }
+    #cartSheet .sheet-content { padding: 4px 20px 18px; background: var(--bg-main); }
+    #cartItemsList .cart-swipe-wrap { overflow:hidden; border:0; border-radius:16px; margin:12px 2px; background:var(--bg-main); box-shadow:var(--shadow-out); }
+    #cartItemsList .cart-swipe-card { min-height:92px; padding:15px 13px; border:0; border-radius:16px; background:var(--bg-main); color:var(--col-accent); }
+    #cartItemsList .cart-item-name { color:var(--col-active); }
+    #cartItemsList .cart-item-details { color:var(--text-muted); }
+    #cartItemsList .cart-item-price { color:var(--col-active); font-variant-numeric:tabular-nums; }
+    #cartItemsList .quantity-control { flex:0 0 108px; width:108px; height:36px; border-radius:999px; background:var(--bg-main); box-shadow:var(--shadow-in); }
+    #cartItemsList .qty-btn { width:32px; border-radius:50%; color:var(--col-active); }
+    #cartItemsList .qty-num { color:var(--col-active); }
+    #cartItemsList .cart-swipe-delete { border-radius:0 16px 16px 0; background:#71312f; color:#e8d9d5; }
+    #cartSheet .sheet-footer { padding:18px 22px max(20px,env(safe-area-inset-bottom)); box-shadow:0 -5px 16px rgba(0,0,0,.22); }
+    #cartSheet .summary-row { padding:15px 16px; margin:0 0 12px !important; border-radius:var(--border-radius-btn); background:var(--bg-main); box-shadow:var(--shadow-in); color:var(--col-active); }
+    #cartSheet #cartTotalPrice { color:var(--col-active) !important; font-size:19px; font-variant-numeric:tabular-nums; }
+    #cartSheet .sheet-footer > div:nth-child(2) { padding:12px 15px 14px !important; margin-bottom:14px !important; border-radius:var(--border-radius-btn); background:var(--bg-main); box-shadow:var(--shadow-in); }
+    #historyPopup .history-content { width:min(92vw,460px); max-height:86dvh; padding:22px 18px 20px; border:0; border-radius:24px; box-shadow:var(--shadow-out); color:var(--col-accent); }
+    #historyPopup .history-content > h3 { color:var(--col-active); padding:12px 14px; margin:0 0 16px !important; border-radius:var(--border-radius-btn); background:var(--bg-main); box-shadow:var(--shadow-in); letter-spacing:.7px; }
+    #historyList { padding:2px 3px; }
+    #historyList article { background:var(--bg-main) !important; border:0 !important; border-radius:18px !important; padding:16px !important; margin:14px 2px !important; box-shadow:var(--shadow-out) !important; color:var(--col-accent); }
+    #historyList article > div:first-child { padding-bottom:12px; border-bottom:1px solid rgba(255,255,255,.07); }
+    #historyList article > div:first-child b { color:var(--col-active); }
+    #historyList article > div:nth-child(2) { display:inline-flex; padding:7px 11px; margin:12px 0 !important; border-radius:999px; background:var(--bg-main); box-shadow:var(--shadow-in); color:var(--col-active) !important; }
+    #historyPopup .history-content > button.opt-btn { min-height:46px; margin-top:20px !important; border-radius:var(--border-radius-btn); background:var(--bg-main) !important; color:var(--col-active) !important; box-shadow:var(--shadow-out) !important; }
+    #historyPopup .history-content > button.opt-btn:active { box-shadow:var(--shadow-in) !important; transform:scale(.98); }
   </style>
 </head>
 <body>
