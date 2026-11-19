@@ -221,6 +221,57 @@
 @media(max-width:700px){.admin-menu-toolbar input,.admin-menu-toolbar select{min-width:100%}}
 .admin-online-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}.admin-online-kpi{border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--glass)}.admin-online-kpi span{display:block;color:var(--muted);font-size:10px}.admin-online-kpi b{display:block;font-size:22px;margin-top:6px}.admin-online-note{font-size:11px;color:var(--muted);margin-top:12px}@media(max-width:700px){.admin-online-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-online-head{display:block}.admin-online-title{font-size:21px}}
 
+
+/* Orders / Customers action icons + centered order detail modal */
+.admin-mini-action{width:32px;height:32px;display:inline-grid;place-items:center;border:1px solid rgba(243,237,231,.14);border-radius:10px;background:rgba(255,255,255,.035);color:var(--paper);cursor:pointer;vertical-align:middle;transition:background .18s,border-color .18s,transform .18s}
+.admin-mini-action:hover{background:rgba(181,151,133,.13);border-color:rgba(181,151,133,.4);transform:translateY(-1px)}
+.admin-mini-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.admin-mini-action.danger{color:#d58b82;border-color:rgba(180,75,65,.3);background:rgba(100,6,6,.13)}
+.admin-customer-actions,.admin-order-row-actions{display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap}
+.admin-customer-actions .admin-mini-action{width:31px;height:31px;border-radius:50%;box-shadow:3px 3px 7px rgba(0,0,0,.28),-2px -2px 6px rgba(255,255,255,.025)}
+.admin-order-row-actions .admin-mini-action{width:32px;height:32px}
+.admin-order-detail.open{position:fixed;inset:0;z-index:1300;display:flex;align-items:center;justify-content:center;padding:18px;background:rgba(5,4,4,.78);backdrop-filter:blur(8px);overflow:auto;scroll-margin:0}
+.admin-order-detail.open:empty{display:none}
+.admin-order-detail.open>*{box-sizing:border-box}
+.admin-order-detail.open{color:var(--white)}
+.admin-order-detail.open .admin-order-detail-head,
+.admin-order-detail.open .admin-order-detail-grid,
+.admin-order-detail.open>h4,
+.admin-order-detail.open>table,
+.admin-order-detail.open>div:not(.admin-order-detail-head){width:min(900px,calc(100vw - 36px));}
+.admin-order-detail.open{display:block}
+.admin-order-detail.open .admin-order-detail-head{margin:0 auto;max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:18px 18px 0 0;background:#1b1513;padding:17px 18px 12px}
+.admin-order-detail.open .admin-order-detail-grid,
+.admin-order-detail.open>h4,
+.admin-order-detail.open>table,
+.admin-order-detail.open>div:not(.admin-order-detail-head){margin-left:auto;margin-right:auto;background:#1b1513;padding-left:18px;padding-right:18px}
+.admin-order-detail.open .admin-order-detail-grid{padding-top:8px;padding-bottom:12px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.admin-order-detail.open>h4{margin-top:0;margin-bottom:0;padding-top:12px;padding-bottom:8px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.admin-order-detail.open>table{display:table;width:min(900px,calc(100vw - 36px));border-left:1px solid var(--line);border-right:1px solid var(--line);padding-bottom:12px}
+.admin-order-detail.open>div:not(.admin-order-detail-head){border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.admin-order-detail.open>div:last-child{border-bottom:1px solid var(--line);border-radius:0 0 18px 18px;padding-bottom:18px}
+.admin-order-detail-close{display:inline-flex;align-items:center;gap:7px}
+.admin-edit-overlay{position:fixed;inset:0;z-index:1400;background:rgba(5,4,4,.78);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:16px}
+.admin-edit-card{width:min(520px,100%);max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:18px;background:#1b1513;padding:18px;box-shadow:0 25px 90px rgba(0,0,0,.55)}
+.admin-edit-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px;font-size:14px}
+.admin-edit-form{display:grid;gap:11px}.admin-edit-field{display:grid;gap:5px}.admin-edit-field span{font-size:10px;color:var(--muted)}
+.admin-edit-field input,.admin-edit-field textarea{width:100%;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.045);color:var(--white);padding:10px 11px;font:inherit;font-size:12px;outline:none;resize:vertical}
+.admin-edit-field input:focus,.admin-edit-field textarea:focus{border-color:rgba(181,151,133,.55)}
+.admin-edit-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}.admin-edit-save{height:36px;padding:0 13px;border:0;border-radius:10px;background:var(--paper);color:var(--black);font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;cursor:pointer}.admin-edit-save svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
+.admin-edit-save:disabled{opacity:.6;cursor:wait}.admin-edit-error{font-size:10px;color:#e5a39b;min-height:14px}
+@media(max-width:700px){
+ .admin-order-detail.open{padding:9px}
+ .admin-order-detail.open .admin-order-detail-head,
+ .admin-order-detail.open .admin-order-detail-grid,
+ .admin-order-detail.open>h4,
+ .admin-order-detail.open>table,
+ .admin-order-detail.open>div:not(.admin-order-detail-head){width:calc(100vw - 18px);padding-left:12px;padding-right:12px}
+ .admin-order-detail.open .admin-order-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .admin-customer-actions,.admin-order-row-actions{gap:4px}
+ .admin-customer-actions .admin-mini-action,.admin-order-row-actions .admin-mini-action{width:30px;height:30px}
+ .admin-edit-card{padding:14px}
+}
+
 /* Admin Order Online - Orders workspace */
 .admin-orders-toolbar{display:grid;grid-template-columns:minmax(180px,1.5fr) repeat(3,minmax(125px,1fr));gap:9px;margin:14px 0}
 .admin-orders-toolbar .field{width:100%;min-width:0}
@@ -326,27 +377,36 @@
 @media(max-width:700px){#adminPayments .pay-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#adminPayments .pay-toolbar{grid-template-columns:1fr 1fr}#adminPayments .pay-kpi b{font-size:18px}}
 
 
-/* Admin Orders & Customers maintenance controls only */
-.admin-mini-action{width:31px;height:31px;display:inline-grid;place-items:center;border:1px solid rgba(243,237,231,.13);border-radius:9px;background:rgba(255,255,255,.035);color:var(--paper);cursor:pointer;vertical-align:middle}
-.admin-mini-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.admin-mini-action.danger{color:#d58b82;border-color:rgba(180,75,65,.28);background:rgba(100,6,6,.12)}
-.admin-customer-actions,.admin-detail-actions{display:flex;align-items:center;gap:6px;white-space:nowrap}
-.admin-order-row-actions{display:flex;align-items:center;gap:6px;white-space:nowrap}
-.admin-order-row-actions .admin-mini-action{width:34px;height:34px}
-.admin-order-detail-overlay{z-index:1300}
-#adminEditOverlay{z-index:1400}
-.admin-order-detail-modal{width:min(820px,100%);max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:19px;background:#1b1513;padding:18px;box-shadow:0 25px 90px rgba(0,0,0,.58)}
-.admin-order-detail-modal .admin-order-detail-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
-@media(max-width:700px){.admin-order-detail-modal{padding:14px;max-height:86vh}.admin-order-detail-modal .admin-order-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-order-row-actions .admin-mini-action{width:32px;height:32px}}
-
-.admin-edit-overlay{position:fixed;inset:0;z-index:1200;background:rgba(5,4,4,.78);backdrop-filter:blur(9px);display:flex;align-items:center;justify-content:center;padding:16px}
-.admin-edit-card{width:min(520px,100%);max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:19px;background:#1b1513;padding:18px;box-shadow:0 25px 90px rgba(0,0,0,.55)}
-.admin-edit-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px;font-size:14px}
-.admin-edit-form{display:grid;gap:11px}.admin-edit-field{display:grid;gap:5px}.admin-edit-field span{font-size:10px;color:var(--muted)}
-.admin-edit-field input,.admin-edit-field textarea{width:100%;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.045);color:var(--white);padding:10px 11px;font:inherit;font-size:12px;outline:none;resize:vertical}
-.admin-edit-field input:focus,.admin-edit-field textarea:focus{border-color:rgba(181,151,133,.55)}
-.admin-edit-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}.admin-edit-save{height:36px;padding:0 13px;border:0;border-radius:10px;background:var(--paper);color:var(--black);font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;cursor:pointer}.admin-edit-save svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
-.admin-edit-save:disabled{opacity:.6;cursor:wait}.admin-edit-error{font-size:10px;color:#e5a39b;min-height:14px}
+/* AI & LINE compact control layout — isolated to the AI module */
+#adminOnlinePanel .bal-ai-status-accordion{margin:7px 0 11px;border:1px solid rgba(243,237,231,.1);border-radius:12px;background:rgba(255,255,255,.025);overflow:hidden}
+#adminOnlinePanel .bal-ai-status-accordion>summary{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:38px;padding:9px 12px;cursor:pointer;list-style:none;color:var(--paper);font-size:11px;font-weight:750}
+#adminOnlinePanel .bal-ai-status-accordion>summary::-webkit-details-marker{display:none}
+#adminOnlinePanel .bal-ai-status-accordion>summary:after{content:'+';font-size:16px;color:var(--muted)}
+#adminOnlinePanel .bal-ai-status-accordion[open]>summary:after{content:'−'}
+#adminOnlinePanel .bal-ai-status-hint{margin-left:auto;color:var(--muted);font-size:9px;font-weight:500}
+#adminOnlinePanel .bal-ai-status-accordion .admin-menu-status,
+#adminOnlinePanel .bal-ai-status-accordion .admin-online-placeholder{margin:0;padding:10px 12px;border-top:1px solid rgba(243,237,231,.07);font-size:10px}
+#adminOnlinePanel .bal-ai-control-compact{margin:9px 0 13px;padding:12px;border:1px solid rgba(243,237,231,.1);border-radius:14px;background:rgba(255,255,255,.025)}
+#adminOnlinePanel .bal-ai-control-compact .bal-section-heading{margin:0 0 9px;gap:8px}
+#adminOnlinePanel .bal-ai-control-compact .bal-section-heading h3{font-size:13px;margin:0}
+#adminOnlinePanel .bal-ai-control-compact .bal-section-heading p{font-size:9px;margin:3px 0 0}
+#adminOnlinePanel .bal-ai-control-compact .bal-section-heading>span{font-size:8px;letter-spacing:1px}
+#adminOnlinePanel .bal-ai-control-compact .bal-ai-control-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}
+#adminOnlinePanel .bal-ai-control-compact .bal-ai-control{min-height:58px;padding:9px 10px;gap:8px;border-radius:10px}
+#adminOnlinePanel .bal-ai-control-compact .bal-ai-control-copy b{font-size:10px}
+#adminOnlinePanel .bal-ai-control-compact .bal-ai-control-copy small{font-size:8px;line-height:1.4}
+#adminOnlinePanel .bal-ai-control-compact .bal-switch{transform:scale(.82);transform-origin:right center}
+#adminOnlinePanel .bal-ai-control-compact .bal-switch-state{font-size:8px}
+#adminOnlinePanel .bal-ai-order-status{margin-top:8px}
+#adminOnlinePanel .bal-ai-draft-section{margin-top:12px}
+#adminOnlinePanel .bal-ai-draft-section>h3{font-size:13px;margin:0 0 5px}
+#adminOnlinePanel .bal-ai-draft-section>.admin-online-note{font-size:9px;margin-bottom:8px}
+@media(max-width:700px){
+ #adminOnlinePanel .bal-ai-control-compact{padding:10px}
+ #adminOnlinePanel .bal-ai-control-compact .bal-ai-control-grid{grid-template-columns:1fr}
+ #adminOnlinePanel .bal-ai-control-compact .bal-ai-control{min-height:54px}
+ #adminOnlinePanel .bal-ai-control-compact .bal-section-heading{align-items:flex-start}
+}
 
 </style>
 <style id="refresh-button-fix">
@@ -747,44 +807,6 @@
  .bal-schedule-day { grid-column:1/-1; justify-content:space-between; }
  .bal-time-field input { height:44px; font-size:14px; }
 }
-
-/* Compact, collapsible AI & LINE controls; keep controls near the top of the page. */
-.bal-ai-control-details { margin-top:12px !important; padding:0 !important; overflow:hidden; }
-.bal-ai-control-summary,.bal-ai-status-details > summary { list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; user-select:none; }
-.bal-ai-control-summary::-webkit-details-marker,.bal-ai-status-details > summary::-webkit-details-marker { display:none; }
-.bal-ai-control-summary { padding:12px 14px; }
-.bal-ai-control-summary > span:first-child { display:grid; gap:3px; min-width:0; }
-.bal-ai-control-summary b { color:var(--white); font-size:14px; }
-.bal-ai-control-summary small { color:var(--muted); font-size:11px; }
-.bal-ai-control-summary-side { display:flex; align-items:center; gap:10px; flex:0 0 auto; }
-.bal-ai-control-summary-side em { font-style:normal; color:#b99582; font-size:9px; font-weight:800; letter-spacing:.1em; border:1px solid rgba(185,149,130,.22); border-radius:20px; padding:5px 8px; }
-.bal-ai-control-summary i,.bal-ai-status-details > summary i { width:8px; height:8px; border-right:2px solid #b99582; border-bottom:2px solid #b99582; transform:rotate(45deg); transition:transform .18s; margin:0 4px 4px 0; }
-.bal-ai-control-details[open] .bal-ai-control-summary i,.bal-ai-status-details[open] > summary i { transform:rotate(225deg); margin-bottom:0; }
-.bal-ai-control-details #adminAiToggles { padding:0 12px 12px; }
-.bal-ai-control-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
-.bal-ai-control { min-height:70px; padding:10px 12px; gap:9px; border-radius:12px; }
-.bal-ai-control-copy b { font-size:12px; }
-.bal-ai-control-copy small { font-size:10px; margin-top:3px; line-height:1.35; }
-.bal-switch-wrap { gap:7px; }
-.bal-switch { flex:0 0 72px; width:72px; height:42px; }
-.bal-switch i { border-width:2px; }
-.bal-switch i:before { width:30px; height:30px; left:4px; top:4px; }
-.bal-switch input:checked+i:before { transform:translateX(30px); }
-.bal-switch-state { min-width:22px; font-size:11px; }
-.bal-ai-status-details { border:1px solid var(--line); border-radius:15px; background:var(--glass); padding:0 12px 12px; }
-.bal-ai-status-details > summary { min-height:48px; color:var(--white); font-weight:800; font-size:14px; }
-.bal-ai-status-details[open] > summary { margin-bottom:10px; border-bottom:1px solid var(--line); }
-@media(max-width:700px) {
- .bal-ai-control-grid { grid-template-columns:1fr; gap:7px; }
- .bal-ai-control { min-height:66px; padding:9px 10px; }
- .bal-switch { flex-basis:68px; width:68px; height:40px; }
- .bal-switch i:before { width:28px; height:28px; left:4px; top:4px; }
- .bal-switch input:checked+i:before { transform:translateX(28px); }
- .bal-switch-state { font-size:10px; min-width:20px; }
- .bal-ai-control-summary { padding:11px 12px; }
- .bal-ai-control-summary b { font-size:13px; }
-}
-
 </style>
 
 
@@ -1145,51 +1167,19 @@ async function validateAuthSession(session){
   if(!row)return null;
   return {...session,username:row.username||session.username,display_name:row.display_name||session.display_name||row.username||session.username,role:row.role||session.role||'admin',is_active:row.is_active!==false};
 }
-function withBootTimeout(promise,ms,label){
-  let timer;
-  return Promise.race([
-    Promise.resolve(promise),
-    new Promise((_,reject)=>{timer=setTimeout(()=>{const e=new Error(label||'หมดเวลารอการเชื่อมต่อ');e.name='BootTimeoutError';reject(e)},ms)})
-  ]).finally(()=>clearTimeout(timer));
-}
 async function initAuth(){
   setLoading(true,'กำลังตรวจสอบสิทธิ์...');
-  try{
-    const session=readAuthSession();
-    if(session){
-      let valid=null;
-      try{
-        valid=await withBootTimeout(validateAuthSession(session),12000,'ตรวจสอบเซสชันใช้เวลานานเกินไป');
-      }catch(err){
-        console.warn('Session validation error:',err.message);
-        if(err.name!=='BootTimeoutError')clearAuthSession();
-        setLoading(false);
-        showLogin(err.name==='BootTimeoutError'?'เชื่อมต่อ Supabase ไม่ทันเวลา กรุณาลองเข้าสู่ระบบอีกครั้ง':'กรุณาเข้าสู่ระบบอีกครั้ง');
-        return;
-      }
+  const session=readAuthSession();
+  if(session){
+    try{
+      const valid=await validateAuthSession(session);
       if(valid&&valid.is_active!==false){
-        currentUser=valid;writeAuthSession(currentUser);setAuthUserUI();hideLogin();
-        // Visitor logging is non-blocking; it must never hold the startup screen open.
-        logCurrentVisitor().catch(err=>console.warn('Visitor log error:',err?.message||err));
-        try{
-          await withBootTimeout(loadDashboard(),25000,'โหลด Dashboard ใช้เวลานานเกินไป');
-        }catch(err){
-          console.warn('Dashboard startup error:',err.message);
-          setLoading(false);
-          toast('เชื่อมต่อข้อมูลไม่สำเร็จ กรุณากด Refresh: '+err.message);
-        }
-        setLoading(false);
-        return;
+        currentUser=valid;writeAuthSession(currentUser);setAuthUserUI();hideLogin();await logCurrentVisitor();await loadDashboard();setLoading(false);return;
       }
-      clearAuthSession();
-    }
-    setLoading(false);
-    showLogin();
-  }catch(err){
-    console.error('BALENRISTA startup error:',err);
-    setLoading(false);
-    showLogin('เริ่มต้นระบบไม่สำเร็จ กรุณาเข้าสู่ระบบอีกครั้ง');
+    }catch(err){console.warn('Session validation error:',err.message)}
+    clearAuthSession();
   }
+  setLoading(false);showLogin();
 }
 async function handleLogin(e){
   e.preventDefault();
@@ -2899,6 +2889,8 @@ function adminIconSvg(name){
   plus:'<path d="M12 5v14M5 12h14"/>',
   close:'<path d="m18 6-12 12M6 6l12 12"/>',
   eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
+  trash:'<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>',
+  save:'<path d="M5 4h12l3 3v13H4V4h1Z"/><path d="M8 4v6h8V4M8 20v-6h8v6"/>',
   edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',
   filter:'<path d="M4 6h16M7 12h10m-7 6h4"/>',
   chevron:'<path d="m6 9 6 6 6-6"/>',
@@ -2906,10 +2898,7 @@ function adminIconSvg(name){
   snow:'<path d="M12 2v20M4 6l16 12M20 6 4 18M8 3l4 3 4-3M8 21l4-3 4 3M3 10l1-4 4 1M16 17l4 1 1-4"/>',
   coffee:'<path d="M4 8h13v7a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8ZM17 10h2a2 2 0 1 1 0 4h-2M7 3v2m4-2v2m4-2v2"/>',
   layers:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5"/>',
-  check:'<path d="m5 12 4 4L19 6"/>',
-  trash:'<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>',
-  ban:'<circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/>',
-  save:'<path d="M5 4h12l3 3v13H4V4h1Z"/><path d="M8 4v6h8V4M8 20v-6h8v6"/>'
+  check:'<path d="m5 12 4 4L19 6"/>'
  };
  return `<svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${paths[name]||paths.layers}</svg>`;
 }
@@ -2943,14 +2932,11 @@ async function adminAiRequest(method='GET', payload=null){
 function renderAdminAiLine(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
   panel.innerHTML=`<div class="admin-orders-headline"><div><h3>AI &amp; LINE</h3><div class="admin-online-note">กล่องข้อความจาก LINE · ตรวจออเดอร์ AI · ตั้งค่าการทำงาน</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminAiLine()">${adminIconSvg('refresh')}<span>Refresh</span></button></div>
-  <div id="adminAiLineStatus" class="admin-menu-status">กำลังโหลดข้อมูล…</div>
-  <details class="bal-ai-control-section bal-ai-control-details">
-    <summary class="bal-ai-control-summary"><span><b>ควบคุมระบบ AI &amp; LINE</b><small>ตั้งค่าการทำงานจากจุดเดียว</small></span><span class="bal-ai-control-summary-side"><em>CONTROL</em><i aria-hidden="true"></i></span></summary>
-    <div id="adminAiToggles" class="bal-ai-control-grid admin-online-placeholder">กำลังโหลดการตั้งค่า…</div>
-  </details>
+  <details class="bal-ai-status-accordion"><summary><span>สถานะการเชื่อมต่อ</span><span class="bal-ai-status-hint">แตะเพื่อดูสถานะ</span></summary><div id="adminAiLineStatus" class="admin-menu-status">กำลังโหลดข้อมูล…</div></details>
+  <section class="bal-ai-control-section bal-ai-control-compact"><div class="bal-section-heading"><div><h3>ควบคุมระบบ AI &amp; LINE</h3><p>จัดการการทำงานของระบบจากจุดเดียว</p></div><span>CONTROL CENTER</span></div><div id="adminAiToggles" class="bal-ai-control-grid admin-online-placeholder">กำลังโหลดการตั้งค่า…</div></section>
   <section class="admin-online-kpis" id="adminAiKpis"></section>
-  <section style="margin-top:18px"><h3>ออเดอร์จาก LINE ที่รอตรวจสอบ</h3><div class="admin-online-note">ชื่อ LINE ลูกค้าจะแสดงเป็นหัวรายการ หาก LINE ไม่ส่งชื่อโปรไฟล์จะแสดงว่าไม่ทราบชื่อ</div><div id="adminLineDraftList" class="admin-online-placeholder">กำลังโหลดออเดอร์…</div></section>
-  <details class="bal-ai-status-details" style="margin-top:18px"><summary><span>สถานะออเดอร์ LINE และข้อมูลลูกค้า</span><i aria-hidden="true"></i></summary><div id="adminLineOrderStatus" class="admin-online-placeholder">กำลังโหลดสถานะ…</div></details>`;
+  <section class="bal-ai-status-accordion bal-ai-order-status"><details><summary><span>สถานะออเดอร์ LINE และข้อมูลลูกค้า</span><span class="bal-ai-status-hint">แตะเพื่อดูรายละเอียด</span></summary><div id="adminLineOrderStatus" class="admin-online-placeholder">กำลังโหลดสถานะ…</div></details></section>
+  <section class="bal-ai-draft-section"><h3>ออเดอร์จาก LINE ที่รอตรวจสอบ</h3><div class="admin-online-note">ชื่อ LINE ลูกค้าจะแสดงเป็นหัวรายการ หาก LINE ไม่ส่งชื่อโปรไฟล์จะแสดงว่าไม่ทราบชื่อ</div><div id="adminLineDraftList" class="admin-online-placeholder">กำลังโหลดออเดอร์…</div></section>`;
   loadAdminAiLineData();
 }
 function adminAiSettingValue(settings,key,fallback=false){const r=(settings||[]).find(x=>x.setting_key===key);if(!r)return fallback;const v=r.setting_value;if(typeof v==='boolean')return v;if(typeof v==='string')return v.toLowerCase()==='true'||v==='1';return !!v;}
@@ -3637,7 +3623,10 @@ async function loadAdminOnlineCustomers(reset=true){
           <td>${adminCustomerEsc(c.line_display_name||'—')}</td>
           <td style="font-size:11px;max-width:180px;overflow-wrap:anywhere">${adminCustomerEsc(c.line_user_id||c.external_customer_id||'—')}</td>
           <td>${adminCustomerDate(c.created_at)}</td>
-          <td><div class="admin-customer-actions"><button type="button" class="admin-mini-action" title="แก้ไขข้อมูลลูกค้า" onclick="openAdminCustomerEditor('${adminCustomerEsc(c.id)}')">${adminIconSvg('edit')}</button><button type="button" class="admin-mini-action danger" title="ลบลูกค้า (เฉพาะที่ไม่มีประวัติ/การผูก LINE)" onclick="deleteAdminCustomer('${adminCustomerEsc(c.id)}')">${adminIconSvg('trash')}</button></div></td>
+          <td><div class="admin-customer-actions">
+            <button type="button" class="admin-mini-action" title="แก้ไขข้อมูลลูกค้า" aria-label="แก้ไขข้อมูลลูกค้า" onclick="openAdminCustomerEditor('${adminCustomerEsc(c.id)}')">${adminIconSvg('edit')}</button>
+            <button type="button" class="admin-mini-action danger" title="ลบลูกค้า" aria-label="ลบลูกค้า" onclick="deleteAdminCustomer('${adminCustomerEsc(c.id)}')">${adminIconSvg('trash')}</button>
+          </div></td>
         </tr>`).join(''):'<tr><td colspan="8" class="admin-customer-empty">ไม่พบข้อมูลลูกค้า</td></tr>';
     }
     const pagination=document.getElementById('adminCustomerPagination');
@@ -3652,7 +3641,47 @@ async function loadAdminOnlineCustomers(reset=true){
 }
 async function loadMoreAdminCustomers(){await loadAdminOnlineCustomers(false)}
 
-// Orders are read and maintained only through the trusted admin-orders Edge Function.
+function adminCustomerEditDialog(title, fields, onSave){
+  const old=document.getElementById('adminCustomerEditOverlay');if(old)old.remove();
+  const overlay=document.createElement('div');overlay.id='adminCustomerEditOverlay';overlay.className='admin-edit-overlay';
+  const fieldHtml=fields.map(f=>`<label class="admin-edit-field"><span>${adminCustomerEsc(f.label)}</span>${f.multiline?`<textarea data-customer-key="${adminCustomerEsc(f.key)}" rows="3">${adminCustomerEsc(f.value||'')}</textarea>`:`<input data-customer-key="${adminCustomerEsc(f.key)}" type="text" value="${adminCustomerEsc(f.value||'')}">`}</label>`).join('');
+  overlay.innerHTML=`<div class="admin-edit-card" role="dialog" aria-modal="true"><div class="admin-edit-head"><b>${adminCustomerEsc(title)}</b><button type="button" class="admin-mini-action" data-close aria-label="ปิด">${adminIconSvg('close')}</button></div><form class="admin-edit-form">${fieldHtml}<div class="admin-edit-error" aria-live="polite"></div><div class="admin-edit-buttons"><button type="button" class="admin-orders-refresh" data-close>ยกเลิก</button><button type="submit" class="admin-edit-save">${adminIconSvg('save')} บันทึก</button></div></form></div>`;
+  document.body.appendChild(overlay);
+  const close=()=>overlay.remove();overlay.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',close));
+  overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
+  overlay.querySelector('form').addEventListener('submit',async e=>{
+    e.preventDefault();const button=overlay.querySelector('[type="submit"]'),error=overlay.querySelector('.admin-edit-error'),values={};
+    overlay.querySelectorAll('[data-customer-key]').forEach(el=>values[el.dataset.customerKey]=el.value.trim());
+    button.disabled=true;error.textContent='';
+    try{await onSave(values);close()}catch(err){error.textContent=err.message||String(err);button.disabled=false}
+  });
+}
+async function openAdminCustomerEditor(customerId){
+  const c=adminOnlineCustomerRows.find(x=>String(x.id)===String(customerId));if(!c){toast('ไม่พบข้อมูลลูกค้า');return}
+  adminCustomerEditDialog('แก้ไขข้อมูลลูกค้า',[
+    {key:'display_name',label:'ชื่อลูกค้า',value:c.display_name},
+    {key:'line_display_name',label:'LINE Display Name',value:c.line_display_name},
+    {key:'phone',label:'เบอร์โทร',value:c.phone},
+    {key:'address',label:'ที่อยู่',value:c.address,multiline:true},
+    {key:'email',label:'อีเมล',value:c.email}
+  ],async values=>{
+    const result=await adminCustomersApi({}, {path:'/'+encodeURIComponent(customerId),method:'PATCH',body:values});
+    if(result.success!==true)throw new Error(result.error||'แก้ไขข้อมูลไม่สำเร็จ');
+    toast(result.audit_warning||'บันทึกข้อมูลลูกค้าสำเร็จ');await loadAdminOnlineCustomers(true);
+  });
+}
+async function deleteAdminCustomer(customerId){
+  const c=adminOnlineCustomerRows.find(x=>String(x.id)===String(customerId));if(!c)return;
+  if(!confirm('ยืนยันลบข้อมูลลูกค้ารายนี้หรือไม่?\\n\\nระบบจะปฏิเสธการลบหากลูกค้ามีประวัติออเดอร์ หรือผูกกับ LINE / External ID'))return;
+  try{
+    const result=await adminCustomersApi({}, {path:'/'+encodeURIComponent(customerId),method:'DELETE'});
+    if(result.success!==true)throw new Error(result.error||'ลบข้อมูลไม่สำเร็จ');
+    toast(result.audit_warning||'ลบข้อมูลลูกค้าสำเร็จ');await loadAdminOnlineCustomers(true);
+  }catch(e){toast('ลบข้อมูลไม่สำเร็จ: '+(e.message||e))}
+}
+
+
+// Orders UI is intentionally empty until a trusted backend endpoint is connected.
 // Do not query backend-only tables directly from the browser using the anon key.
 let adminOnlineOrderRows=[];
 let adminOnlineOrdersLoading=false;
@@ -3678,7 +3707,7 @@ async function renderAdminOrders(){
       <select id="adminOrdersPayment" class="field" onchange="filterAdminOrders()"><option value="">ทุกสถานะชำระเงิน</option><option value="unpaid">ยังไม่ชำระ</option><option value="pending">รอตรวจสอบ</option><option value="paid">ชำระแล้ว</option><option value="failed">ไม่ผ่าน</option><option value="refunded">คืนเงินแล้ว</option></select>
     </div>
     <div id="adminOrdersMessage" class="admin-online-note" style="padding:12px 2px">กำลังเชื่อมต่อ Backend…</div>
-    <div class="admin-orders-table-wrap"><table class="admin-orders-table"><thead><tr><th>เลขออเดอร์</th><th>วันที่</th><th>ช่องทาง</th><th>ลูกค้า</th><th>ประเภท</th><th>ยอดรวม</th><th>ออเดอร์</th><th>ชำระเงิน</th><th>Loyverse</th><th>จัดการ</th></tr></thead><tbody id="adminOrdersTbody"><tr><td colspan="10"><div class="admin-orders-empty">กำลังโหลดข้อมูล…</div></td></tr></tbody></table></div>
+    <div id="adminOrderDetail" class="admin-order-detail" aria-live="polite"></div><div class="admin-orders-table-wrap"><table class="admin-orders-table"><thead><tr><th>เลขออเดอร์</th><th>วันที่</th><th>ช่องทาง</th><th>ลูกค้า</th><th>ประเภท</th><th>ยอดรวม</th><th>ออเดอร์</th><th>ชำระเงิน</th><th>Loyverse</th><th>จัดการ</th></tr></thead><tbody id="adminOrdersTbody"><tr><td colspan="10"><div class="admin-orders-empty">กำลังโหลดข้อมูล…</div></td></tr></tbody></table></div>
     <div class="admin-orders-footnote">ใช้ Session เดิมของ Dashboard · API contract เตรียมไว้เชื่อม Supabase Edge Functions · ไม่อ่านตารางส่วนตัวโดยตรงจาก Browser</div>`;
   await loadAdminOnlineOrders();
 }
@@ -3736,7 +3765,7 @@ function adminOrderCustomerRecord(o){
 }
 function adminOrderCustomerName(o){
   const customer=adminOrderCustomerRecord(o);
-  return o?.customer_name_snapshot||customer.line_display_name||customer.display_name||'ไม่ระบุชื่อ';
+  return customer.line_display_name||customer.display_name||'ไม่ระบุชื่อ';
 }
 function adminOrderCustomerPhone(o){
   const customer=adminOrderCustomerRecord(o);
@@ -3758,61 +3787,33 @@ function filterAdminOrders(){
   body.innerHTML=rows.map(o=>`<tr><td>${escapeAdminOrderText(o.order_number)}</td><td>${escapeAdminOrderText(o.created_at?new Date(o.created_at).toLocaleString('th-TH'):'—')}</td><td>${escapeAdminOrderText(o.source||'')}</td><td>${escapeAdminOrderText(adminOrderCustomerName(o))}</td><td>${escapeAdminOrderText(o.order_type||'')}</td><td>${Number(o.total_amount||0).toLocaleString('th-TH',{minimumFractionDigits:2})}</td><td>${adminOrderWorkflowTag(o)}<div style="margin-top:4px">${escapeAdminOrderText(o.order_status||'')}</div></td><td>${escapeAdminOrderText(o.payment_status||'')}</td><td>${escapeAdminOrderText(o.loyverse_sync_status||'')}</td><td><div class="admin-order-row-actions"><button class="admin-mini-action" type="button" onclick="openAdminOrderDetail('${escapeAdminOrderText(o.id)}')" title="ดูรายละเอียด" aria-label="ดูรายละเอียด">${adminIconSvg('eye')}</button><button class="admin-mini-action" type="button" onclick="openAdminOrderEditor('${escapeAdminOrderText(o.id)}')" title="แก้ไขออเดอร์" aria-label="แก้ไขออเดอร์">${adminIconSvg('edit')}</button><button class="admin-mini-action danger" type="button" onclick="cancelAdminOrder('${escapeAdminOrderText(o.id)}')" title="ยกเลิกออเดอร์" aria-label="ยกเลิกออเดอร์">${adminIconSvg('trash')}</button></div></td></tr>`).join('');
 }
 
-
+function previewAdminOrderDetail(){
+  const box=document.getElementById('adminOrderDetail');if(!box)return;
+  box.classList.add('open');
+  const demoItems=[
+    {name:'Iced Americano',detail:'หวาน 50% · ไม่เพิ่มช็อต',qty:2,unit:70,total:140},
+    {name:'Matcha Latte',detail:'หวาน 25%',qty:1,unit:85,total:85}
+  ];
+  box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ตัวอย่างรายละเอียดออเดอร์</h3><div class="admin-online-note">DEMO PREVIEW · ข้อมูลจำลอง ไม่ใช่รายการสั่งซื้อจริง</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div>
+  <div class="admin-order-detail-grid">
+    ${adminOrderCell('เลขออเดอร์','ตัวอย่าง BL-00125')}${adminOrderCell('วันที่','ตัวอย่าง 04/11/2026 09:30')}${adminOrderCell('ช่องทาง','Website')}
+    ${adminOrderCell('ชื่อลูกค้า','คุณลูกค้าตัวอย่าง')}${adminOrderCell('เบอร์โทร','08X-XXX-XXXX')}${adminOrderCell('ประเภท','รับที่ร้าน')}
+    ${adminOrderCell('สถานะออเดอร์','รอยืนยัน')}${adminOrderCell('สถานะชำระเงิน','รอตรวจสอบ')}${adminOrderCell('วิธีชำระ','QR Payment')}
+  </div>
+  <h4>รายการสินค้า</h4><div style="overflow:auto"><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${demoItems.map(x=>`<tr><td><b>${x.name}</b><div class="admin-online-note">${x.detail}</div></td><td>${x.qty}</td><td>${adminOrderMoney(x.unit)}</td><td>${adminOrderMoney(x.total)}</td></tr>`).join('')}</tbody></table></div>
+  <h4>สรุปยอด</h4><div class="admin-order-detail-grid">${adminOrderCell('ยอดสินค้า','225.00 ฿')}${adminOrderCell('ส่วนลด','0.00 ฿')}${adminOrderCell('ค่าจัดส่ง','0.00 ฿')}${adminOrderCell('ยอดสุทธิ','225.00 ฿')}</div>
+  <h4>การชำระเงิน</h4><div class="admin-online-note">ตัวอย่างสถานะ: รอตรวจสอบ · เมื่อเชื่อม API จะมีข้อมูลธุรกรรมและปุ่มเปิดดูสลิปแบบปลอดภัย</div>
+  <h4>ประวัติออเดอร์</h4><div class="admin-order-event"><b>สร้างคำสั่งซื้อ</b><span>ตัวอย่างเวลา · Website</span></div><div class="admin-order-event"><b>รอร้านยืนยัน</b><span>ตัวอย่างสถานะ</span></div>
+  <div class="admin-online-note" style="margin-top:12px">หน้านี้เป็นตัวอย่างการจัดวางเท่านั้น ข้อมูลจริงจะโหลดจาก Supabase ผ่าน Edge Function หลังพัฒนา API</div>`;
+  box.scrollIntoView({behavior:'smooth',block:'start'});
+}
 function escapeAdminOrderText(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function adminOrderMoney(v){return Number(v||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})+' ฿'}
 function adminOrderDate(v){if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleString('th-TH')}
 function adminOrderCell(label,value){return `<div class="admin-order-detail-cell"><span>${escapeAdminOrderText(label)}</span><b>${escapeAdminOrderText(value??'—')||'—'}</b></div>`}
-function adminEditDialog(title, fields, onSave){
-  const old=document.getElementById('adminEditOverlay');if(old)old.remove();
-  const overlay=document.createElement('div');overlay.id='adminEditOverlay';overlay.className='admin-edit-overlay';
-  const fieldHtml=fields.map((f,i)=>`<label class="admin-edit-field"><span>${escapeAdminOrderText(f.label)}</span>${f.multiline?`<textarea data-edit-key="${escapeAdminOrderText(f.key)}" rows="${f.rows||3}">${escapeAdminOrderText(f.value||'')}</textarea>`:`<input data-edit-key="${escapeAdminOrderText(f.key)}" type="${f.type||'text'}" value="${escapeAdminOrderText(f.value||'')}">`}</label>`).join('');
-  overlay.innerHTML=`<div class="admin-edit-card" role="dialog" aria-modal="true"><div class="admin-edit-head"><b>${escapeAdminOrderText(title)}</b><button type="button" class="admin-mini-action" data-close>${adminIconSvg('close')}</button></div><form class="admin-edit-form">${fieldHtml}<div class="admin-edit-error" aria-live="polite"></div><div class="admin-edit-buttons"><button type="button" class="admin-order-detail-close" data-close>ยกเลิก</button><button type="submit" class="admin-edit-save">${adminIconSvg('save')} บันทึก</button></div></form></div>`;
-  document.body.appendChild(overlay);
-  const close=()=>overlay.remove();overlay.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',close));
-  overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
-  overlay.querySelector('form').addEventListener('submit',async e=>{
-    e.preventDefault();const button=overlay.querySelector('[type="submit"]');const error=overlay.querySelector('.admin-edit-error');
-    const values={};overlay.querySelectorAll('[data-edit-key]').forEach(el=>values[el.dataset.editKey]=el.value.trim());
-    button.disabled=true;button.textContent='กำลังบันทึก…';error.textContent='';
-    try{await onSave(values);close()}catch(err){error.textContent=err.message||String(err);button.disabled=false;button.innerHTML=adminIconSvg('save')+' บันทึก'}
-  });
-}
-function adminRefreshOrderDetail(orderId){return openAdminOrderDetail(orderId)}
-async function openAdminOrderEditor(orderId){
-  try{
-    const data=await adminOnlineApi('/'+encodeURIComponent(orderId));const o=data.order||{};
-    adminEditDialog('แก้ไขข้อมูลออเดอร์',[{key:'customer_name_snapshot',label:'ชื่อลูกค้า',value:o.customer_name_snapshot},{key:'customer_phone_snapshot',label:'เบอร์โทร',value:o.customer_phone_snapshot},{key:'customer_address_snapshot',label:'ที่อยู่',value:o.customer_address_snapshot,multiline:true,rows:3},{key:'customer_note',label:'หมายเหตุลูกค้า',value:o.customer_note,multiline:true},{key:'admin_note',label:'หมายเหตุแอดมิน',value:o.admin_note,multiline:true}],async values=>{
-      const result=await adminOnlineApi('/'+encodeURIComponent(orderId),{}, {method:'PATCH',body:values});
-      await loadAdminOnlineOrders();await adminRefreshOrderDetail(orderId);toast(result.audit_warning||'บันทึกข้อมูลออเดอร์แล้ว');
-    });
-  }catch(e){toast('เปิดฟอร์มแก้ไขไม่สำเร็จ: '+(e.message||e))}
-}
-async function cancelAdminOrder(orderId){
-  if(!window.confirm('ยืนยันยกเลิกออเดอร์นี้?\n\nระบบจะเก็บออเดอร์และประวัติไว้ ไม่ลบข้อมูลถาวร\nออเดอร์ที่ชำระเงินแล้ว, ส่ง Loyalty แล้ว หรือ Sync กับ Loyverse แล้วจะถูกปฏิเสธ'))return;
-  const reason=window.prompt('ระบุเหตุผลการยกเลิก (ไม่บังคับ)','ยกเลิกโดยผู้ดูแลระบบ');if(reason===null)return;
-  try{const result=await adminOnlineApi('/'+encodeURIComponent(orderId),{}, {method:'PATCH',body:{action:'cancel',reason}});await loadAdminOnlineOrders();await openAdminOrderDetail(orderId);toast(result.audit_warning||'ยกเลิกออเดอร์แล้ว โดยเก็บประวัติไว้')}catch(e){toast('ยกเลิกไม่สำเร็จ: '+(e.message||e))}
-}
-function openAdminCustomerEditor(customerId){
-  const c=adminOnlineCustomerRows.find(x=>String(x.id)===String(customerId));if(!c)return toast('ไม่พบข้อมูลลูกค้า');
-  adminEditDialog('แก้ไขข้อมูลลูกค้า',[{key:'display_name',label:'ชื่อลูกค้า',value:c.display_name},{key:'line_display_name',label:'LINE Display Name',value:c.line_display_name},{key:'phone',label:'เบอร์โทร',value:c.phone},{key:'email',label:'อีเมล',value:c.email,type:'email'},{key:'address',label:'ที่อยู่',value:c.address,multiline:true,rows:3}],async values=>{
-    const result=await adminCustomersApi({}, {path:'/'+encodeURIComponent(customerId),method:'PATCH',body:values});
-    await loadAdminOnlineCustomers(true);toast(result.audit_warning||'บันทึกข้อมูลลูกค้าแล้ว');
-  });
-}
-async function deleteAdminCustomer(customerId){
-  if(!window.confirm('ยืนยันลบข้อมูลลูกค้ารายนี้?\n\nระบบจะอนุญาตเฉพาะลูกค้าที่ไม่มีประวัติออเดอร์และไม่ได้ผูก LINE/External ID เพื่อป้องกันผลกระทบต่อ Loyalty'))return;
-  try{const result=await adminCustomersApi({}, {path:'/'+encodeURIComponent(customerId),method:'DELETE'});await loadAdminOnlineCustomers(true);toast(result.audit_warning||'ลบข้อมูลลูกค้าแล้ว')}catch(e){toast('ลบไม่ได้: '+(e.message||e))}
-}
-
 async function openAdminOrderDetail(orderId){
-  if(!orderId)return;
-  closeAdminOrderDetail();
-  const overlay=document.createElement('div');overlay.id='adminOrderDetailOverlay';overlay.className='admin-edit-overlay admin-order-detail-overlay';
-  overlay.innerHTML='<div class="admin-order-detail-modal" role="dialog" aria-modal="true" aria-label="รายละเอียดออเดอร์"><div class="admin-online-note">กำลังโหลดรายละเอียดออเดอร์…</div></div>';
-  document.body.appendChild(overlay);
-  overlay.addEventListener('click',e=>{if(e.target===overlay)closeAdminOrderDetail()});
-  const box=overlay.querySelector('.admin-order-detail-modal');
+  const box=document.getElementById('adminOrderDetail');if(!box||!orderId)return;
+  box.classList.add('open');box.innerHTML=`<div class="admin-order-detail-head"><b>กำลังโหลดรายละเอียดออเดอร์…</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div>`;
   try{
     const data=await adminOnlineApi('/'+encodeURIComponent(orderId));
     const o=data.order||{};const items=Array.isArray(data.items)?data.items:[];const payments=Array.isArray(data.payments)?data.payments:[];const events=Array.isArray(data.events)?data.events:[];
@@ -3820,10 +3821,52 @@ async function openAdminOrderDetail(orderId){
     const itemRows=items.length?items.map(x=>`<tr><td>${escapeAdminOrderText(x.menu_name_snapshot||'—')}<div class="admin-online-note">${escapeAdminOrderText(x.note||'')}</div>${x.modifiers?`<div class="admin-online-note">ตัวเลือก: ${escapeAdminOrderText(typeof x.modifiers==='string'?x.modifiers:JSON.stringify(x.modifiers))}</div>`:''}</td><td>${Number(x.quantity||0)}</td><td>${adminOrderMoney(x.unit_price)}</td><td>${adminOrderMoney(x.line_total)}</td></tr>`).join(''):'<tr><td colspan="4">ไม่มีรายการสินค้า</td></tr>';
     const paymentRows=payments.length?payments.map(x=>`<tr><td>${escapeAdminOrderText(x.payment_method||'—')}</td><td>${escapeAdminOrderText(x.payment_status||'—')}</td><td>${adminOrderMoney(x.amount)}</td><td>${escapeAdminOrderText(x.provider_transaction_ref||'—')}</td><td>${escapeAdminOrderText(x.proof_storage_path?'มีไฟล์สลิป (รอระบบลิงก์แบบปลอดภัย)':'—')}</td><td>${escapeAdminOrderText(adminOrderDate(x.verified_at))}</td></tr>`).join(''):'<tr><td colspan="6">ยังไม่มีข้อมูลการชำระเงิน</td></tr>';
     const eventRows=events.length?events.map(x=>`<div class="admin-order-event"><b>${escapeAdminOrderText(x.event_type||'เปลี่ยนแปลง')}</b><span>${escapeAdminOrderText(adminOrderDate(x.created_at))} · ${escapeAdminOrderText(x.actor_type||'ระบบ')}</span>${x.note?`<div>${escapeAdminOrderText(x.note)}</div>`:''}<div class="admin-online-note">${escapeAdminOrderText(JSON.stringify({old:x.old_value??null,new:x.new_value??null}))}</div></div>`).join(''):'<div class="admin-online-note">ยังไม่มีประวัติเหตุการณ์</div>';
-    box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()" aria-label="ปิดรายละเอียด">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',customerName)}${adminOrderCell('เบอร์โทร',customerPhone)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table><h4>การชำระเงิน</h4><div style="overflow:auto"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div>${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div>${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4>${eventRows}`;
+    box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',customerName)}${adminOrderCell('เบอร์โทร',customerPhone)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table><h4>การชำระเงิน</h4><div style="overflow:auto"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div>${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div>${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4>${eventRows}`;
   }catch(err){box.innerHTML=`<div class="admin-order-detail-head"><b>โหลดรายละเอียดไม่สำเร็จ</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-online-note">${escapeAdminOrderText(err.message||err)}</div>`;}
 }
-function closeAdminOrderDetail(){document.getElementById('adminOrderDetailOverlay')?.remove();}
+function closeAdminOrderDetail(){const box=document.getElementById('adminOrderDetail');if(box){box.classList.remove('open');box.innerHTML='';}}
+
+function adminOrderEditDialog(title, fields, onSave){
+  const old=document.getElementById('adminOrderEditOverlay');if(old)old.remove();
+  const overlay=document.createElement('div');overlay.id='adminOrderEditOverlay';overlay.className='admin-edit-overlay';
+  const fieldHtml=fields.map(f=>`<label class="admin-edit-field"><span>${escapeAdminOrderText(f.label)}</span>${f.multiline?`<textarea data-order-key="${escapeAdminOrderText(f.key)}" rows="3">${escapeAdminOrderText(f.value||'')}</textarea>`:`<input data-order-key="${escapeAdminOrderText(f.key)}" type="text" value="${escapeAdminOrderText(f.value||'')}">`}</label>`).join('');
+  overlay.innerHTML=`<div class="admin-edit-card" role="dialog" aria-modal="true"><div class="admin-edit-head"><b>${escapeAdminOrderText(title)}</b><button type="button" class="admin-mini-action" data-close aria-label="ปิด">${adminIconSvg('close')}</button></div><form class="admin-edit-form">${fieldHtml}<div class="admin-edit-error" aria-live="polite"></div><div class="admin-edit-buttons"><button type="button" class="admin-orders-refresh" data-close>ยกเลิก</button><button type="submit" class="admin-edit-save">${adminIconSvg('save')} บันทึก</button></div></form></div>`;
+  document.body.appendChild(overlay);
+  const close=()=>overlay.remove();overlay.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',close));
+  overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
+  overlay.querySelector('form').addEventListener('submit',async e=>{
+    e.preventDefault();const button=overlay.querySelector('[type="submit"]'),error=overlay.querySelector('.admin-edit-error'),values={};
+    overlay.querySelectorAll('[data-order-key]').forEach(el=>values[el.dataset.orderKey]=el.value.trim());
+    button.disabled=true;error.textContent='';
+    try{await onSave(values);close()}catch(err){error.textContent=err.message||String(err);button.disabled=false}
+  });
+}
+async function openAdminOrderEditor(orderId){
+  try{
+    const data=await adminOnlineApi('/'+encodeURIComponent(orderId));const o=data.order||{};
+    adminOrderEditDialog('แก้ไขข้อมูลออเดอร์',[
+      {key:'customer_name_snapshot',label:'ชื่อลูกค้า',value:o.customer_name_snapshot},
+      {key:'customer_phone_snapshot',label:'เบอร์โทร',value:o.customer_phone_snapshot},
+      {key:'customer_address_snapshot',label:'ที่อยู่',value:o.customer_address_snapshot,multiline:true},
+      {key:'customer_note',label:'หมายเหตุลูกค้า',value:o.customer_note,multiline:true},
+      {key:'admin_note',label:'หมายเหตุแอดมิน',value:o.admin_note,multiline:true}
+    ],async values=>{
+      const result=await adminOnlineApi('/'+encodeURIComponent(orderId),{}, {method:'PATCH',body:values});
+      if(result.success===false)throw new Error(result.error||'บันทึกข้อมูลไม่สำเร็จ');
+      toast(result.audit_warning||'บันทึกข้อมูลออเดอร์สำเร็จ');await loadAdminOnlineOrders();
+    });
+  }catch(e){toast('เปิดฟอร์มแก้ไขไม่สำเร็จ: '+(e.message||e))}
+}
+async function cancelAdminOrder(orderId){
+  if(!confirm('ยืนยันยกเลิกออเดอร์นี้หรือไม่?\\n\\nระบบจะเปลี่ยนสถานะเป็นยกเลิกและเก็บข้อมูล/ประวัติไว้ ไม่ลบถาวร'))return;
+  const reason=prompt('ระบุเหตุผลการยกเลิก (ไม่บังคับ)','ยกเลิกโดยผู้ดูแลระบบ');if(reason===null)return;
+  try{
+    const result=await adminOnlineApi('/'+encodeURIComponent(orderId),{}, {method:'PATCH',body:{action:'cancel',reason}});
+    if(result.success===false)throw new Error(result.error||'ยกเลิกออเดอร์ไม่สำเร็จ');
+    toast(result.audit_warning||'ยกเลิกออเดอร์แล้ว โดยเก็บประวัติไว้');await loadAdminOnlineOrders();closeAdminOrderDetail();
+  }catch(e){toast('ยกเลิกไม่สำเร็จ: '+(e.message||e))}
+}
+
 
 function toggleAdminGroup(group){
   const map={sales:['orders'],catalog:['menu','customers'],finance:['payments','rewards'],system:['settings','ai-line','faq']};
