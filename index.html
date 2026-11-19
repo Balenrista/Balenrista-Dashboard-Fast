@@ -408,6 +408,127 @@
  #adminOnlinePanel .bal-ai-control-compact .bal-section-heading{align-items:flex-start}
 }
 
+
+/* ===== UI refinement v2: opaque order modal + AI/LINE hierarchy ===== */
+body>#adminOrderDetail.admin-order-detail.open{
+  position:fixed!important;inset:0!important;z-index:10000!important;
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100vw!important;height:100dvh!important;max-width:none!important;max-height:none!important;
+  margin:0!important;padding:clamp(10px,2.5vw,24px)!important;
+  overflow:hidden!important;box-sizing:border-box!important;
+  background:rgba(5,4,4,.97)!important;
+  -webkit-backdrop-filter:blur(14px)!important;backdrop-filter:blur(14px)!important;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-card{
+  display:flex;flex-direction:column;position:relative;
+  width:min(920px,100%)!important;height:min(90dvh,900px)!important;max-height:90dvh!important;
+  margin:0!important;padding:0!important;overflow:hidden!important;
+  border:1px solid rgba(220,194,177,.2)!important;border-radius:20px!important;
+  background:#171210!important;color:#f4eee9!important;
+  box-shadow:0 30px 100px rgba(0,0,0,.8)!important;isolation:isolate;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-head{
+  position:sticky;top:0;z-index:2;flex:0 0 auto;width:100%!important;max-height:none!important;
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin:0!important;padding:17px 20px!important;
+  border:0!important;border-bottom:1px solid rgba(220,194,177,.13)!important;
+  border-radius:0!important;background:#211916!important;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-head h3{font-size:clamp(15px,2.4vw,20px)!important;line-height:1.35}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-head .admin-online-note{margin-top:5px;font-size:10px}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-close{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;
+  min-height:38px;padding:0 12px;border:1px solid rgba(220,194,177,.2);
+  border-radius:10px;background:#2a211d;color:#f4eee9;font-size:11px;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;
+  width:100%!important;margin:0!important;padding:16px 18px 8px!important;
+  border:0!important;background:#171210!important;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-grid>*{
+  min-width:0;padding:12px 13px!important;border:1px solid rgba(220,194,177,.13)!important;
+  border-radius:12px;background:#201815!important;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-grid>* :last-child{overflow-wrap:anywhere}
+body>#adminOrderDetail.admin-order-detail.open h4{
+  width:100%!important;margin:0!important;padding:14px 18px 8px!important;
+  border:0!important;background:#171210!important;color:#d8b9a5;font-size:12px!important;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-table-wrap{
+  width:calc(100% - 36px);margin:0 18px 8px;overflow:auto;
+  border:1px solid rgba(220,194,177,.13);border-radius:12px;background:#1d1714;
+}
+body>#adminOrderDetail.admin-order-detail.open table{width:100%;min-width:540px;margin:0!important;padding:0!important;border:0!important;background:transparent!important}
+body>#adminOrderDetail.admin-order-detail.open th,
+body>#adminOrderDetail.admin-order-detail.open td{padding:10px 11px;font-size:10px;border-bottom:1px solid rgba(220,194,177,.1)}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-text,
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-events{
+  width:calc(100% - 36px);margin:0 18px 8px;padding:12px 13px;
+  border:1px solid rgba(220,194,177,.13);border-radius:12px;background:#201815;
+  color:#e8ded6;font-size:11px;line-height:1.65;overflow-wrap:anywhere;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-events{margin-bottom:18px}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-event{padding:9px 0;border-bottom:1px solid rgba(220,194,177,.1)}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-event:last-child{border-bottom:0}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-loading{padding:22px;color:#c6b5aa;font-size:12px}
+#adminOnlinePanel .bal-ai-status-accordion{margin:8px 0 12px;border:1px solid rgba(220,194,177,.14);border-radius:13px;background:#1d1714;overflow:hidden}
+#adminOnlinePanel .bal-ai-status-accordion>details>summary,
+#adminOnlinePanel>details.bal-ai-status-accordion>summary{
+  min-height:42px;padding:11px 14px;font-size:11px;color:#eaded5;
+}
+#adminOnlinePanel .bal-ai-draft-section,
+#adminOnlinePanel .bal-ai-summary-section,
+#adminOnlinePanel .bal-ai-control-compact{
+  margin:12px 0 0;padding:15px;border:1px solid rgba(220,194,177,.13);
+  border-radius:15px;background:linear-gradient(145deg,#211916,#191412);
+}
+#adminOnlinePanel .bal-ai-section-title{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 12px}
+#adminOnlinePanel .bal-ai-section-title h3{margin:0!important;font-size:13px!important;color:#f0e7e0}
+#adminOnlinePanel .bal-ai-section-title p{margin:4px 0 0;color:#a99a90;font-size:9px;line-height:1.5}
+#adminOnlinePanel .bal-ai-section-mark{flex:0 0 auto;padding:5px 8px;border:1px solid rgba(181,151,133,.2);border-radius:999px;color:#c7a996;font-size:8px;letter-spacing:.8px}
+#adminOnlinePanel .admin-online-kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0!important}
+#adminOnlinePanel .admin-online-kpi{min-width:0;padding:12px!important;border:1px solid rgba(220,194,177,.12)!important;border-radius:12px!important;background:#171210!important}
+#adminOnlinePanel .admin-online-kpi span{font-size:9px!important;color:#aa9b91}
+#adminOnlinePanel .admin-online-kpi b{font-size:21px!important;margin-top:5px;display:block}
+#adminOnlinePanel .bal-ai-control-compact{padding:15px}
+#adminOnlinePanel .bal-ai-control-compact .bal-section-heading{align-items:center;margin:0 0 12px}
+#adminOnlinePanel .bal-ai-control-compact .bal-section-heading h3{font-size:13px!important}
+#adminOnlinePanel .bal-ai-control-compact .bal-section-heading p{font-size:9px;margin:4px 0 0;color:#a99a90}
+#adminOnlinePanel .bal-ai-control-compact .bal-section-heading>span{padding:6px 9px;border:1px solid rgba(181,151,133,.22);border-radius:999px;color:#c7a996;font-size:8px;letter-spacing:.8px}
+#adminOnlinePanel .bal-ai-control-compact .bal-ai-control-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;
+  padding:0!important;border:0!important;border-radius:0!important;background:transparent!important;
+}
+#adminOnlinePanel .bal-ai-control-compact .bal-ai-control{
+  min-width:0;min-height:70px!important;padding:11px 12px!important;
+  display:flex;align-items:center;gap:10px;border:1px solid rgba(220,194,177,.13)!important;
+  border-radius:12px!important;background:#191412!important;
+}
+#adminOnlinePanel .bal-ai-control-compact .bal-ai-control:has(input:checked){border-color:rgba(134,33,34,.65)!important;background:rgba(134,33,34,.11)!important}
+#adminOnlinePanel .bal-ai-control-compact .bal-ai-control-copy{min-width:0;flex:1}
+#adminOnlinePanel .bal-ai-control-compact .bal-ai-control-copy b{font-size:10px!important;line-height:1.45}
+#adminOnlinePanel .bal-ai-control-compact .bal-ai-control-copy small{font-size:8px!important;line-height:1.45;color:#a99a90}
+#adminOnlinePanel .bal-ai-control-compact .bal-switch-wrap{flex:0 0 auto;gap:6px}
+#adminOnlinePanel .bal-ai-control-compact .bal-switch{transform:scale(.76);transform-origin:right center;margin-left:-10px}
+#adminOnlinePanel .bal-ai-control-compact .bal-switch-state{font-size:8px;min-width:16px}
+@media(max-width:700px){
+ body>#adminOrderDetail.admin-order-detail.open{padding:8px!important}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-card{width:100%!important;height:92dvh!important;max-height:92dvh!important;border-radius:16px!important}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-head{padding:13px!important}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding:11px 10px 6px!important}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-grid>*{padding:10px!important;font-size:10px}
+ body>#adminOrderDetail.admin-order-detail.open h4{padding:12px 11px 7px!important}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-table-wrap{width:calc(100% - 22px);margin:0 11px 7px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-text,
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-events{width:calc(100% - 22px);margin:0 11px 7px;padding:10px}
+ #adminOnlinePanel .bal-ai-draft-section,#adminOnlinePanel .bal-ai-summary-section,#adminOnlinePanel .bal-ai-control-compact{padding:12px;margin-top:10px}
+ #adminOnlinePanel .admin-online-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}
+ #adminOnlinePanel .bal-ai-control-compact .bal-ai-control-grid{grid-template-columns:1fr}
+ #adminOnlinePanel .bal-ai-control-compact .bal-ai-control{min-height:62px!important;padding:9px 10px!important}
+ #adminOnlinePanel .bal-ai-control-compact .bal-switch{transform:scale(.7)}
+}
+
 </style>
 <style id="refresh-button-fix">
   .fab.is-refreshing {
@@ -2933,10 +3054,10 @@ function renderAdminAiLine(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
   panel.innerHTML=`<div class="admin-orders-headline"><div><h3>AI &amp; LINE</h3><div class="admin-online-note">กล่องข้อความจาก LINE · ตรวจออเดอร์ AI · ตั้งค่าการทำงาน</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminAiLine()">${adminIconSvg('refresh')}<span>Refresh</span></button></div>
   <details class="bal-ai-status-accordion"><summary><span>สถานะการเชื่อมต่อ</span><span class="bal-ai-status-hint">แตะเพื่อดูสถานะ</span></summary><div id="adminAiLineStatus" class="admin-menu-status">กำลังโหลดข้อมูล…</div></details>
-  <section class="bal-ai-control-section bal-ai-control-compact"><div class="bal-section-heading"><div><h3>ควบคุมระบบ AI &amp; LINE</h3><p>จัดการการทำงานของระบบจากจุดเดียว</p></div><span>CONTROL CENTER</span></div><div id="adminAiToggles" class="bal-ai-control-grid admin-online-placeholder">กำลังโหลดการตั้งค่า…</div></section>
-  <section class="admin-online-kpis" id="adminAiKpis"></section>
   <section class="bal-ai-status-accordion bal-ai-order-status"><details><summary><span>สถานะออเดอร์ LINE และข้อมูลลูกค้า</span><span class="bal-ai-status-hint">แตะเพื่อดูรายละเอียด</span></summary><div id="adminLineOrderStatus" class="admin-online-placeholder">กำลังโหลดสถานะ…</div></details></section>
-  <section class="bal-ai-draft-section"><h3>ออเดอร์จาก LINE ที่รอตรวจสอบ</h3><div class="admin-online-note">ชื่อ LINE ลูกค้าจะแสดงเป็นหัวรายการ หาก LINE ไม่ส่งชื่อโปรไฟล์จะแสดงว่าไม่ทราบชื่อ</div><div id="adminLineDraftList" class="admin-online-placeholder">กำลังโหลดออเดอร์…</div></section>`;
+  <section class="bal-ai-draft-section"><div class="bal-ai-section-title"><div><h3>ออเดอร์จาก LINE ที่รอตรวจสอบ</h3><p>รายการที่ต้องตรวจสอบก่อนยืนยันออเดอร์</p></div><span class="bal-ai-section-mark">REVIEW QUEUE</span></div><div id="adminLineDraftList" class="admin-online-placeholder">กำลังโหลดออเดอร์…</div></section>
+  <section class="bal-ai-summary-section"><div class="bal-ai-section-title"><div><h3>ภาพรวมระบบ</h3><p>จำนวนรายการที่เกี่ยวข้องกับ AI &amp; LINE</p></div><span class="bal-ai-section-mark">OVERVIEW</span></div><div class="admin-online-kpis" id="adminAiKpis"></div></section>
+  <section class="bal-ai-control-section bal-ai-control-compact"><div class="bal-section-heading"><div><h3>ควบคุมระบบ AI &amp; LINE</h3><p>ตั้งค่าการทำงานของแต่ละส่วนแยกจากกัน</p></div><span>CONTROL CENTER</span></div><div id="adminAiToggles" class="bal-ai-control-grid admin-online-placeholder">กำลังโหลดการตั้งค่า…</div></section>`;
   loadAdminAiLineData();
 }
 function adminAiSettingValue(settings,key,fallback=false){const r=(settings||[]).find(x=>x.setting_key===key);if(!r)return fallback;const v=r.setting_value;if(typeof v==='boolean')return v;if(typeof v==='string')return v.toLowerCase()==='true'||v==='1';return !!v;}
@@ -3811,9 +3932,21 @@ function escapeAdminOrderText(v){return String(v??'').replace(/[&<>"']/g,c=>({'&
 function adminOrderMoney(v){return Number(v||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})+' ฿'}
 function adminOrderDate(v){if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleString('th-TH')}
 function adminOrderCell(label,value){return `<div class="admin-order-detail-cell"><span>${escapeAdminOrderText(label)}</span><b>${escapeAdminOrderText(value??'—')||'—'}</b></div>`}
+let adminOrderDetailHome = null;
+let adminOrderDetailBodyOverflow = '';
 async function openAdminOrderDetail(orderId){
   const box=document.getElementById('adminOrderDetail');if(!box||!orderId)return;
-  box.classList.add('open');box.innerHTML=`<div class="admin-order-detail-head"><b>กำลังโหลดรายละเอียดออเดอร์…</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div>`;
+  if(!adminOrderDetailHome){
+    adminOrderDetailHome=document.createComment('adminOrderDetailHome');
+    box.parentNode.insertBefore(adminOrderDetailHome,box);
+  }
+  if(box.parentNode!==document.body)document.body.appendChild(box);
+  adminOrderDetailBodyOverflow=document.body.style.overflow;
+  document.body.style.overflow='hidden';
+  box.classList.add('open');
+  box.innerHTML=`<div class="admin-order-detail-card" role="dialog" aria-modal="true" aria-label="รายละเอียดออเดอร์"><div class="admin-order-detail-head"><b>กำลังโหลดรายละเอียดออเดอร์…</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-loading">กำลังดึงข้อมูลจาก Supabase…</div></div>`;
+  box.onclick=e=>{if(e.target===box)closeAdminOrderDetail()};
+  document.addEventListener('keydown',adminOrderDetailEscape);
   try{
     const data=await adminOnlineApi('/'+encodeURIComponent(orderId));
     const o=data.order||{};const items=Array.isArray(data.items)?data.items:[];const payments=Array.isArray(data.payments)?data.payments:[];const events=Array.isArray(data.events)?data.events:[];
@@ -3821,10 +3954,22 @@ async function openAdminOrderDetail(orderId){
     const itemRows=items.length?items.map(x=>`<tr><td>${escapeAdminOrderText(x.menu_name_snapshot||'—')}<div class="admin-online-note">${escapeAdminOrderText(x.note||'')}</div>${x.modifiers?`<div class="admin-online-note">ตัวเลือก: ${escapeAdminOrderText(typeof x.modifiers==='string'?x.modifiers:JSON.stringify(x.modifiers))}</div>`:''}</td><td>${Number(x.quantity||0)}</td><td>${adminOrderMoney(x.unit_price)}</td><td>${adminOrderMoney(x.line_total)}</td></tr>`).join(''):'<tr><td colspan="4">ไม่มีรายการสินค้า</td></tr>';
     const paymentRows=payments.length?payments.map(x=>`<tr><td>${escapeAdminOrderText(x.payment_method||'—')}</td><td>${escapeAdminOrderText(x.payment_status||'—')}</td><td>${adminOrderMoney(x.amount)}</td><td>${escapeAdminOrderText(x.provider_transaction_ref||'—')}</td><td>${escapeAdminOrderText(x.proof_storage_path?'มีไฟล์สลิป (รอระบบลิงก์แบบปลอดภัย)':'—')}</td><td>${escapeAdminOrderText(adminOrderDate(x.verified_at))}</td></tr>`).join(''):'<tr><td colspan="6">ยังไม่มีข้อมูลการชำระเงิน</td></tr>';
     const eventRows=events.length?events.map(x=>`<div class="admin-order-event"><b>${escapeAdminOrderText(x.event_type||'เปลี่ยนแปลง')}</b><span>${escapeAdminOrderText(adminOrderDate(x.created_at))} · ${escapeAdminOrderText(x.actor_type||'ระบบ')}</span>${x.note?`<div>${escapeAdminOrderText(x.note)}</div>`:''}<div class="admin-online-note">${escapeAdminOrderText(JSON.stringify({old:x.old_value??null,new:x.new_value??null}))}</div></div>`).join(''):'<div class="admin-online-note">ยังไม่มีประวัติเหตุการณ์</div>';
-    box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',customerName)}${adminOrderCell('เบอร์โทร',customerPhone)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table><h4>การชำระเงิน</h4><div style="overflow:auto"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div>${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div>${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4>${eventRows}`;
-  }catch(err){box.innerHTML=`<div class="admin-order-detail-head"><b>โหลดรายละเอียดไม่สำเร็จ</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-online-note">${escapeAdminOrderText(err.message||err)}</div>`;}
+    box.innerHTML=`<div class="admin-order-detail-card" role="dialog" aria-modal="true" aria-label="รายละเอียดออเดอร์"><div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',customerName)}${adminOrderCell('เบอร์โทร',customerPhone)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><div class="admin-order-detail-table-wrap"><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table></div><h4>การชำระเงิน</h4><div class="admin-order-detail-table-wrap"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div class="admin-order-detail-text">${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div class="admin-order-detail-text">${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4><div class="admin-order-detail-events">${eventRows}</div></div>`;
+  }catch(err){
+    box.innerHTML=`<div class="admin-order-detail-card" role="dialog" aria-modal="true" aria-label="รายละเอียดออเดอร์"><div class="admin-order-detail-head"><b>โหลดรายละเอียดไม่สำเร็จ</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-text">${escapeAdminOrderText(err.message||err)}</div></div>`;
+  }
 }
-function closeAdminOrderDetail(){const box=document.getElementById('adminOrderDetail');if(box){box.classList.remove('open');box.innerHTML='';}}
+function adminOrderDetailEscape(e){if(e.key==='Escape')closeAdminOrderDetail()}
+function closeAdminOrderDetail(){
+  const box=document.getElementById('adminOrderDetail');
+  document.removeEventListener('keydown',adminOrderDetailEscape);
+  if(box){
+    box.classList.remove('open');box.onclick=null;box.innerHTML='';
+    document.body.style.overflow=adminOrderDetailBodyOverflow||'';
+    if(adminOrderDetailHome&&adminOrderDetailHome.parentNode){adminOrderDetailHome.parentNode.insertBefore(box,adminOrderDetailHome);adminOrderDetailHome.remove();}
+  }
+  adminOrderDetailHome=null;
+}
 
 function adminOrderEditDialog(title, fields, onSave){
   const old=document.getElementById('adminOrderEditOverlay');if(old)old.remove();
