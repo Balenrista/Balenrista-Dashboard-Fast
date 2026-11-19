@@ -331,6 +331,14 @@
 .admin-mini-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .admin-mini-action.danger{color:#d58b82;border-color:rgba(180,75,65,.28);background:rgba(100,6,6,.12)}
 .admin-customer-actions,.admin-detail-actions{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.admin-order-row-actions{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.admin-order-row-actions .admin-mini-action{width:34px;height:34px}
+.admin-order-detail-overlay{z-index:1300}
+#adminEditOverlay{z-index:1400}
+.admin-order-detail-modal{width:min(820px,100%);max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:19px;background:#1b1513;padding:18px;box-shadow:0 25px 90px rgba(0,0,0,.58)}
+.admin-order-detail-modal .admin-order-detail-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+@media(max-width:700px){.admin-order-detail-modal{padding:14px;max-height:86vh}.admin-order-detail-modal .admin-order-detail-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-order-row-actions .admin-mini-action{width:32px;height:32px}}
+
 .admin-edit-overlay{position:fixed;inset:0;z-index:1200;background:rgba(5,4,4,.78);backdrop-filter:blur(9px);display:flex;align-items:center;justify-content:center;padding:16px}
 .admin-edit-card{width:min(520px,100%);max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:19px;background:#1b1513;padding:18px;box-shadow:0 25px 90px rgba(0,0,0,.55)}
 .admin-edit-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px;font-size:14px}
@@ -2820,6 +2828,7 @@ function adminIconSvg(name){
   refresh:'<path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',
   close:'<path d="m18 6-12 12M6 6l12 12"/>',
+  eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>,
   edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',
   filter:'<path d="M4 6h16M7 12h10m-7 6h4"/>',
   chevron:'<path d="m6 9 6 6 6-6"/>',
@@ -3576,7 +3585,7 @@ let adminOnlineOrdersLoading=false;
 async function renderAdminOrders(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
   panel.innerHTML=`
-    <div class="admin-orders-headline"><div><h3>Order Management</h3><div class="admin-online-note">รวมออเดอร์ Website, LINE และใบจดกระดาษในหน้าเดียว</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="admin-orders-refresh" type="button" onclick="previewAdminOrderDetail()">ดูตัวอย่างรายละเอียด</button><button class="admin-orders-refresh" type="button" onclick="renderAdminOrders()">${adminIconSvg('refresh')}<span>Refresh</span></button></div></div>
+    <div class="admin-orders-headline"><div><h3>Order Management</h3><div class="admin-online-note">รวมออเดอร์ Website, LINE และใบจดกระดาษในหน้าเดียว</div></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="admin-orders-refresh" type="button" onclick="renderAdminOrders()">${adminIconSvg('refresh')}<span>Refresh</span></button></div></div>
     <div class="admin-orders-summary">
       <div class="admin-orders-stat"><span>ออเดอร์ที่โหลด</span><b id="adminOrdersTotal">—</b></div>
       <div class="admin-orders-stat"><span>รอยืนยัน</span><b id="adminOrdersPending">—</b></div>
@@ -3595,7 +3604,7 @@ async function renderAdminOrders(){
       <select id="adminOrdersPayment" class="field" onchange="filterAdminOrders()"><option value="">ทุกสถานะชำระเงิน</option><option value="unpaid">ยังไม่ชำระ</option><option value="pending">รอตรวจสอบ</option><option value="paid">ชำระแล้ว</option><option value="failed">ไม่ผ่าน</option><option value="refunded">คืนเงินแล้ว</option></select>
     </div>
     <div id="adminOrdersMessage" class="admin-online-note" style="padding:12px 2px">กำลังเชื่อมต่อ Backend…</div>
-    <div id="adminOrderDetail" class="admin-order-detail" aria-live="polite"></div><div class="admin-orders-table-wrap"><table class="admin-orders-table"><thead><tr><th>เลขออเดอร์</th><th>วันที่</th><th>ช่องทาง</th><th>ลูกค้า</th><th>ประเภท</th><th>ยอดรวม</th><th>ออเดอร์</th><th>ชำระเงิน</th><th>Loyverse</th></tr></thead><tbody id="adminOrdersTbody"><tr><td colspan="9"><div class="admin-orders-empty">กำลังโหลดข้อมูล…</div></td></tr></tbody></table></div>
+    <div class="admin-orders-table-wrap"><table class="admin-orders-table"><thead><tr><th>เลขออเดอร์</th><th>วันที่</th><th>ช่องทาง</th><th>ลูกค้า</th><th>ประเภท</th><th>ยอดรวม</th><th>ออเดอร์</th><th>ชำระเงิน</th><th>Loyverse</th><th>จัดการ</th></tr></thead><tbody id="adminOrdersTbody"><tr><td colspan="10"><div class="admin-orders-empty">กำลังโหลดข้อมูล…</div></td></tr></tbody></table></div>
     <div class="admin-orders-footnote">ใช้ Session เดิมของ Dashboard · API contract เตรียมไว้เชื่อม Supabase Edge Functions · ไม่อ่านตารางส่วนตัวโดยตรงจาก Browser</div>`;
   await loadAdminOnlineOrders();
 }
@@ -3618,7 +3627,7 @@ async function loadAdminOnlineOrders(){
   }catch(err){
     adminOnlineOrderRows=[];
     if(msg)msg.textContent='ยังเชื่อม Backend ไม่สำเร็จ: '+err.message+' — ตรวจสอบว่า Deploy Edge Function และตั้งค่า Secrets แล้ว';
-    if(body)body.innerHTML='<tr><td colspan="9"><div class="admin-orders-empty"><b>ไม่สามารถโหลดออเดอร์ได้</b>หน้านี้ยังคงใช้งาน Dashboard ส่วนอื่นได้ตามปกติ</div></td></tr>';
+    if(body)body.innerHTML='<tr><td colspan="10"><div class="admin-orders-empty"><b>ไม่สามารถโหลดออเดอร์ได้</b>หน้านี้ยังคงใช้งาน Dashboard ส่วนอื่นได้ตามปกติ</div></td></tr>';
     console.error('Admin Online Orders:',err);
   }finally{adminOnlineOrdersLoading=false}
 }
@@ -3671,30 +3680,11 @@ function filterAdminOrders(){
     return (!status||o.order_status===status)&&(!source||src===source)&&(!payment||o.payment_status===payment)&&(!quick||quick!=='review'||review)&&(!q||[o.order_number,adminOrderCustomerName(o),adminOrderCustomerPhone(o)].some(v=>String(v||'').toLowerCase().includes(q)));
   });
   const body=document.getElementById('adminOrdersTbody');if(!body)return;
-  if(!rows.length){body.innerHTML='<tr><td colspan="9"><div class="admin-orders-empty"><b>ยังไม่มีรายการออเดอร์ในตัวกรองนี้</b>รายการจริงจะแสดงเมื่อ Backend ส่งข้อมูลกลับมา</div></td></tr>';return;}
-  body.innerHTML=rows.map(o=>`<tr><td>${escapeAdminOrderText(o.order_number)}</td><td>${escapeAdminOrderText(o.created_at?new Date(o.created_at).toLocaleString('th-TH'):'—')}</td><td>${escapeAdminOrderText(o.source||'')}</td><td>${escapeAdminOrderText(adminOrderCustomerName(o))}</td><td>${escapeAdminOrderText(o.order_type||'')}</td><td>${Number(o.total_amount||0).toLocaleString('th-TH',{minimumFractionDigits:2})}</td><td>${adminOrderWorkflowTag(o)}<div style="margin-top:4px">${escapeAdminOrderText(o.order_status||'')}</div></td><td>${escapeAdminOrderText(o.payment_status||'')}</td><td>${escapeAdminOrderText(o.loyverse_sync_status||'')} <button class="admin-order-open" type="button" onclick="openAdminOrderDetail('${escapeAdminOrderText(o.id)}')">รายละเอียด</button></td></tr>`).join('');
+  if(!rows.length){body.innerHTML='<tr><td colspan="10"><div class="admin-orders-empty"><b>ยังไม่มีรายการออเดอร์ในตัวกรองนี้</b>รายการจริงจะแสดงเมื่อ Backend ส่งข้อมูลกลับมา</div></td></tr>';return;}
+  body.innerHTML=rows.map(o=>`<tr><td>${escapeAdminOrderText(o.order_number)}</td><td>${escapeAdminOrderText(o.created_at?new Date(o.created_at).toLocaleString('th-TH'):'—')}</td><td>${escapeAdminOrderText(o.source||'')}</td><td>${escapeAdminOrderText(adminOrderCustomerName(o))}</td><td>${escapeAdminOrderText(o.order_type||'')}</td><td>${Number(o.total_amount||0).toLocaleString('th-TH',{minimumFractionDigits:2})}</td><td>${adminOrderWorkflowTag(o)}<div style="margin-top:4px">${escapeAdminOrderText(o.order_status||'')}</div></td><td>${escapeAdminOrderText(o.payment_status||'')}</td><td>${escapeAdminOrderText(o.loyverse_sync_status||'')}</td><td><div class="admin-order-row-actions"><button class="admin-mini-action" type="button" onclick="openAdminOrderDetail('${escapeAdminOrderText(o.id)}')" title="ดูรายละเอียด" aria-label="ดูรายละเอียด">${adminIconSvg('eye')}</button><button class="admin-mini-action" type="button" onclick="openAdminOrderEditor('${escapeAdminOrderText(o.id)}')" title="แก้ไขออเดอร์" aria-label="แก้ไขออเดอร์">${adminIconSvg('edit')}</button><button class="admin-mini-action danger" type="button" onclick="cancelAdminOrder('${escapeAdminOrderText(o.id)}')" title="ยกเลิกออเดอร์" aria-label="ยกเลิกออเดอร์">${adminIconSvg('trash')}</button></div></td></tr>`).join('');
 }
 
-function previewAdminOrderDetail(){
-  const box=document.getElementById('adminOrderDetail');if(!box)return;
-  box.classList.add('open');
-  const demoItems=[
-    {name:'Iced Americano',detail:'หวาน 50% · ไม่เพิ่มช็อต',qty:2,unit:70,total:140},
-    {name:'Matcha Latte',detail:'หวาน 25%',qty:1,unit:85,total:85}
-  ];
-  box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ตัวอย่างรายละเอียดออเดอร์</h3><div class="admin-online-note">DEMO PREVIEW · ข้อมูลจำลอง ไม่ใช่รายการสั่งซื้อจริง</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div>
-  <div class="admin-order-detail-grid">
-    ${adminOrderCell('เลขออเดอร์','ตัวอย่าง BL-00125')}${adminOrderCell('วันที่','ตัวอย่าง 04/11/2026 09:30')}${adminOrderCell('ช่องทาง','Website')}
-    ${adminOrderCell('ชื่อลูกค้า','คุณลูกค้าตัวอย่าง')}${adminOrderCell('เบอร์โทร','08X-XXX-XXXX')}${adminOrderCell('ประเภท','รับที่ร้าน')}
-    ${adminOrderCell('สถานะออเดอร์','รอยืนยัน')}${adminOrderCell('สถานะชำระเงิน','รอตรวจสอบ')}${adminOrderCell('วิธีชำระ','QR Payment')}
-  </div>
-  <h4>รายการสินค้า</h4><div style="overflow:auto"><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${demoItems.map(x=>`<tr><td><b>${x.name}</b><div class="admin-online-note">${x.detail}</div></td><td>${x.qty}</td><td>${adminOrderMoney(x.unit)}</td><td>${adminOrderMoney(x.total)}</td></tr>`).join('')}</tbody></table></div>
-  <h4>สรุปยอด</h4><div class="admin-order-detail-grid">${adminOrderCell('ยอดสินค้า','225.00 ฿')}${adminOrderCell('ส่วนลด','0.00 ฿')}${adminOrderCell('ค่าจัดส่ง','0.00 ฿')}${adminOrderCell('ยอดสุทธิ','225.00 ฿')}</div>
-  <h4>การชำระเงิน</h4><div class="admin-online-note">ตัวอย่างสถานะ: รอตรวจสอบ · เมื่อเชื่อม API จะมีข้อมูลธุรกรรมและปุ่มเปิดดูสลิปแบบปลอดภัย</div>
-  <h4>ประวัติออเดอร์</h4><div class="admin-order-event"><b>สร้างคำสั่งซื้อ</b><span>ตัวอย่างเวลา · Website</span></div><div class="admin-order-event"><b>รอร้านยืนยัน</b><span>ตัวอย่างสถานะ</span></div>
-  <div class="admin-online-note" style="margin-top:12px">หน้านี้เป็นตัวอย่างการจัดวางเท่านั้น ข้อมูลจริงจะโหลดจาก Supabase ผ่าน Edge Function หลังพัฒนา API</div>`;
-  box.scrollIntoView({behavior:'smooth',block:'start'});
-}
+
 function escapeAdminOrderText(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function adminOrderMoney(v){return Number(v||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})+' ฿'}
 function adminOrderDate(v){if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleString('th-TH')}
@@ -3742,9 +3732,13 @@ async function deleteAdminCustomer(customerId){
 }
 
 async function openAdminOrderDetail(orderId){
-  const box=document.getElementById('adminOrderDetail');if(!box||!orderId)return;
-  box.classList.add('open');box.innerHTML='<div class="admin-online-note">กำลังโหลดรายละเอียดออเดอร์…</div>';
-  box.scrollIntoView({behavior:'smooth',block:'start'});
+  if(!orderId)return;
+  closeAdminOrderDetail();
+  const overlay=document.createElement('div');overlay.id='adminOrderDetailOverlay';overlay.className='admin-edit-overlay admin-order-detail-overlay';
+  overlay.innerHTML='<div class="admin-order-detail-modal" role="dialog" aria-modal="true" aria-label="รายละเอียดออเดอร์"><div class="admin-online-note">กำลังโหลดรายละเอียดออเดอร์…</div></div>';
+  document.body.appendChild(overlay);
+  overlay.addEventListener('click',e=>{if(e.target===overlay)closeAdminOrderDetail()});
+  const box=overlay.querySelector('.admin-order-detail-modal');
   try{
     const data=await adminOnlineApi('/'+encodeURIComponent(orderId));
     const o=data.order||{};const items=Array.isArray(data.items)?data.items:[];const payments=Array.isArray(data.payments)?data.payments:[];const events=Array.isArray(data.events)?data.events:[];
@@ -3752,10 +3746,10 @@ async function openAdminOrderDetail(orderId){
     const itemRows=items.length?items.map(x=>`<tr><td>${escapeAdminOrderText(x.menu_name_snapshot||'—')}<div class="admin-online-note">${escapeAdminOrderText(x.note||'')}</div>${x.modifiers?`<div class="admin-online-note">ตัวเลือก: ${escapeAdminOrderText(typeof x.modifiers==='string'?x.modifiers:JSON.stringify(x.modifiers))}</div>`:''}</td><td>${Number(x.quantity||0)}</td><td>${adminOrderMoney(x.unit_price)}</td><td>${adminOrderMoney(x.line_total)}</td></tr>`).join(''):'<tr><td colspan="4">ไม่มีรายการสินค้า</td></tr>';
     const paymentRows=payments.length?payments.map(x=>`<tr><td>${escapeAdminOrderText(x.payment_method||'—')}</td><td>${escapeAdminOrderText(x.payment_status||'—')}</td><td>${adminOrderMoney(x.amount)}</td><td>${escapeAdminOrderText(x.provider_transaction_ref||'—')}</td><td>${escapeAdminOrderText(x.proof_storage_path?'มีไฟล์สลิป (รอระบบลิงก์แบบปลอดภัย)':'—')}</td><td>${escapeAdminOrderText(adminOrderDate(x.verified_at))}</td></tr>`).join(''):'<tr><td colspan="6">ยังไม่มีข้อมูลการชำระเงิน</td></tr>';
     const eventRows=events.length?events.map(x=>`<div class="admin-order-event"><b>${escapeAdminOrderText(x.event_type||'เปลี่ยนแปลง')}</b><span>${escapeAdminOrderText(adminOrderDate(x.created_at))} · ${escapeAdminOrderText(x.actor_type||'ระบบ')}</span>${x.note?`<div>${escapeAdminOrderText(x.note)}</div>`:''}<div class="admin-online-note">${escapeAdminOrderText(JSON.stringify({old:x.old_value??null,new:x.new_value??null}))}</div></div>`).join(''):'<div class="admin-online-note">ยังไม่มีประวัติเหตุการณ์</div>';
-    box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><div class="admin-detail-actions"><button class="admin-mini-action" type="button" onclick="openAdminOrderEditor('${escapeAdminOrderText(o.id)}')" title="แก้ไขข้อมูล">${adminIconSvg('edit')}</button><button class="admin-mini-action danger" type="button" onclick="cancelAdminOrder('${escapeAdminOrderText(o.id)}')" title="ยกเลิกออเดอร์">${adminIconSvg('ban')}</button><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',customerName)}${adminOrderCell('เบอร์โทร',customerPhone)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table><h4>การชำระเงิน</h4><div style="overflow:auto"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div>${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div>${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4>${eventRows}`;
+    box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()" aria-label="ปิดรายละเอียด">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',customerName)}${adminOrderCell('เบอร์โทร',customerPhone)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table><h4>การชำระเงิน</h4><div style="overflow:auto"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div>${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div>${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4>${eventRows}`;
   }catch(err){box.innerHTML=`<div class="admin-order-detail-head"><b>โหลดรายละเอียดไม่สำเร็จ</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-online-note">${escapeAdminOrderText(err.message||err)}</div>`;}
 }
-function closeAdminOrderDetail(){const box=document.getElementById('adminOrderDetail');if(box){box.classList.remove('open');box.innerHTML='';}}
+function closeAdminOrderDetail(){document.getElementById('adminOrderDetailOverlay')?.remove();}
 
 function toggleAdminGroup(group){
   const map={sales:['orders'],catalog:['menu','customers'],finance:['payments','rewards'],system:['settings','ai-line','faq']};
