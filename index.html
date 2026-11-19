@@ -529,6 +529,54 @@ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-loading{paddi
  #adminOnlinePanel .bal-ai-control-compact .bal-switch{transform:scale(.7)}
 }
 
+
+/* AI & LINE v3: icon-only collapsible headers and requested section order */
+#adminOnlinePanel .bal-ai-fold-section{
+  display:block;margin:12px 0 0;padding:0;border:1px solid rgba(220,194,177,.14);
+  border-radius:15px;background:linear-gradient(145deg,#211916,#191412);overflow:hidden;
+}
+#adminOnlinePanel .bal-ai-fold-section>summary{
+  min-height:58px;padding:12px 15px;display:flex;align-items:center;justify-content:space-between;
+  gap:12px;cursor:pointer;list-style:none;color:#f0e7e0;
+}
+#adminOnlinePanel .bal-ai-fold-section>summary::-webkit-details-marker{display:none}
+#adminOnlinePanel .bal-ai-fold-title{display:flex;flex-direction:column;gap:4px;min-width:0}
+#adminOnlinePanel .bal-ai-fold-title b{font-size:13px;font-weight:800;line-height:1.35}
+#adminOnlinePanel .bal-ai-fold-title small{font-size:9px;color:#a99a90;line-height:1.4}
+#adminOnlinePanel .bal-ai-fold-icon{
+  flex:0 0 27px;width:27px;height:27px;border:1px solid rgba(181,151,133,.28);
+  border-radius:9px;display:grid;place-items:center;background:rgba(255,255,255,.025);position:relative;
+}
+#adminOnlinePanel .bal-ai-fold-icon:before{
+  content:'';width:7px;height:7px;border-right:1.7px solid #c7a996;border-bottom:1.7px solid #c7a996;
+  transform:translateY(-2px) rotate(45deg);transition:transform .18s ease;
+}
+#adminOnlinePanel .bal-ai-fold-section[open]>summary .bal-ai-fold-icon:before{transform:translateY(2px) rotate(225deg)}
+#adminOnlinePanel .bal-ai-fold-content{padding:0 14px 14px;border-top:1px solid rgba(220,194,177,.08)}
+#adminOnlinePanel .bal-ai-fold-content>.admin-online-kpis{padding-top:12px}
+#adminOnlinePanel .bal-ai-fold-section.bal-ai-control-compact .bal-ai-fold-content{padding-top:12px}
+#adminOnlinePanel .bal-ai-fold-section.bal-ai-control-compact .bal-ai-control-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#adminOnlinePanel .bal-ai-fold-section.bal-ai-control-compact .bal-ai-control{min-height:62px;padding:10px 11px;border-radius:11px}
+#adminOnlinePanel .bal-ai-fold-section.bal-ai-control-compact .bal-switch{transform:scale(.78);transform-origin:right center}
+#adminOnlinePanel .bal-ai-draft-section{margin-top:12px}
+#adminOnlinePanel .bal-ai-order-status{margin-top:12px}
+#adminOnlinePanel .bal-ai-connection-section{
+  margin:12px 0 0;padding:14px 15px;border:1px solid rgba(220,194,177,.13);
+  border-radius:15px;background:linear-gradient(145deg,#211916,#191412);
+}
+#adminOnlinePanel .bal-ai-connection-section .bal-ai-section-title{margin-bottom:9px}
+#adminOnlinePanel .bal-ai-connection-section .admin-menu-status{
+  padding:10px 11px;border-radius:10px;background:rgba(255,255,255,.025);
+  border:1px solid rgba(220,194,177,.08);font-size:10px;line-height:1.5;
+}
+@media(max-width:700px){
+  #adminOnlinePanel .bal-ai-fold-section>summary{min-height:54px;padding:11px 12px}
+  #adminOnlinePanel .bal-ai-fold-content{padding:0 11px 11px}
+  #adminOnlinePanel .bal-ai-fold-section.bal-ai-control-compact .bal-ai-control-grid{grid-template-columns:1fr}
+  #adminOnlinePanel .bal-ai-fold-section.bal-ai-control-compact .bal-ai-control{min-height:58px;padding:9px 10px}
+  #adminOnlinePanel .bal-ai-connection-section{padding:12px}
+}
+
 </style>
 <style id="refresh-button-fix">
   .fab.is-refreshing {
@@ -3053,11 +3101,11 @@ async function adminAiRequest(method='GET', payload=null){
 function renderAdminAiLine(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
   panel.innerHTML=`<div class="admin-orders-headline"><div><h3>AI &amp; LINE</h3><div class="admin-online-note">กล่องข้อความจาก LINE · ตรวจออเดอร์ AI · ตั้งค่าการทำงาน</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminAiLine()">${adminIconSvg('refresh')}<span>Refresh</span></button></div>
-  <details class="bal-ai-status-accordion"><summary><span>สถานะการเชื่อมต่อ</span><span class="bal-ai-status-hint">แตะเพื่อดูสถานะ</span></summary><div id="adminAiLineStatus" class="admin-menu-status">กำลังโหลดข้อมูล…</div></details>
-  <section class="bal-ai-status-accordion bal-ai-order-status"><details><summary><span>สถานะออเดอร์ LINE และข้อมูลลูกค้า</span><span class="bal-ai-status-hint">แตะเพื่อดูรายละเอียด</span></summary><div id="adminLineOrderStatus" class="admin-online-placeholder">กำลังโหลดสถานะ…</div></details></section>
+  <details class="bal-ai-fold-section bal-ai-summary-section" open><summary><span class="bal-ai-fold-title"><b>ภาพรวมระบบ</b><small>จำนวนรายการที่เกี่ยวข้องกับ AI &amp; LINE</small></span><span class="bal-ai-fold-icon" aria-hidden="true"></span></summary><div class="bal-ai-fold-content"><div class="admin-online-kpis" id="adminAiKpis"></div></div></details>
+  <details class="bal-ai-fold-section bal-ai-control-section bal-ai-control-compact" open><summary><span class="bal-ai-fold-title"><b>ควบคุมระบบ AI &amp; LINE</b><small>ตั้งค่าการทำงานของแต่ละส่วนแยกจากกัน</small></span><span class="bal-ai-fold-icon" aria-hidden="true"></span></summary><div class="bal-ai-fold-content"><div id="adminAiToggles" class="bal-ai-control-grid admin-online-placeholder">กำลังโหลดการตั้งค่า…</div></div></details>
   <section class="bal-ai-draft-section"><div class="bal-ai-section-title"><div><h3>ออเดอร์จาก LINE ที่รอตรวจสอบ</h3><p>รายการที่ต้องตรวจสอบก่อนยืนยันออเดอร์</p></div><span class="bal-ai-section-mark">REVIEW QUEUE</span></div><div id="adminLineDraftList" class="admin-online-placeholder">กำลังโหลดออเดอร์…</div></section>
-  <section class="bal-ai-summary-section"><div class="bal-ai-section-title"><div><h3>ภาพรวมระบบ</h3><p>จำนวนรายการที่เกี่ยวข้องกับ AI &amp; LINE</p></div><span class="bal-ai-section-mark">OVERVIEW</span></div><div class="admin-online-kpis" id="adminAiKpis"></div></section>
-  <section class="bal-ai-control-section bal-ai-control-compact"><div class="bal-section-heading"><div><h3>ควบคุมระบบ AI &amp; LINE</h3><p>ตั้งค่าการทำงานของแต่ละส่วนแยกจากกัน</p></div><span>CONTROL CENTER</span></div><div id="adminAiToggles" class="bal-ai-control-grid admin-online-placeholder">กำลังโหลดการตั้งค่า…</div></section>`;
+  <details class="bal-ai-fold-section bal-ai-order-status"><summary><span class="bal-ai-fold-title"><b>สถานะออเดอร์ LINE และข้อมูลลูกค้า</b><small>รายละเอียดสถานะและข้อมูลลูกค้าที่เกี่ยวข้อง</small></span><span class="bal-ai-fold-icon" aria-hidden="true"></span></summary><div class="bal-ai-fold-content"><div id="adminLineOrderStatus" class="admin-online-placeholder">กำลังโหลดสถานะ…</div></div></details>
+  <section class="bal-ai-connection-section"><div class="bal-ai-section-title"><div><h3>สถานะการเชื่อมต่อ</h3><p>สถานะการเชื่อมต่อบริการ AI &amp; LINE</p></div><span class="bal-ai-section-mark">CONNECTION</span></div><div id="adminAiLineStatus" class="admin-menu-status">กำลังโหลดข้อมูล…</div></section>`;
   loadAdminAiLineData();
 }
 function adminAiSettingValue(settings,key,fallback=false){const r=(settings||[]).find(x=>x.setting_key===key);if(!r)return fallback;const v=r.setting_value;if(typeof v==='boolean')return v;if(typeof v==='string')return v.toLowerCase()==='true'||v==='1';return !!v;}
