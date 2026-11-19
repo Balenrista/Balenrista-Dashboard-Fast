@@ -1145,19 +1145,51 @@ async function validateAuthSession(session){
   if(!row)return null;
   return {...session,username:row.username||session.username,display_name:row.display_name||session.display_name||row.username||session.username,role:row.role||session.role||'admin',is_active:row.is_active!==false};
 }
+function withBootTimeout(promise,ms,label){
+  let timer;
+  return Promise.race([
+    Promise.resolve(promise),
+    new Promise((_,reject)=>{timer=setTimeout(()=>{const e=new Error(label||'หมดเวลารอการเชื่อมต่อ');e.name='BootTimeoutError';reject(e)},ms)})
+  ]).finally(()=>clearTimeout(timer));
+}
 async function initAuth(){
   setLoading(true,'กำลังตรวจสอบสิทธิ์...');
-  const session=readAuthSession();
-  if(session){
-    try{
-      const valid=await validateAuthSession(session);
-      if(valid&&valid.is_active!==false){
-        currentUser=valid;writeAuthSession(currentUser);setAuthUserUI();hideLogin();await logCurrentVisitor();await loadDashboard();setLoading(false);return;
+  try{
+    const session=readAuthSession();
+    if(session){
+      let valid=null;
+      try{
+        valid=await withBootTimeout(validateAuthSession(session),12000,'ตรวจสอบเซสชันใช้เวลานานเกินไป');
+      }catch(err){
+        console.warn('Session validation error:',err.message);
+        if(err.name!=='BootTimeoutError')clearAuthSession();
+        setLoading(false);
+        showLogin(err.name==='BootTimeoutError'?'เชื่อมต่อ Supabase ไม่ทันเวลา กรุณาลองเข้าสู่ระบบอีกครั้ง':'กรุณาเข้าสู่ระบบอีกครั้ง');
+        return;
       }
-    }catch(err){console.warn('Session validation error:',err.message)}
-    clearAuthSession();
+      if(valid&&valid.is_active!==false){
+        currentUser=valid;writeAuthSession(currentUser);setAuthUserUI();hideLogin();
+        // Visitor logging is non-blocking; it must never hold the startup screen open.
+        logCurrentVisitor().catch(err=>console.warn('Visitor log error:',err?.message||err));
+        try{
+          await withBootTimeout(loadDashboard(),25000,'โหลด Dashboard ใช้เวลานานเกินไป');
+        }catch(err){
+          console.warn('Dashboard startup error:',err.message);
+          setLoading(false);
+          toast('เชื่อมต่อข้อมูลไม่สำเร็จ กรุณากด Refresh: '+err.message);
+        }
+        setLoading(false);
+        return;
+      }
+      clearAuthSession();
+    }
+    setLoading(false);
+    showLogin();
+  }catch(err){
+    console.error('BALENRISTA startup error:',err);
+    setLoading(false);
+    showLogin('เริ่มต้นระบบไม่สำเร็จ กรุณาเข้าสู่ระบบอีกครั้ง');
   }
-  setLoading(false);showLogin();
 }
 async function handleLogin(e){
   e.preventDefault();
