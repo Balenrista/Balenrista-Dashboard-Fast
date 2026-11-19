@@ -729,6 +729,53 @@ body>#adminOrderDetail.admin-order-detail.open .admin-order-item-meta>strong{
  body>#adminOrderDetail.admin-order-detail.open .admin-order-total-panel{padding:13px 12px}
 }
 
+
+/* FAQ management: branded modal editor and compact action icons */
+#adminOnlinePanel .admin-faq-question{min-width:150px;color:var(--paper);font-weight:750;line-height:1.5}
+#adminOnlinePanel .admin-faq-answer-cell{max-width:390px;min-width:210px;white-space:pre-wrap;line-height:1.55;color:#c9bbb1}
+#adminOnlinePanel .admin-faq-status{display:inline-flex;padding:5px 9px;border-radius:999px;font-size:9px;font-weight:800;white-space:nowrap}
+#adminOnlinePanel .admin-faq-status.is-active{color:#d8b69f;background:rgba(134,33,34,.2);border:1px solid rgba(134,33,34,.4)}
+#adminOnlinePanel .admin-faq-status.is-inactive{color:#9e928a;background:rgba(255,255,255,.045);border:1px solid rgba(255,255,255,.1)}
+#adminOnlinePanel .admin-faq-actions{display:flex;gap:6px;align-items:center}
+#adminOnlinePanel .admin-faq-empty{text-align:center;padding:28px!important;color:var(--muted)}
+.admin-faq-overlay{position:fixed;inset:0;z-index:16000;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(5,4,4,.82);backdrop-filter:blur(9px);-webkit-backdrop-filter:blur(9px)}
+.admin-faq-editor{width:min(620px,100%);max-height:min(90dvh,820px);overflow:auto;border:1px solid rgba(205,169,145,.25);border-radius:20px;background:linear-gradient(150deg,#251b17,#171210 72%);box-shadow:0 28px 100px rgba(0,0,0,.65);color:#f2e9e2}
+.admin-faq-editor-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;padding:20px 21px 16px;border-bottom:1px solid rgba(205,169,145,.13)}
+.admin-faq-kicker{font-size:8px;letter-spacing:1.8px;font-weight:850;color:#b9957e}
+.admin-faq-editor-head h3{margin:6px 0 4px;font-size:19px;font-weight:850}
+.admin-faq-editor-head p{margin:0;color:#a99a90;font-size:10px}
+.admin-faq-editor-form{display:grid;gap:15px;padding:18px 21px 21px}
+.admin-faq-field{display:grid;gap:7px;min-width:0}
+.admin-faq-field>span{font-size:11px;color:#ddc7b8;font-weight:750}
+.admin-faq-field>span b{color:#d77e73}
+.admin-faq-field input,.admin-faq-field textarea{width:100%;box-sizing:border-box;border:1px solid rgba(205,169,145,.2);border-radius:11px;background:#171210;color:#f3eae4;padding:12px 13px;font:inherit;font-size:12px;outline:none}
+.admin-faq-field textarea{min-height:135px;resize:vertical;line-height:1.6}
+.admin-faq-field input:focus,.admin-faq-field textarea:focus{border-color:#a66e58;box-shadow:0 0 0 3px rgba(166,110,88,.12)}
+.admin-faq-field input::placeholder,.admin-faq-field textarea::placeholder{color:#74675f}
+.admin-faq-field small{font-size:9px;color:#95877e}
+.admin-faq-form-row{display:grid;grid-template-columns:minmax(100px,.8fr) minmax(0,1.2fr);gap:13px;align-items:end}
+.admin-faq-active{display:flex;align-items:center;gap:10px;min-height:43px;padding:9px 11px;border:1px solid rgba(205,169,145,.15);border-radius:11px;background:rgba(255,255,255,.025)}
+.admin-faq-active input{width:17px;height:17px;accent-color:#862122}
+.admin-faq-active span{display:grid;gap:3px}
+.admin-faq-active b{font-size:10px;color:#eadbd0}
+.admin-faq-active small{font-size:8px;color:#9d8f85}
+.admin-faq-form-error{min-height:14px;color:#e59b91;font-size:10px}
+.admin-faq-editor-actions{display:flex;justify-content:flex-end;gap:8px;padding-top:3px}
+.admin-faq-cancel,.admin-faq-save{min-height:39px;padding:0 15px;border-radius:10px;font:inherit;font-size:11px;font-weight:800;cursor:pointer}
+.admin-faq-cancel{border:1px solid rgba(205,169,145,.2);background:rgba(255,255,255,.035);color:#c9b9ae}
+.admin-faq-save{display:flex;align-items:center;gap:7px;border:1px solid #8e3935;background:#862122;color:#fff1e9}
+.admin-faq-save svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
+.admin-faq-save:disabled{opacity:.55;cursor:wait}
+@media(max-width:700px){
+ .admin-faq-overlay{padding:9px}
+ .admin-faq-editor{max-height:calc(100dvh - 18px);border-radius:16px}
+ .admin-faq-editor-head{padding:15px 14px 13px}
+ .admin-faq-editor-form{padding:14px;gap:12px}
+ .admin-faq-form-row{grid-template-columns:1fr 1fr;gap:8px}
+ .admin-faq-editor-head h3{font-size:16px}
+ #adminOnlinePanel .admin-faq-answer-cell{min-width:180px}
+}
+
 </style>
 <style id="refresh-button-fix">
   .fab.is-refreshing {
@@ -3527,11 +3574,54 @@ async function deleteLineDraft(id){if(!confirm('ลบข้อความน�
 async function renderAdminFaqPage(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
   panel.innerHTML=`<div class="admin-orders-headline"><div><h3>FAQ · ฐานความรู้ AI</h3><div class="admin-online-note">คำถามและคำตอบที่ AI ใช้ตอบลูกค้าผ่าน LINE</div></div><div style="display:flex;gap:8px"><button class="admin-orders-refresh" onclick="createAdminFaq()">${adminIconSvg('plus')}<span>เพิ่ม FAQ</span></button><button class="admin-orders-refresh" onclick="renderAdminFaqPage()">${adminIconSvg('refresh')}<span>Refresh</span></button></div></div><div id="adminFaqStatus" class="admin-menu-status">กำลังโหลด FAQ…</div><div class="admin-menu-table-wrap"><table class="admin-menu-table"><thead><tr><th>คำถาม</th><th>คำตอบ</th><th>ลำดับ</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody id="adminFaqBody"><tr><td colspan="5">กำลังโหลด…</td></tr></tbody></table></div>`;
-  try{const d=await adminAiRequest('GET');if(!d.success)throw new Error('อ่านข้อมูลไม่สำเร็จ');const rows=d.faq||[];const body=document.getElementById('adminFaqBody');if(body)body.innerHTML=rows.map(r=>`<tr><td>${escapeAdminOrderText(r.question)}</td><td style="max-width:360px;white-space:normal">${escapeAdminOrderText(r.answer)}</td><td>${Number(r.sort_order)||0}</td><td>${r.is_active?'เปิด':'ปิด'}</td><td><button class="admin-orders-refresh" onclick="editAdminFaq('${r.id}')">แก้ไข</button> <button class="admin-orders-refresh" onclick="toggleAdminFaq('${r.id}',${!r.is_active})">${r.is_active?'ปิด':'เปิด'}</button> <button class="admin-orders-refresh" onclick="deleteAdminFaq('${r.id}')">ลบ</button></td></tr>`).join('')||'<tr><td colspan="5">ยังไม่มี FAQ</td></tr>';const st=document.getElementById('adminFaqStatus');if(st)st.textContent=`โหลด FAQ สำเร็จ ${rows.length} รายการ`;
+  try{const d=await adminAiRequest('GET');if(!d.success)throw new Error('อ่านข้อมูลไม่สำเร็จ');const rows=d.faq||[];const body=document.getElementById('adminFaqBody');if(body)body.innerHTML=rows.map(r=>`<tr><td><div class="admin-faq-question">${escapeAdminOrderText(r.question)}</div></td><td class="admin-faq-answer-cell">${escapeAdminOrderText(r.answer)}</td><td>${Number(r.sort_order)||0}</td><td><span class="admin-faq-status ${r.is_active?'is-active':'is-inactive'}">${r.is_active?'เปิดใช้งาน':'ปิดใช้งาน'}</span></td><td><div class="admin-faq-actions"><button type="button" class="admin-mini-action" title="แก้ไข FAQ" aria-label="แก้ไข FAQ" onclick="editAdminFaq('${escapeAdminOrderText(r.id)}')">${adminIconSvg('edit')}</button><button type="button" class="admin-mini-action" title="${r.is_active?'ปิดใช้งาน':'เปิดใช้งาน'}" aria-label="${r.is_active?'ปิดใช้งาน':'เปิดใช้งาน'}" onclick="toggleAdminFaq('${escapeAdminOrderText(r.id)}',${!r.is_active})">${adminIconSvg(r.is_active?'eye':'eye')}</button><button type="button" class="admin-mini-action danger" title="ลบ FAQ" aria-label="ลบ FAQ" onclick="deleteAdminFaq('${escapeAdminOrderText(r.id)}')">${adminIconSvg('trash')}</button></div></td></tr>`).join('')||'<tr><td colspan="5" class="admin-faq-empty">ยังไม่มี FAQ เพิ่มรายการแรกได้จากปุ่มเพิ่ม FAQ</td></tr>';const st=document.getElementById('adminFaqStatus');if(st)st.textContent=`โหลด FAQ สำเร็จ ${rows.length} รายการ`;
   }catch(e){const st=document.getElementById('adminFaqStatus');if(st)st.textContent='โหลดไม่สำเร็จ: '+e.message;}
 }
-async function createAdminFaq(){const q=prompt('คำถาม FAQ:');if(q===null||!q.trim())return;const a=prompt('คำตอบ FAQ:');if(a===null||!a.trim())return;try{await adminAiRequest('POST',{action:'faq_create',question:q.trim(),answer:a.trim(),is_active:true});await renderAdminFaqPage();}catch(e){alert('บันทึก FAQ ไม่สำเร็จ: '+e.message)}}
-async function editAdminFaq(id){try{const d=await adminAiRequest('GET');const r=(d.faq||[]).find(x=>x.id===id);if(!r)return;const q=prompt('แก้ไขคำถาม:',r.question);if(q===null)return;const a=prompt('แก้ไขคำตอบ:',r.answer);if(a===null)return;const order=prompt('ลำดับการแสดง:',String(r.sort_order??0));if(order===null)return;await adminAiRequest('POST',{action:'faq_update',id,question:q,answer:a,sort_order:Number(order)});await renderAdminFaqPage();}catch(e){alert('แก้ไข FAQ ไม่สำเร็จ: '+e.message)}}
+function openAdminFaqEditor(mode='create',record=null){
+  const old=document.getElementById('adminFaqEditorOverlay');if(old)old.remove();
+  const isEdit=mode==='edit'&&record;
+  const overlay=document.createElement('div');overlay.id='adminFaqEditorOverlay';overlay.className='admin-faq-overlay';
+  overlay.innerHTML=`<section class="admin-faq-editor" role="dialog" aria-modal="true" aria-labelledby="adminFaqEditorTitle">
+    <header class="admin-faq-editor-head"><div><span class="admin-faq-kicker">BALENRISTA KNOWLEDGE BASE</span><h3 id="adminFaqEditorTitle">${isEdit?'แก้ไข FAQ':'เพิ่ม FAQ ใหม่'}</h3><p>คำถามและคำตอบที่ AI ใช้ตอบลูกค้าผ่าน LINE</p></div><button type="button" class="admin-mini-action" data-faq-close aria-label="ปิด">${adminIconSvg('close')}</button></header>
+    <form id="adminFaqEditorForm" class="admin-faq-editor-form">
+      <label class="admin-faq-field"><span>คำถาม <b>*</b></span><input name="question" maxlength="500" required placeholder="พิมพ์คำถามที่ลูกค้ามักสอบถาม" value="${escapeAdminOrderText(record?.question||'')}"></label>
+      <label class="admin-faq-field"><span>คำตอบ <b>*</b></span><textarea name="answer" rows="6" maxlength="5000" required placeholder="พิมพ์คำตอบที่ต้องการให้ AI ใช้ตอบลูกค้า">${escapeAdminOrderText(record?.answer||'')}</textarea><small>แนะนำให้เขียนคำตอบให้ชัดเจน กระชับ และตรงกับข้อมูลร้าน</small></label>
+      <div class="admin-faq-form-row"><label class="admin-faq-field"><span>ลำดับการแสดง</span><input name="sort_order" type="number" step="1" value="${Number(record?.sort_order??0)}"></label><label class="admin-faq-active"><input name="is_active" type="checkbox" ${record?.is_active===false?'':'checked'}><span><b>เปิดใช้งาน</b><small>อนุญาตให้ระบบนำ FAQ นี้ไปใช้ตอบ</small></span></label></div>
+      <div class="admin-faq-form-error" aria-live="polite"></div>
+      <footer class="admin-faq-editor-actions"><button type="button" class="admin-faq-cancel" data-faq-close>ยกเลิก</button><button type="submit" class="admin-faq-save">${adminIconSvg('save')} ${isEdit?'บันทึกการแก้ไข':'เพิ่ม FAQ'}</button></footer>
+    </form>
+  </section>`;
+  document.body.appendChild(overlay);
+  const close=()=>overlay.remove();
+  overlay.querySelectorAll('[data-faq-close]').forEach(b=>b.addEventListener('click',close));
+  overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
+  overlay.querySelector('input[name="question"]').focus();
+  overlay.querySelector('form').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const form=e.currentTarget,submit=form.querySelector('[type="submit"]'),error=form.querySelector('.admin-faq-form-error');
+    const question=form.elements.question.value.trim(),answer=form.elements.answer.value.trim();
+    const sort=Number(form.elements.sort_order.value||0),is_active=form.elements.is_active.checked;
+    if(!question||!answer){error.textContent='กรุณากรอกคำถามและคำตอบให้ครบ';return}
+    if(!Number.isInteger(sort)){error.textContent='ลำดับการแสดงต้องเป็นจำนวนเต็ม';return}
+    submit.disabled=true;error.textContent='';
+    try{
+      const payload=isEdit
+        ?{action:'faq_update',id:record.id,question,answer,sort_order:sort,is_active}
+        :{action:'faq_create',question,answer,sort_order:sort,is_active};
+      const result=await adminAiRequest('POST',payload);
+      if(result?.success===false)throw new Error(result.error||'บันทึก FAQ ไม่สำเร็จ');
+      close();await renderAdminFaqPage();
+    }catch(err){error.textContent=err.message||'บันทึก FAQ ไม่สำเร็จ';submit.disabled=false}
+  });
+}
+async function createAdminFaq(){openAdminFaqEditor('create')}
+async function editAdminFaq(id){
+  try{
+    const d=await adminAiRequest('GET');if(!d.success)throw new Error('อ่านข้อมูล FAQ ไม่สำเร็จ');
+    const r=(d.faq||[]).find(x=>String(x.id)===String(id));if(!r)throw new Error('ไม่พบ FAQ รายการนี้');
+    openAdminFaqEditor('edit',r);
+  }catch(e){alert('เปิด FAQ ไม่สำเร็จ: '+e.message)}
+}
 async function toggleAdminFaq(id,is_active){try{await adminAiRequest('POST',{action:'faq_update',id,is_active});await renderAdminFaqPage()}catch(e){alert(e.message)}}
 async function deleteAdminFaq(id){if(!confirm('ยืนยันลบ FAQ รายการนี้?'))return;try{await adminAiRequest('POST',{action:'faq_delete',id});await renderAdminFaqPage()}catch(e){alert('ลบไม่สำเร็จ: '+e.message)}}
 async function renderAdminRewardLinksPage(){
