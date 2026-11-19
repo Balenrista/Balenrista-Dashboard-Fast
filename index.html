@@ -747,6 +747,44 @@
  .bal-schedule-day { grid-column:1/-1; justify-content:space-between; }
  .bal-time-field input { height:44px; font-size:14px; }
 }
+
+/* Compact, collapsible AI & LINE controls; keep controls near the top of the page. */
+.bal-ai-control-details { margin-top:12px !important; padding:0 !important; overflow:hidden; }
+.bal-ai-control-summary,.bal-ai-status-details > summary { list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer; user-select:none; }
+.bal-ai-control-summary::-webkit-details-marker,.bal-ai-status-details > summary::-webkit-details-marker { display:none; }
+.bal-ai-control-summary { padding:12px 14px; }
+.bal-ai-control-summary > span:first-child { display:grid; gap:3px; min-width:0; }
+.bal-ai-control-summary b { color:var(--white); font-size:14px; }
+.bal-ai-control-summary small { color:var(--muted); font-size:11px; }
+.bal-ai-control-summary-side { display:flex; align-items:center; gap:10px; flex:0 0 auto; }
+.bal-ai-control-summary-side em { font-style:normal; color:#b99582; font-size:9px; font-weight:800; letter-spacing:.1em; border:1px solid rgba(185,149,130,.22); border-radius:20px; padding:5px 8px; }
+.bal-ai-control-summary i,.bal-ai-status-details > summary i { width:8px; height:8px; border-right:2px solid #b99582; border-bottom:2px solid #b99582; transform:rotate(45deg); transition:transform .18s; margin:0 4px 4px 0; }
+.bal-ai-control-details[open] .bal-ai-control-summary i,.bal-ai-status-details[open] > summary i { transform:rotate(225deg); margin-bottom:0; }
+.bal-ai-control-details #adminAiToggles { padding:0 12px 12px; }
+.bal-ai-control-grid { grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.bal-ai-control { min-height:70px; padding:10px 12px; gap:9px; border-radius:12px; }
+.bal-ai-control-copy b { font-size:12px; }
+.bal-ai-control-copy small { font-size:10px; margin-top:3px; line-height:1.35; }
+.bal-switch-wrap { gap:7px; }
+.bal-switch { flex:0 0 72px; width:72px; height:42px; }
+.bal-switch i { border-width:2px; }
+.bal-switch i:before { width:30px; height:30px; left:4px; top:4px; }
+.bal-switch input:checked+i:before { transform:translateX(30px); }
+.bal-switch-state { min-width:22px; font-size:11px; }
+.bal-ai-status-details { border:1px solid var(--line); border-radius:15px; background:var(--glass); padding:0 12px 12px; }
+.bal-ai-status-details > summary { min-height:48px; color:var(--white); font-weight:800; font-size:14px; }
+.bal-ai-status-details[open] > summary { margin-bottom:10px; border-bottom:1px solid var(--line); }
+@media(max-width:700px) {
+ .bal-ai-control-grid { grid-template-columns:1fr; gap:7px; }
+ .bal-ai-control { min-height:66px; padding:9px 10px; }
+ .bal-switch { flex-basis:68px; width:68px; height:40px; }
+ .bal-switch i:before { width:28px; height:28px; left:4px; top:4px; }
+ .bal-switch input:checked+i:before { transform:translateX(28px); }
+ .bal-switch-state { font-size:10px; min-width:20px; }
+ .bal-ai-control-summary { padding:11px 12px; }
+ .bal-ai-control-summary b { font-size:13px; }
+}
+
 </style>
 
 
@@ -2828,7 +2866,7 @@ function adminIconSvg(name){
   refresh:'<path d="M20 11a8 8 0 0 0-14.8-4L3 10M4 4v6h6M4 13a8 8 0 0 0 14.8 4L21 14M20 20v-6h-6"/>',
   plus:'<path d="M12 5v14M5 12h14"/>',
   close:'<path d="m18 6-12 12M6 6l12 12"/>',
-  eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>,
+  eye:'<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/>',
   edit:'<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"/>',
   filter:'<path d="M4 6h16M7 12h10m-7 6h4"/>',
   chevron:'<path d="m6 9 6 6 6-6"/>',
@@ -2874,9 +2912,13 @@ function renderAdminAiLine(){
   const panel=document.getElementById('adminOnlinePanel');if(!panel)return;
   panel.innerHTML=`<div class="admin-orders-headline"><div><h3>AI &amp; LINE</h3><div class="admin-online-note">กล่องข้อความจาก LINE · ตรวจออเดอร์ AI · ตั้งค่าการทำงาน</div></div><button class="admin-orders-refresh" type="button" onclick="renderAdminAiLine()">${adminIconSvg('refresh')}<span>Refresh</span></button></div>
   <div id="adminAiLineStatus" class="admin-menu-status">กำลังโหลดข้อมูล…</div>
+  <details class="bal-ai-control-section bal-ai-control-details">
+    <summary class="bal-ai-control-summary"><span><b>ควบคุมระบบ AI &amp; LINE</b><small>ตั้งค่าการทำงานจากจุดเดียว</small></span><span class="bal-ai-control-summary-side"><em>CONTROL</em><i aria-hidden="true"></i></span></summary>
+    <div id="adminAiToggles" class="bal-ai-control-grid admin-online-placeholder">กำลังโหลดการตั้งค่า…</div>
+  </details>
   <section class="admin-online-kpis" id="adminAiKpis"></section>
   <section style="margin-top:18px"><h3>ออเดอร์จาก LINE ที่รอตรวจสอบ</h3><div class="admin-online-note">ชื่อ LINE ลูกค้าจะแสดงเป็นหัวรายการ หาก LINE ไม่ส่งชื่อโปรไฟล์จะแสดงว่าไม่ทราบชื่อ</div><div id="adminLineDraftList" class="admin-online-placeholder">กำลังโหลดออเดอร์…</div></section>
-  <section style="margin-top:22px"><h3>สถานะออเดอร์ LINE และข้อมูลลูกค้า</h3><div id="adminLineOrderStatus" class="admin-online-placeholder">กำลังโหลดสถานะ…</div></section><section class="bal-ai-control-section"><div class="bal-section-heading"><div><h3>ควบคุมระบบ AI &amp; LINE</h3><p>จัดการการทำงานของระบบจากจุดเดียว</p></div><span>CONTROL CENTER</span></div><div id="adminAiToggles" class="bal-ai-control-grid admin-online-placeholder">กำลังโหลดการตั้งค่า…</div></section>`;
+  <details class="bal-ai-status-details" style="margin-top:18px"><summary><span>สถานะออเดอร์ LINE และข้อมูลลูกค้า</span><i aria-hidden="true"></i></summary><div id="adminLineOrderStatus" class="admin-online-placeholder">กำลังโหลดสถานะ…</div></details>`;
   loadAdminAiLineData();
 }
 function adminAiSettingValue(settings,key,fallback=false){const r=(settings||[]).find(x=>x.setting_key===key);if(!r)return fallback;const v=r.setting_value;if(typeof v==='boolean')return v;if(typeof v==='string')return v.toLowerCase()==='true'||v==='1';return !!v;}
