@@ -325,6 +325,21 @@
 #adminSlipModal .pay-slip-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
 @media(max-width:700px){#adminPayments .pay-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}#adminPayments .pay-toolbar{grid-template-columns:1fr 1fr}#adminPayments .pay-kpi b{font-size:18px}}
 
+
+/* Admin Orders & Customers maintenance controls only */
+.admin-mini-action{width:31px;height:31px;display:inline-grid;place-items:center;border:1px solid rgba(243,237,231,.13);border-radius:9px;background:rgba(255,255,255,.035);color:var(--paper);cursor:pointer;vertical-align:middle}
+.admin-mini-action svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.admin-mini-action.danger{color:#d58b82;border-color:rgba(180,75,65,.28);background:rgba(100,6,6,.12)}
+.admin-customer-actions,.admin-detail-actions{display:flex;align-items:center;gap:6px;white-space:nowrap}
+.admin-edit-overlay{position:fixed;inset:0;z-index:1200;background:rgba(5,4,4,.78);backdrop-filter:blur(9px);display:flex;align-items:center;justify-content:center;padding:16px}
+.admin-edit-card{width:min(520px,100%);max-height:88vh;overflow:auto;border:1px solid var(--line);border-radius:19px;background:#1b1513;padding:18px;box-shadow:0 25px 90px rgba(0,0,0,.55)}
+.admin-edit-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px;font-size:14px}
+.admin-edit-form{display:grid;gap:11px}.admin-edit-field{display:grid;gap:5px}.admin-edit-field span{font-size:10px;color:var(--muted)}
+.admin-edit-field input,.admin-edit-field textarea{width:100%;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.045);color:var(--white);padding:10px 11px;font:inherit;font-size:12px;outline:none;resize:vertical}
+.admin-edit-field input:focus,.admin-edit-field textarea:focus{border-color:rgba(181,151,133,.55)}
+.admin-edit-buttons{display:flex;justify-content:flex-end;gap:8px;margin-top:4px}.admin-edit-save{height:36px;padding:0 13px;border:0;border-radius:10px;background:var(--paper);color:var(--black);font-size:11px;font-weight:800;display:flex;align-items:center;gap:6px;cursor:pointer}.admin-edit-save svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:1.8}
+.admin-edit-save:disabled{opacity:.6;cursor:wait}.admin-edit-error{font-size:10px;color:#e5a39b;min-height:14px}
+
 </style>
 <style id="refresh-button-fix">
   .fab.is-refreshing {
@@ -2787,17 +2802,14 @@ function billsSectionActive(){return document.getElementById('billsSection')?.cl
 // Requires deployed Supabase Edge Function: admin-orders.
 // Uses existing Dashboard currentUser.session_token; no new login.
 const ADMIN_ORDERS_API_URL = `${SUPABASE_URL}/functions/v1/admin-orders`;
-async function adminOnlineApi(path='', params={}){
+async function adminOnlineApi(path='', params={}, options={}){
   if(!currentUser?.session_token) throw new Error('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');
   const qs=new URLSearchParams(params);
   const target=ADMIN_ORDERS_API_URL+path+(qs.toString()?'?'+qs.toString():'');
-  const res=await window.fetch(target,{
-    method:'GET',
-    headers:{
-      'x-session-token':currentUser.session_token,
-      'apikey':SUPABASE_ANON_KEY
-    }
-  });
+  const method=options.method||'GET';
+  const headers={'x-session-token':currentUser.session_token,'apikey':SUPABASE_ANON_KEY};
+  if(options.body!==undefined)headers['Content-Type']='application/json';
+  const res=await window.fetch(target,{method,headers,body:options.body===undefined?undefined:JSON.stringify(options.body)});
   const body=await res.json().catch(()=>({}));
   if(!res.ok) throw new Error(body.error||`Backend HTTP ${res.status}`);
   return body;
@@ -2815,7 +2827,10 @@ function adminIconSvg(name){
   snow:'<path d="M12 2v20M4 6l16 12M20 6 4 18M8 3l4 3 4-3M8 21l4-3 4 3M3 10l1-4 4 1M16 17l4 1 1-4"/>',
   coffee:'<path d="M4 8h13v7a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5V8ZM17 10h2a2 2 0 1 1 0 4h-2M7 3v2m4-2v2m4-2v2"/>',
   layers:'<path d="m12 3 9 5-9 5-9-5 9-5ZM3 12l9 5 9-5M3 16l9 5 9-5"/>',
-  check:'<path d="m5 12 4 4L19 6"/>'
+  check:'<path d="m5 12 4 4L19 6"/>',
+  trash:'<path d="M4 7h16M9 7V4h6v3M7 7l1 13h8l1-13M10 11v5M14 11v5"/>',
+  ban:'<circle cx="12" cy="12" r="9"/><path d="m6 6 12 12"/>',
+  save:'<path d="M5 4h12l3 3v13H4V4h1Z"/><path d="M8 4v6h8V4M8 20v-6h8v6"/>'
  };
  return `<svg class="admin-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${paths[name]||paths.layers}</svg>`;
 }
@@ -3450,13 +3465,14 @@ let adminOnlineCustomerOffset=0;
 let adminOnlineCustomerTotal=0;
 const ADMIN_CUSTOMERS_PAGE_SIZE=50;
 
-async function adminCustomersApi(params={}){
+async function adminCustomersApi(params={}, options={}){
   if(!currentUser?.session_token)throw new Error('เซสชันหมดอายุ กรุณาเข้าสู่ระบบใหม่');
   const qs=new URLSearchParams(params);
-  const response=await window.fetch(ADMIN_CUSTOMERS_API_URL+(qs.toString()?'?'+qs.toString():''),{
-    method:'GET',
-    headers:{'x-session-token':currentUser.session_token,'apikey':SUPABASE_ANON_KEY}
-  });
+  const target=ADMIN_CUSTOMERS_API_URL+(qs.toString()?'?'+qs.toString():'')+(options.path||'');
+  const method=options.method||'GET';
+  const headers={'x-session-token':currentUser.session_token,'apikey':SUPABASE_ANON_KEY};
+  if(options.body!==undefined)headers['Content-Type']='application/json';
+  const response=await window.fetch(target,{method,headers,body:options.body===undefined?undefined:JSON.stringify(options.body)});
   const body=await response.json().catch(()=>({}));
   if(!response.ok)throw new Error(body.error||`Backend HTTP ${response.status}`);
   return body;
@@ -3490,8 +3506,8 @@ function renderAdminOnlineCustomers(){
     <div id="adminCustomerMessage" class="admin-customer-message">กำลังโหลดข้อมูลลูกค้า…</div>
     <div class="admin-customer-table-wrap">
       <table class="admin-customer-table">
-        <thead><tr><th>ชื่อลูกค้า</th><th>ช่องทาง</th><th>เบอร์โทร</th><th>ที่อยู่</th><th>LINE Display Name</th><th>LINE User ID</th><th>วันที่เพิ่ม</th></tr></thead>
-        <tbody id="adminCustomerTbody"><tr><td colspan="7" class="admin-customer-empty">กำลังโหลด…</td></tr></tbody>
+        <thead><tr><th>ชื่อลูกค้า</th><th>ช่องทาง</th><th>เบอร์โทร</th><th>ที่อยู่</th><th>LINE Display Name</th><th>LINE User ID</th><th>วันที่เพิ่ม</th><th>จัดการ</th></tr></thead>
+        <tbody id="adminCustomerTbody"><tr><td colspan="8" class="admin-customer-empty">กำลังโหลด…</td></tr></tbody>
       </table>
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:12px">
@@ -3514,7 +3530,7 @@ async function loadAdminOnlineCustomers(reset=true){
   const body=document.getElementById('adminCustomerTbody');
   const more=document.getElementById('adminCustomerMore');
   if(message)message.textContent='กำลังโหลดข้อมูลลูกค้า…';
-  if(body&&reset)body.innerHTML='<tr><td colspan="7" class="admin-customer-empty">กำลังโหลด…</td></tr>';
+  if(body&&reset)body.innerHTML='<tr><td colspan="8" class="admin-customer-empty">กำลังโหลด…</td></tr>';
   try{
     const q=(document.getElementById('adminCustomerSearch')?.value||'').trim();
     const source=document.getElementById('adminCustomerSource')?.value||'';
@@ -3538,7 +3554,8 @@ async function loadAdminOnlineCustomers(reset=true){
           <td>${adminCustomerEsc(c.line_display_name||'—')}</td>
           <td style="font-size:11px;max-width:180px;overflow-wrap:anywhere">${adminCustomerEsc(c.line_user_id||c.external_customer_id||'—')}</td>
           <td>${adminCustomerDate(c.created_at)}</td>
-        </tr>`).join(''):'<tr><td colspan="7" class="admin-customer-empty">ไม่พบข้อมูลลูกค้า</td></tr>';
+          <td><div class="admin-customer-actions"><button type="button" class="admin-mini-action" title="แก้ไขข้อมูลลูกค้า" onclick="openAdminCustomerEditor('${adminCustomerEsc(c.id)}')">${adminIconSvg('edit')}</button><button type="button" class="admin-mini-action danger" title="ลบลูกค้า (เฉพาะที่ไม่มีประวัติ/การผูก LINE)" onclick="deleteAdminCustomer('${adminCustomerEsc(c.id)}')">${adminIconSvg('trash')}</button></div></td>
+        </tr>`).join(''):'<tr><td colspan="8" class="admin-customer-empty">ไม่พบข้อมูลลูกค้า</td></tr>';
     }
     const pagination=document.getElementById('adminCustomerPagination');
     if(pagination)pagination.textContent=adminOnlineCustomerRows.length?`แสดง ${adminOnlineCustomerRows.length} จาก ${adminOnlineCustomerTotal} ราย`:'';
@@ -3546,13 +3563,13 @@ async function loadAdminOnlineCustomers(reset=true){
     adminOnlineCustomerOffset=adminOnlineCustomerRows.length;
   }catch(e){
     if(message)message.textContent='โหลดข้อมูลลูกค้าไม่สำเร็จ: '+(e.message||e);
-    if(body)body.innerHTML=`<tr><td colspan="7" class="admin-customer-empty">ไม่สามารถโหลดข้อมูลได้<br>${adminCustomerEsc(e.message||e)}<br><br>ตรวจสอบว่า Deploy Edge Function admin-customers แล้ว</td></tr>`;
+    if(body)body.innerHTML=`<tr><td colspan="8" class="admin-customer-empty">ไม่สามารถโหลดข้อมูลได้<br>${adminCustomerEsc(e.message||e)}<br><br>ตรวจสอบว่า Deploy Edge Function admin-customers แล้ว</td></tr>`;
     if(more)more.style.display='none';
   }finally{adminOnlineCustomersLoading=false;}
 }
 async function loadMoreAdminCustomers(){await loadAdminOnlineCustomers(false)}
 
-// Orders UI is intentionally empty until a trusted backend endpoint is connected.
+// Orders are read and maintained only through the trusted admin-orders Edge Function.
 // Do not query backend-only tables directly from the browser using the anon key.
 let adminOnlineOrderRows=[];
 let adminOnlineOrdersLoading=false;
@@ -3636,7 +3653,7 @@ function adminOrderCustomerRecord(o){
 }
 function adminOrderCustomerName(o){
   const customer=adminOrderCustomerRecord(o);
-  return customer.line_display_name||customer.display_name||'ไม่ระบุชื่อ';
+  return o?.customer_name_snapshot||customer.line_display_name||customer.display_name||'ไม่ระบุชื่อ';
 }
 function adminOrderCustomerPhone(o){
   const customer=adminOrderCustomerRecord(o);
@@ -3682,6 +3699,48 @@ function escapeAdminOrderText(v){return String(v??'').replace(/[&<>"']/g,c=>({'&
 function adminOrderMoney(v){return Number(v||0).toLocaleString('th-TH',{minimumFractionDigits:2,maximumFractionDigits:2})+' ฿'}
 function adminOrderDate(v){if(!v)return '—';const d=new Date(v);return Number.isNaN(d.getTime())?'—':d.toLocaleString('th-TH')}
 function adminOrderCell(label,value){return `<div class="admin-order-detail-cell"><span>${escapeAdminOrderText(label)}</span><b>${escapeAdminOrderText(value??'—')||'—'}</b></div>`}
+function adminEditDialog(title, fields, onSave){
+  const old=document.getElementById('adminEditOverlay');if(old)old.remove();
+  const overlay=document.createElement('div');overlay.id='adminEditOverlay';overlay.className='admin-edit-overlay';
+  const fieldHtml=fields.map((f,i)=>`<label class="admin-edit-field"><span>${escapeAdminOrderText(f.label)}</span>${f.multiline?`<textarea data-edit-key="${escapeAdminOrderText(f.key)}" rows="${f.rows||3}">${escapeAdminOrderText(f.value||'')}</textarea>`:`<input data-edit-key="${escapeAdminOrderText(f.key)}" type="${f.type||'text'}" value="${escapeAdminOrderText(f.value||'')}">`}</label>`).join('');
+  overlay.innerHTML=`<div class="admin-edit-card" role="dialog" aria-modal="true"><div class="admin-edit-head"><b>${escapeAdminOrderText(title)}</b><button type="button" class="admin-mini-action" data-close>${adminIconSvg('close')}</button></div><form class="admin-edit-form">${fieldHtml}<div class="admin-edit-error" aria-live="polite"></div><div class="admin-edit-buttons"><button type="button" class="admin-order-detail-close" data-close>ยกเลิก</button><button type="submit" class="admin-edit-save">${adminIconSvg('save')} บันทึก</button></div></form></div>`;
+  document.body.appendChild(overlay);
+  const close=()=>overlay.remove();overlay.querySelectorAll('[data-close]').forEach(b=>b.addEventListener('click',close));
+  overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
+  overlay.querySelector('form').addEventListener('submit',async e=>{
+    e.preventDefault();const button=overlay.querySelector('[type="submit"]');const error=overlay.querySelector('.admin-edit-error');
+    const values={};overlay.querySelectorAll('[data-edit-key]').forEach(el=>values[el.dataset.editKey]=el.value.trim());
+    button.disabled=true;button.textContent='กำลังบันทึก…';error.textContent='';
+    try{await onSave(values);close()}catch(err){error.textContent=err.message||String(err);button.disabled=false;button.innerHTML=adminIconSvg('save')+' บันทึก'}
+  });
+}
+function adminRefreshOrderDetail(orderId){return openAdminOrderDetail(orderId)}
+async function openAdminOrderEditor(orderId){
+  try{
+    const data=await adminOnlineApi('/'+encodeURIComponent(orderId));const o=data.order||{};
+    adminEditDialog('แก้ไขข้อมูลออเดอร์',[{key:'customer_name_snapshot',label:'ชื่อลูกค้า',value:o.customer_name_snapshot},{key:'customer_phone_snapshot',label:'เบอร์โทร',value:o.customer_phone_snapshot},{key:'customer_address_snapshot',label:'ที่อยู่',value:o.customer_address_snapshot,multiline:true,rows:3},{key:'customer_note',label:'หมายเหตุลูกค้า',value:o.customer_note,multiline:true},{key:'admin_note',label:'หมายเหตุแอดมิน',value:o.admin_note,multiline:true}],async values=>{
+      const result=await adminOnlineApi('/'+encodeURIComponent(orderId),{}, {method:'PATCH',body:values});
+      await loadAdminOnlineOrders();await adminRefreshOrderDetail(orderId);toast(result.audit_warning||'บันทึกข้อมูลออเดอร์แล้ว');
+    });
+  }catch(e){toast('เปิดฟอร์มแก้ไขไม่สำเร็จ: '+(e.message||e))}
+}
+async function cancelAdminOrder(orderId){
+  if(!window.confirm('ยืนยันยกเลิกออเดอร์นี้?\n\nระบบจะเก็บออเดอร์และประวัติไว้ ไม่ลบข้อมูลถาวร\nออเดอร์ที่ชำระเงินแล้ว, ส่ง Loyalty แล้ว หรือ Sync กับ Loyverse แล้วจะถูกปฏิเสธ'))return;
+  const reason=window.prompt('ระบุเหตุผลการยกเลิก (ไม่บังคับ)','ยกเลิกโดยผู้ดูแลระบบ');if(reason===null)return;
+  try{const result=await adminOnlineApi('/'+encodeURIComponent(orderId),{}, {method:'PATCH',body:{action:'cancel',reason}});await loadAdminOnlineOrders();await openAdminOrderDetail(orderId);toast(result.audit_warning||'ยกเลิกออเดอร์แล้ว โดยเก็บประวัติไว้')}catch(e){toast('ยกเลิกไม่สำเร็จ: '+(e.message||e))}
+}
+function openAdminCustomerEditor(customerId){
+  const c=adminOnlineCustomerRows.find(x=>String(x.id)===String(customerId));if(!c)return toast('ไม่พบข้อมูลลูกค้า');
+  adminEditDialog('แก้ไขข้อมูลลูกค้า',[{key:'display_name',label:'ชื่อลูกค้า',value:c.display_name},{key:'line_display_name',label:'LINE Display Name',value:c.line_display_name},{key:'phone',label:'เบอร์โทร',value:c.phone},{key:'email',label:'อีเมล',value:c.email,type:'email'},{key:'address',label:'ที่อยู่',value:c.address,multiline:true,rows:3}],async values=>{
+    const result=await adminCustomersApi({}, {path:'/'+encodeURIComponent(customerId),method:'PATCH',body:values});
+    await loadAdminOnlineCustomers(true);toast(result.audit_warning||'บันทึกข้อมูลลูกค้าแล้ว');
+  });
+}
+async function deleteAdminCustomer(customerId){
+  if(!window.confirm('ยืนยันลบข้อมูลลูกค้ารายนี้?\n\nระบบจะอนุญาตเฉพาะลูกค้าที่ไม่มีประวัติออเดอร์และไม่ได้ผูก LINE/External ID เพื่อป้องกันผลกระทบต่อ Loyalty'))return;
+  try{const result=await adminCustomersApi({}, {path:'/'+encodeURIComponent(customerId),method:'DELETE'});await loadAdminOnlineCustomers(true);toast(result.audit_warning||'ลบข้อมูลลูกค้าแล้ว')}catch(e){toast('ลบไม่ได้: '+(e.message||e))}
+}
+
 async function openAdminOrderDetail(orderId){
   const box=document.getElementById('adminOrderDetail');if(!box||!orderId)return;
   box.classList.add('open');box.innerHTML='<div class="admin-online-note">กำลังโหลดรายละเอียดออเดอร์…</div>';
@@ -3693,7 +3752,7 @@ async function openAdminOrderDetail(orderId){
     const itemRows=items.length?items.map(x=>`<tr><td>${escapeAdminOrderText(x.menu_name_snapshot||'—')}<div class="admin-online-note">${escapeAdminOrderText(x.note||'')}</div>${x.modifiers?`<div class="admin-online-note">ตัวเลือก: ${escapeAdminOrderText(typeof x.modifiers==='string'?x.modifiers:JSON.stringify(x.modifiers))}</div>`:''}</td><td>${Number(x.quantity||0)}</td><td>${adminOrderMoney(x.unit_price)}</td><td>${adminOrderMoney(x.line_total)}</td></tr>`).join(''):'<tr><td colspan="4">ไม่มีรายการสินค้า</td></tr>';
     const paymentRows=payments.length?payments.map(x=>`<tr><td>${escapeAdminOrderText(x.payment_method||'—')}</td><td>${escapeAdminOrderText(x.payment_status||'—')}</td><td>${adminOrderMoney(x.amount)}</td><td>${escapeAdminOrderText(x.provider_transaction_ref||'—')}</td><td>${escapeAdminOrderText(x.proof_storage_path?'มีไฟล์สลิป (รอระบบลิงก์แบบปลอดภัย)':'—')}</td><td>${escapeAdminOrderText(adminOrderDate(x.verified_at))}</td></tr>`).join(''):'<tr><td colspan="6">ยังไม่มีข้อมูลการชำระเงิน</td></tr>';
     const eventRows=events.length?events.map(x=>`<div class="admin-order-event"><b>${escapeAdminOrderText(x.event_type||'เปลี่ยนแปลง')}</b><span>${escapeAdminOrderText(adminOrderDate(x.created_at))} · ${escapeAdminOrderText(x.actor_type||'ระบบ')}</span>${x.note?`<div>${escapeAdminOrderText(x.note)}</div>`:''}<div class="admin-online-note">${escapeAdminOrderText(JSON.stringify({old:x.old_value??null,new:x.new_value??null}))}</div></div>`).join(''):'<div class="admin-online-note">ยังไม่มีประวัติเหตุการณ์</div>';
-    box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',customerName)}${adminOrderCell('เบอร์โทร',customerPhone)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table><h4>การชำระเงิน</h4><div style="overflow:auto"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div>${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div>${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4>${eventRows}`;
+    box.innerHTML=`<div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><div class="admin-detail-actions"><button class="admin-mini-action" type="button" onclick="openAdminOrderEditor('${escapeAdminOrderText(o.id)}')" title="แก้ไขข้อมูล">${adminIconSvg('edit')}</button><button class="admin-mini-action danger" type="button" onclick="cancelAdminOrder('${escapeAdminOrderText(o.id)}')" title="ยกเลิกออเดอร์">${adminIconSvg('ban')}</button><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',customerName)}${adminOrderCell('เบอร์โทร',customerPhone)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table><h4>การชำระเงิน</h4><div style="overflow:auto"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div>${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div>${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4>${eventRows}`;
   }catch(err){box.innerHTML=`<div class="admin-order-detail-head"><b>โหลดรายละเอียดไม่สำเร็จ</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-online-note">${escapeAdminOrderText(err.message||err)}</div>`;}
 }
 function closeAdminOrderDetail(){const box=document.getElementById('adminOrderDetail');if(box){box.classList.remove('open');box.innerHTML='';}}
