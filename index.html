@@ -577,6 +577,158 @@ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-loading{paddi
   #adminOnlinePanel .bal-ai-connection-section{padding:12px}
 }
 
+
+/* Orders detail v4 — customer, statuses and ordered items only */
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-card-v2{
+  width:min(760px,100%)!important;max-height:min(90dvh,880px)!important;
+  height:auto!important;overflow:hidden!important;background:#171210!important;
+  border:1px solid rgba(207,174,151,.24)!important;border-radius:22px!important;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-head{
+  padding:18px 20px!important;background:linear-gradient(135deg,#2a1e19,#201713)!important;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-title-wrap{min-width:0}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-eyebrow{
+  display:block;margin-bottom:5px;color:#b9947d;font-size:8px;font-weight:800;letter-spacing:1.7px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-title-wrap h3{
+  margin:0!important;color:#f5eee8;font-size:clamp(16px,2.7vw,21px)!important;font-weight:850
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-body{
+  min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:17px 19px 20px;
+  scrollbar-width:thin;scrollbar-color:#594238 transparent;
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-section-heading{
+  display:flex;align-items:center;gap:10px;margin:0 0 10px;color:#d9b8a2;
+  font-size:12px;font-weight:850;letter-spacing:.1px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-section-line{
+  height:1px;flex:1;background:linear-gradient(90deg,rgba(194,151,124,.28),transparent)
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-panel,
+body>#adminOrderDetail.admin-order-detail.open .admin-order-status-panel,
+body>#adminOrderDetail.admin-order-detail.open .admin-order-items-section,
+body>#adminOrderDetail.admin-order-detail.open .admin-order-note-section{margin:0 0 17px}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid .admin-order-detail-cell{
+  padding:13px 14px;border:1px solid rgba(211,180,159,.15);border-radius:13px;
+  background:linear-gradient(145deg,#241b17,#1d1714);min-width:0
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid .admin-order-detail-cell span,
+body>#adminOrderDetail.admin-order-detail.open .admin-order-status-chip span{
+  display:block;color:#a9988d;font-size:10px;margin-bottom:6px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid .admin-order-detail-cell b{
+  display:block;color:#f4ece6;font-size:14px;line-height:1.4;overflow-wrap:anywhere
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-status-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-status-chip{
+  min-width:0;padding:11px 12px;border:1px solid rgba(211,180,159,.12);
+  border-radius:12px;background:#201815
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-status-chip b{
+  display:block;color:#ead8cb;font-size:12px;font-weight:800;overflow-wrap:anywhere
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-count{
+  margin-left:auto;padding:4px 8px;border:1px solid rgba(194,151,124,.2);
+  border-radius:999px;color:#c9a891;font-size:9px;font-weight:700
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-items-list{
+  display:grid;gap:8px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-card{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 13px;border:1px solid rgba(211,180,159,.14);border-radius:13px;
+  background:linear-gradient(145deg,#241b17,#1c1613)
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-main{
+  display:flex;align-items:flex-start;gap:10px;min-width:0
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-index{
+  flex:0 0 26px;width:26px;height:26px;display:grid;place-items:center;
+  border-radius:8px;background:rgba(153,43,39,.18);color:#d7a18f;font-size:9px;font-weight:850
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-copy{display:grid;gap:4px;min-width:0}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-copy>b{
+  color:#f3eae3;font-size:12px;font-weight:800;line-height:1.45;overflow-wrap:anywhere
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-copy small{
+  color:#a9988d;font-size:9px;line-height:1.45;overflow-wrap:anywhere
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-meta{
+  flex:0 0 auto;display:grid;justify-items:end;gap:5px;color:#a9988d;font-size:9px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-meta b{color:#e9d8cc}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-meta strong{color:#d9b59f;font-size:11px}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-items-empty{
+  padding:22px 14px;text-align:center;border:1px dashed rgba(211,180,159,.2);
+  border-radius:12px;color:#a9988d;font-size:11px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-note-section .admin-order-detail-text{
+  width:100%;margin:0;padding:12px 13px;border:1px solid rgba(211,180,159,.14);
+  border-radius:12px;background:#201815;color:#e8ded6;font-size:11px;line-height:1.6
+}
+@media(max-width:700px){
+ body>#adminOrderDetail.admin-order-detail.open{padding:8px!important}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-card-v2{
+   width:100%!important;max-height:calc(100dvh - 16px)!important;border-radius:18px!important
+ }
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-head{padding:14px 13px!important;gap:8px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-close{min-height:36px;padding:0 10px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-detail-body{padding:14px 12px 17px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid{grid-template-columns:1fr 1fr;gap:7px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid .admin-order-detail-cell{padding:11px 10px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid .admin-order-detail-cell b{font-size:12px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-status-grid{grid-template-columns:1fr 1fr;gap:7px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-status-chip{padding:10px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-item-card{align-items:flex-start;padding:11px 10px;gap:8px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-item-meta{padding-top:2px}
+}
+
+
+/* Order detail v5: restore original address/type and total amount fields */
+body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid .admin-order-detail-cell{
+  min-height:68px;display:flex;flex-direction:column;justify-content:center
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid .admin-order-detail-cell b{
+  white-space:pre-wrap
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-total-panel{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  margin:3px 0 17px;padding:16px 17px;border:1px solid rgba(177,74,64,.38);
+  border-radius:15px;background:linear-gradient(120deg,rgba(112,29,27,.30),rgba(42,28,23,.95));
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-total-panel>div{
+  display:grid;gap:4px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-total-panel span{
+  color:#f0dfd4;font-size:13px;font-weight:850
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-total-panel small{
+  color:#ad9a8e;font-size:9px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-total-panel strong{
+  color:#f4d8c7;font-size:clamp(19px,4vw,25px);font-weight:900;white-space:nowrap
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-meta{
+  min-width:92px
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-meta>span{
+  display:flex;gap:4px;justify-content:flex-end;white-space:nowrap
+}
+body>#adminOrderDetail.admin-order-detail.open .admin-order-item-meta>strong{
+  padding-top:3px;border-top:1px solid rgba(211,180,159,.13)
+}
+@media(max-width:700px){
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid{grid-template-columns:1fr 1fr}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-customer-grid .admin-order-detail-cell{min-height:65px}
+ body>#adminOrderDetail.admin-order-detail.open .admin-order-total-panel{padding:13px 12px}
+}
+
 </style>
 <style id="refresh-button-fix">
   .fab.is-refreshing {
@@ -3999,10 +4151,12 @@ async function openAdminOrderDetail(orderId){
     const data=await adminOnlineApi('/'+encodeURIComponent(orderId));
     const o=data.order||{};const items=Array.isArray(data.items)?data.items:[];const payments=Array.isArray(data.payments)?data.payments:[];const events=Array.isArray(data.events)?data.events:[];
     const customerName=adminOrderCustomerName(o);const customerPhone=adminOrderCustomerPhone(o);
-    const itemRows=items.length?items.map(x=>`<tr><td>${escapeAdminOrderText(x.menu_name_snapshot||'—')}<div class="admin-online-note">${escapeAdminOrderText(x.note||'')}</div>${x.modifiers?`<div class="admin-online-note">ตัวเลือก: ${escapeAdminOrderText(typeof x.modifiers==='string'?x.modifiers:JSON.stringify(x.modifiers))}</div>`:''}</td><td>${Number(x.quantity||0)}</td><td>${adminOrderMoney(x.unit_price)}</td><td>${adminOrderMoney(x.line_total)}</td></tr>`).join(''):'<tr><td colspan="4">ไม่มีรายการสินค้า</td></tr>';
-    const paymentRows=payments.length?payments.map(x=>`<tr><td>${escapeAdminOrderText(x.payment_method||'—')}</td><td>${escapeAdminOrderText(x.payment_status||'—')}</td><td>${adminOrderMoney(x.amount)}</td><td>${escapeAdminOrderText(x.provider_transaction_ref||'—')}</td><td>${escapeAdminOrderText(x.proof_storage_path?'มีไฟล์สลิป (รอระบบลิงก์แบบปลอดภัย)':'—')}</td><td>${escapeAdminOrderText(adminOrderDate(x.verified_at))}</td></tr>`).join(''):'<tr><td colspan="6">ยังไม่มีข้อมูลการชำระเงิน</td></tr>';
-    const eventRows=events.length?events.map(x=>`<div class="admin-order-event"><b>${escapeAdminOrderText(x.event_type||'เปลี่ยนแปลง')}</b><span>${escapeAdminOrderText(adminOrderDate(x.created_at))} · ${escapeAdminOrderText(x.actor_type||'ระบบ')}</span>${x.note?`<div>${escapeAdminOrderText(x.note)}</div>`:''}<div class="admin-online-note">${escapeAdminOrderText(JSON.stringify({old:x.old_value??null,new:x.new_value??null}))}</div></div>`).join(''):'<div class="admin-online-note">ยังไม่มีประวัติเหตุการณ์</div>';
-    box.innerHTML=`<div class="admin-order-detail-card" role="dialog" aria-modal="true" aria-label="รายละเอียดออเดอร์"><div class="admin-order-detail-head"><div><h3 style="margin:0">ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">รายละเอียดจากฐานข้อมูล Supabase</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-grid">${adminOrderCell('วันที่',adminOrderDate(o.created_at))}${adminOrderCell('ช่องทาง',o.source)}${adminOrderCell('ประเภท',o.order_type)}${adminOrderCell('ชื่อลูกค้า',customerName)}${adminOrderCell('เบอร์โทร',customerPhone)}${adminOrderCell('ที่อยู่',o.customer_address_snapshot)}${adminOrderCell('สถานะออเดอร์',o.order_status)}${adminOrderCell('สถานะชำระเงิน',o.payment_status)}${adminOrderCell('วิธีชำระ',o.payment_method)}${adminOrderCell('ยอดสินค้า',adminOrderMoney(o.subtotal))}${adminOrderCell('ส่วนลด',adminOrderMoney(o.discount_amount))}${adminOrderCell('ค่าจัดส่ง',adminOrderMoney(o.delivery_fee))}${adminOrderCell('ยอดสุทธิ',adminOrderMoney(o.total_amount))}${adminOrderCell('Loyverse Sync',o.loyverse_sync_status)}${adminOrderCell('Loyverse Receipt',o.loyverse_receipt_id)}</div><h4>รายการสินค้า</h4><div class="admin-order-detail-table-wrap"><table><thead><tr><th>เมนู / รายละเอียด</th><th>จำนวน</th><th>ราคา/หน่วย</th><th>รวม</th></tr></thead><tbody>${itemRows}</tbody></table></div><h4>การชำระเงิน</h4><div class="admin-order-detail-table-wrap"><table><thead><tr><th>ช่องทาง</th><th>สถานะ</th><th>ยอด</th><th>เลขธุรกรรม</th><th>สลิป</th><th>ตรวจสอบเมื่อ</th></tr></thead><tbody>${paymentRows}</tbody></table></div><h4>หมายเหตุลูกค้า</h4><div class="admin-order-detail-text">${escapeAdminOrderText(o.customer_note||'—')}</div><h4>หมายเหตุแอดมิน</h4><div class="admin-order-detail-text">${escapeAdminOrderText(o.admin_note||'—')}</div><h4>ประวัติออเดอร์</h4><div class="admin-order-detail-events">${eventRows}</div></div>`;
+    const itemRows=items.length?items.map((x,index)=>`<article class="admin-order-item-card"><div class="admin-order-item-main"><span class="admin-order-item-index">${String(index+1).padStart(2,'0')}</span><div class="admin-order-item-copy"><b>${escapeAdminOrderText(x.menu_name_snapshot||'ไม่ระบุชื่อเมนู')}</b>${x.modifiers?`<small>ตัวเลือก: ${escapeAdminOrderText(typeof x.modifiers==='string'?x.modifiers:JSON.stringify(x.modifiers))}</small>`:''}${x.note?`<small>หมายเหตุ: ${escapeAdminOrderText(x.note)}</small>`:''}</div></div><div class="admin-order-item-meta"><span>จำนวน <b>× ${Number(x.quantity||0)}</b></span><span>ราคา/หน่วย <b>${adminOrderMoney(x.unit_price)}</b></span><strong>${adminOrderMoney(x.line_total??(Number(x.unit_price||0)*Number(x.quantity||0)))}</strong></div></article>`).join(''):'<div class="admin-order-items-empty">ไม่พบรายการสินค้าในข้อมูลออเดอร์นี้</div>';
+    const orderStatus=escapeAdminOrderText(o.order_status||'—');
+    const paymentStatus=escapeAdminOrderText(o.payment_status||'—');
+    const paymentMethod=escapeAdminOrderText(o.payment_method|| (payments[0]?.payment_method)||'—');
+    const customerNote=String(o.customer_note||'').trim();
+    box.innerHTML=`<div class="admin-order-detail-card admin-order-detail-card-v2" role="dialog" aria-modal="true" aria-label="รายละเอียดออเดอร์"><div class="admin-order-detail-head"><div class="admin-order-title-wrap"><span class="admin-order-eyebrow">ORDER DETAILS</span><h3>ออเดอร์ ${escapeAdminOrderText(o.order_number||'')}</h3><div class="admin-online-note">${escapeAdminOrderText(adminOrderDate(o.created_at))} · ${escapeAdminOrderText(o.source||'—')} · ${escapeAdminOrderText(o.order_type||'—')}</div></div><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()" aria-label="ปิดรายละเอียด">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-body"><section class="admin-order-customer-panel"><div class="admin-order-section-heading"><span>ข้อมูลลูกค้าและการรับสินค้า</span><span class="admin-order-section-line"></span></div><div class="admin-order-customer-grid">${adminOrderCell('ชื่อลูกค้า',customerName)}${adminOrderCell('เบอร์โทร',customerPhone)}${adminOrderCell('ประเภทออเดอร์',o.order_type)}${adminOrderCell('ที่อยู่จัดส่ง',o.customer_address_snapshot)}</div></section><section class="admin-order-status-panel"><div class="admin-order-section-heading"><span>สถานะออเดอร์</span><span class="admin-order-section-line"></span></div><div class="admin-order-status-grid"><div class="admin-order-status-chip"><span>ออเดอร์</span><b>${orderStatus}</b></div><div class="admin-order-status-chip"><span>การชำระเงิน</span><b>${paymentStatus}</b></div><div class="admin-order-status-chip"><span>วิธีชำระ</span><b>${paymentMethod}</b></div><div class="admin-order-status-chip"><span>Loyverse Sync</span><b>${escapeAdminOrderText(o.loyverse_sync_status||'—')}</b></div>${o.loyverse_receipt_id?`<div class="admin-order-status-chip"><span>Loyverse Receipt</span><b>${escapeAdminOrderText(o.loyverse_receipt_id)}</b></div>`:''}</div></section><section class="admin-order-items-section"><div class="admin-order-section-heading"><span>รายการที่สั่ง</span><span class="admin-order-item-count">${items.length} รายการ</span></div><div class="admin-order-items-list">${itemRows}</div></section><section class="admin-order-total-panel"><div><span>ยอดรวมสุทธิ</span><small>ยอดรวมของออเดอร์นี้</small></div><strong>${adminOrderMoney(o.total_amount)}</strong></section>${customerNote?`<section class="admin-order-note-section"><div class="admin-order-section-heading"><span>หมายเหตุลูกค้า</span></div><div class="admin-order-detail-text">${escapeAdminOrderText(customerNote)}</div></section>`:''}</div></div>`;
   }catch(err){
     box.innerHTML=`<div class="admin-order-detail-card" role="dialog" aria-modal="true" aria-label="รายละเอียดออเดอร์"><div class="admin-order-detail-head"><b>โหลดรายละเอียดไม่สำเร็จ</b><button class="admin-order-detail-close" type="button" onclick="closeAdminOrderDetail()">ปิด ${adminIconSvg('close')}</button></div><div class="admin-order-detail-text">${escapeAdminOrderText(err.message||err)}</div></div>`;
   }
