@@ -1253,6 +1253,84 @@ body>#adminOrderDetail.admin-order-detail.open .admin-order-item-meta>strong{
 }
 </style>
 
+
+<style id="br-theme-adaptive-menu-icons">
+/* Theme-aware management/apps popovers and line icons */
+body[data-br-theme] #managementMenu,
+body[data-br-theme] #appsMenu {
+  background: var(--black) !important;
+  color: var(--white) !important;
+  border-color: var(--line) !important;
+  box-shadow: var(--shadow) !important;
+  -webkit-backdrop-filter: blur(28px) saturate(125%);
+  backdrop-filter: blur(28px) saturate(125%);
+}
+body[data-br-theme] #managementMenu .popover-title,
+body[data-br-theme] #appsMenu .popover-title {
+  color: var(--muted) !important;
+}
+body[data-br-theme] #managementMenu .menu-item,
+body[data-br-theme] #appsMenu .menu-item {
+  color: var(--white) !important;
+  transition: color .18s ease, background .18s ease;
+}
+body[data-br-theme] #managementMenu .menu-item:hover,
+body[data-br-theme] #appsMenu .menu-item:hover {
+  background: var(--glass2) !important;
+}
+body[data-br-theme] #managementMenu .menu-item svg,
+body[data-br-theme] #appsMenu .menu-item svg {
+  width: 21px !important;
+  height: 21px !important;
+  flex: 0 0 21px;
+  stroke: var(--paper) !important;
+  fill: none !important;
+  stroke-width: 1.8 !important;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke .18s ease;
+}
+body[data-br-theme] #managementMenu .menu-item:hover svg,
+body[data-br-theme] #appsMenu .menu-item:hover svg {
+  stroke: var(--white) !important;
+}
+body[data-br-theme] #managementMenu .menu-note,
+body[data-br-theme] #appsMenu .menu-note {
+  color: var(--muted) !important;
+}
+body[data-br-theme] #managementMenu .menu-sep {
+  background: var(--line) !important;
+}
+body[data-br-theme] #managementMenu .auth-user {
+  background: var(--glass) !important;
+  border-color: var(--line) !important;
+}
+body[data-br-theme] #managementMenu .auth-avatar {
+  background: var(--glass2) !important;
+  color: var(--paper) !important;
+}
+body[data-br-theme] #managementMenu .auth-avatar svg {
+  stroke: currentColor !important;
+}
+body[data-br-theme] #managementMenu .auth-user-name {
+  color: var(--white) !important;
+}
+body[data-br-theme] #managementMenu .auth-user-role {
+  color: var(--muted) !important;
+}
+body[data-br-theme] #managementMenu .logout-item,
+body[data-br-theme] #managementMenu .logout-item svg {
+  color: var(--paper) !important;
+  stroke: var(--paper) !important;
+}
+body[data-br-theme] #managementMenu .logout-item:hover {
+  color: var(--white) !important;
+}
+body[data-br-theme] #managementMenu .logout-item:hover svg {
+  stroke: var(--white) !important;
+}
+</style>
+
 </head>
 <body>
 <div id="authOverlay" class="auth-overlay hidden">
