@@ -1331,6 +1331,165 @@ body[data-br-theme] #managementMenu .logout-item:hover svg {
 }
 </style>
 
+
+<style id="bal-store-hours-compact-ui-only">
+/* Store Hours only: compact single-line rows; all schedule IDs and save logic remain unchanged. */
+#adminOrderOnlineSection #adminAiSettingsBody .bal-settings-section .bal-schedule-grid{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:7px;
+  margin-top:12px;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-row{
+  display:grid;
+  grid-template-columns:66px minmax(0,1fr) minmax(0,1fr) 76px;
+  align-items:center;
+  gap:8px;
+  min-width:0;
+  padding:8px 10px;
+  border:1px solid var(--line,rgba(255,255,255,.10));
+  border-radius:13px;
+  background:var(--glass,rgba(10,9,9,.28));
+  box-sizing:border-box;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-day{
+  display:flex;
+  align-items:center;
+  min-width:0;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-day b{
+  color:var(--white);
+  font-size:12px;
+  line-height:1.25;
+  white-space:nowrap;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-time-field{
+  display:grid;
+  gap:4px;
+  min-width:0;
+  color:var(--muted);
+  font-size:10px;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-time-field small{
+  font-size:9px;
+  line-height:1.15;
+  white-space:nowrap;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-time-field input{
+  display:block;
+  box-sizing:border-box;
+  width:100%;
+  min-width:0;
+  height:36px;
+  padding:3px 2px;
+  border:1px solid var(--line,rgba(255,255,255,.13));
+  border-radius:9px;
+  background:var(--glass2,rgba(255,255,255,.045));
+  color:var(--white);
+  font-size:12px;
+  text-align:center;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:5px;
+  min-width:0;
+  min-height:34px;
+  position:relative;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle input{
+  position:absolute;
+  width:1px;
+  height:1px;
+  opacity:0;
+  pointer-events:none;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle i{
+  display:block;
+  position:relative;
+  flex:0 0 46px;
+  width:46px;
+  height:26px;
+  box-sizing:border-box;
+  border:1px solid rgba(255,255,255,.20);
+  border-radius:30px;
+  background:#414141;
+  transition:background .18s ease,border-color .18s ease;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle i:before{
+  content:"";
+  position:absolute;
+  left:3px;
+  top:3px;
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#f5f3f1;
+  box-shadow:0 1px 4px rgba(0,0,0,.28);
+  transition:transform .18s ease;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle input:checked+i{
+  background:var(--wine,#862122);
+  border-color:var(--wine,#862122);
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle input:checked+i:before{
+  transform:translateX(20px);
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle input:focus-visible+i{
+  outline:2px solid var(--paper,#c9dff0);
+  outline-offset:3px;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle span{
+  min-width:18px;
+  font-size:10px;
+  line-height:1;
+  font-weight:700;
+  text-align:right;
+  color:var(--muted);
+  white-space:nowrap;
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle .bal-status-open{display:none}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle input:checked~.bal-status-open{
+  display:inline;
+  color:var(--white);
+}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle input:checked~.bal-status-closed{display:none}
+#adminOrderOnlineSection #adminAiSettingsBody .bal-settings-section button{
+  min-height:38px;
+  padding:8px 12px;
+  font-size:12px;
+}
+@media(max-width:520px){
+  #adminOrderOnlineSection #adminAiSettingsBody .bal-settings-section{padding:11px}
+  #adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-row{
+    grid-template-columns:52px minmax(0,1fr) minmax(0,1fr) 70px;
+    gap:6px;
+    padding:7px;
+  }
+  #adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-day b{font-size:11px}
+  #adminOrderOnlineSection #adminAiSettingsBody .bal-time-field small{font-size:8px}
+  #adminOrderOnlineSection #adminAiSettingsBody .bal-time-field input{
+    height:35px;
+    font-size:11px;
+    padding:2px 0;
+  }
+  #adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle{gap:4px}
+  #adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle i{
+    flex-basis:42px;
+    width:42px;
+    height:25px;
+  }
+  #adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle i:before{
+    width:17px;height:17px;left:3px;top:3px;
+  }
+  #adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle input:checked+i:before{transform:translateX(17px)}
+  #adminOrderOnlineSection #adminAiSettingsBody .bal-schedule-toggle span{font-size:9px;min-width:17px}
+}
+</style>
+
 </head>
 <body>
 <div id="authOverlay" class="auth-overlay hidden">
@@ -3810,7 +3969,7 @@ async function renderAdminAiSettingsPage(){
  panel.innerHTML=`<div class="admin-orders-headline"><div><h3>Settings</h3><div class="admin-online-note">ตั้งค่าเวลาเปิดร้านและข้อมูลการให้บริการ</div></div><button class="admin-orders-refresh" onclick="renderAdminAiSettingsPage()">${adminIconSvg('refresh')}<span>Refresh</span></button></div><div id="adminAiSettingsStatus" class="admin-menu-status">กำลังโหลดการตั้งค่า…</div><div id="adminAiSettingsBody"></div>`;
  try{const d=await adminAiRequest('GET');if(!d.success)throw new Error('โหลดการตั้งค่าไม่สำเร็จ');const host=document.getElementById('adminAiSettingsBody');if(!host)return;
  const schedule=d.store_schedule||{};const days=[['mon','จันทร์'],['tue','อังคาร'],['wed','พุธ'],['thu','พฤหัสบดี'],['fri','ศุกร์'],['sat','เสาร์'],['sun','อาทิตย์']];
- host.innerHTML=`<section class="bal-settings-section"><div class="bal-section-heading"><h3>เวลาเปิดร้าน</h3><span>STORE HOURS</span></div><div class="admin-online-note">เขตเวลา Asia/Bangkok · ตั้งค่าเวลารายวันและวันหยุด</div><div style="display:grid;gap:8px;margin-top:12px">${days.map(([k,label])=>{const x=schedule.weekly?.[k]||{enabled:true,open:'06:00',close:'13:30'};return `<div class="bal-schedule-row"><div class="bal-schedule-day"><b>${label}</b><input id="sched_${k}_enabled" type="checkbox" ${x.enabled?'checked':''} aria-label="เปิด ${label}"></div><label class="bal-time-field"><small>เปิด</small><input id="sched_${k}_open" type="time" value="${esc(x.open)}" class="field"></label><label class="bal-time-field"><small>ปิด</small><input id="sched_${k}_close" type="time" value="${esc(x.close)}" class="field"></label></div>`}).join('')}</div><button class="admin-orders-refresh" style="margin-top:12px" onclick="saveAdminStoreSchedule()">บันทึกเวลาเปิดร้าน</button></section>
+ host.innerHTML=`<section class="bal-settings-section"><div class="bal-section-heading"><h3>เวลาเปิดร้าน</h3><span>STORE HOURS</span></div><div class="admin-online-note">เขตเวลา Asia/Bangkok · ตั้งค่าเวลารายวันและวันหยุด</div><div class="bal-schedule-grid">${days.map(([k,label])=>{const x=schedule.weekly?.[k]||{enabled:true,open:'06:00',close:'13:30'};return `<div class="bal-schedule-row"><div class="bal-schedule-day"><b>${label}</b></div><label class="bal-time-field"><small>เวลาเปิด</small><input id="sched_${k}_open" type="time" value="${esc(x.open)}" class="field"></label><label class="bal-time-field"><small>เวลาปิด</small><input id="sched_${k}_close" type="time" value="${esc(x.close)}" class="field"></label><label class="bal-schedule-toggle" aria-label="สถานะร้านวัน${label}" title="${x.enabled?'เปิดร้าน':'ปิดร้าน'}"><input id="sched_${k}_enabled" type="checkbox" ${x.enabled?'checked':''} aria-label="เปิด ${label}"><i aria-hidden="true"></i><span class="bal-status-open">เปิด</span><span class="bal-status-closed">ปิด</span></label></div>`}).join('')}</div><button class="admin-orders-refresh" style="margin-top:12px" onclick="saveAdminStoreSchedule()">บันทึกเวลาเปิดร้าน</button></section>
  <section style="margin-top:22px"><h3>การตั้งค่าที่จัดการอยู่</h3><div class="admin-online-note">FAQ และ Reward Links จัดการในแท็บของตัวเอง โดยใช้ตารางเดิม</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><button class="admin-orders-refresh" onclick="switchAdminOnlineTab('faq')">จัดการ FAQ</button><button class="admin-orders-refresh" onclick="switchAdminOnlineTab('rewards')">จัดการ Reward Links</button></div></section>`;
  const st=document.getElementById('adminAiSettingsStatus');if(st)st.textContent='โหลดการตั้งค่าจาก Supabase สำเร็จ';
  }catch(e){const st=document.getElementById('adminAiSettingsStatus');if(st)st.textContent='โหลดไม่สำเร็จ: '+e.message;}
